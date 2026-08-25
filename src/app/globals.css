@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   토큰 — 색은 전부 여기서만 정의한다 (라이트 = 기본)
+   디자인 레퍼런스: 흰 바탕 + 크림·스카이 확산 그라디언트
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --ground: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f7f9fc;
+  --ink: #0b0c0e;
+  --ink-2: #3d444e;
+  --ink-3: #5a6472;
+  --border: #e6e9ef;
+  --border-2: #f0f2f6;
+  --accent: #2f6fd0;
+  --accent-soft: #8fc2f2;
+  --accent-wash: #e8f2fd;
+  --blob-a: rgba(251, 225, 150, 0.55);
+  --blob-b: rgba(120, 178, 240, 0.5);
+  --blob-c: rgba(163, 205, 247, 0.38);
+  --chip-bg: #0b0c0e;
+  --chip-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(11, 12, 14, 0.04), 0 12px 28px -18px rgba(11, 12, 14, 0.28);
+  --shadow-lift: 0 2px 4px rgba(11, 12, 14, 0.05), 0 24px 48px -24px rgba(11, 12, 14, 0.34);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0a0d13;
+    --surface: #121721;
+    --surface-2: #161c27;
+    --ink: #eef2f8;
+    --ink-2: #b9c2d0;
+    --ink-3: #8b95a5;
+    --border: #232b38;
+    --border-2: #1b2230;
+    --accent: #7db4f2;
+    --accent-soft: #3c6a9e;
+    --accent-wash: #16202e;
+    --blob-a: rgba(184, 152, 66, 0.2);
+    --blob-b: rgba(60, 120, 200, 0.26);
+    --blob-c: rgba(70, 130, 200, 0.16);
+    --chip-bg: #eef2f8;
+    --chip-ink: #0a0d13;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -18px rgba(0, 0, 0, 0.8);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45), 0 24px 48px -24px rgba(0, 0, 0, 0.9);
+  }
+}
+
+[data-theme="dark"] {
+  --ground: #0a0d13;
+  --surface: #121721;
+  --surface-2: #161c27;
+  --ink: #eef2f8;
+  --ink-2: #b9c2d0;
+  --ink-3: #8b95a5;
+  --border: #232b38;
+  --border-2: #1b2230;
+  --accent: #7db4f2;
+  --accent-soft: #3c6a9e;
+  --accent-wash: #16202e;
+  --blob-a: rgba(184, 152, 66, 0.2);
+  --blob-b: rgba(60, 120, 200, 0.26);
+  --blob-c: rgba(70, 130, 200, 0.16);
+  --chip-bg: #eef2f8;
+  --chip-ink: #0a0d13;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -18px rgba(0, 0, 0, 0.8);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45), 0 24px 48px -24px rgba(0, 0, 0, 0.9);
+}
+
+@theme inline {
+  --font-display: var(--font-outfit), "Noto Sans KR", system-ui, sans-serif;
+  --font-sans: var(--font-outfit), var(--font-noto), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* 제목은 균형 잡힌 줄바꿈 */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+  letter-spacing: -0.02em;
+}
+
+/* 본문 안의 강조 — 콘텐츠 데이터에서 <b> 로 넘어온다 */
+.prose-ko b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* 표 가로 스크롤은 항상 자기 컨테이너 안에서 */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
