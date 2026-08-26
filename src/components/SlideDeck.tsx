@@ -227,7 +227,18 @@ export default function SlideDeck({
           </div>
         ) : (
           <div className="flex items-center justify-between gap-4">
-            <NavButton dir="prev" disabled={i === 0} onClick={() => go(i - 1)} />
+            {/* 첫 장에서는 비활성 "이전" 대신 나갈 길을 준다 */}
+            {i === 0 ? (
+              <Link
+                href="/#curriculum"
+                className="flex flex-none items-center gap-2 rounded-full border border-(--border) px-4 py-2.5 text-[0.88rem] font-medium text-(--ink) transition-colors hover:border-(--ink-3) sm:px-5"
+              >
+                <ArrowIcon dir="left" />
+                메인으로 돌아가기
+              </Link>
+            ) : (
+              <NavButton dir="prev" disabled={false} onClick={() => go(i - 1)} />
+            )}
             <div className="hidden items-center justify-center gap-1.5 sm:flex">
               {slides.map((_, n) => (
                 <button
