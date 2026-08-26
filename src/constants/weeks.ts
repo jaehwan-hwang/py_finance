@@ -38,7 +38,7 @@ export const weeks: WeekMeta[] = [
     desc: "복리, 연속복리, NPV, IRR. 반복문으로 복리 계산기를 직접 만듭니다.",
     python: ["if", "for / while", "def"],
     bonus: "f-string으로 결과 깔끔하게 출력하기",
-    available: false,
+    available: true,
   },
   {
     num: "03",
@@ -47,7 +47,7 @@ export const weeks: WeekMeta[] = [
     desc: "로그수익률을 이해하고, 실제 주가 데이터를 코드로 가져옵니다.",
     python: ["리스트·딕셔너리", "import", "pandas DataFrame"],
     bonus: "try/except로 데이터를 못 가져올 때 대비하기",
-    available: false,
+    available: true,
   },
   {
     num: "04",
@@ -56,7 +56,7 @@ export const weeks: WeekMeta[] = [
     desc: "변동성, CAGR, 샤프지수, MDD. 수익률 1위와 샤프 1위와 MDD 1위가 전부 다르다는 것을 눈으로 확인합니다.",
     python: ["mean / std / rolling", "numpy 배열 연산"],
     bonus: "리스트 컴프리헨션으로 코드 간결하게 쓰기",
-    available: false,
+    available: true,
   },
   {
     num: "05",
@@ -65,7 +65,7 @@ export const weeks: WeekMeta[] = [
     desc: "공분산, 상관계수, 베타, CAPM. 상관계수가 낮으면 왜 위험이 줄어드는지 코드로 확인합니다.",
     python: ["딕셔너리로 다중 자산 관리", "matplotlib 기초"],
     bonus: "zip()으로 여러 리스트 한 번에 다루기",
-    available: false,
+    available: true,
   },
   {
     num: "06",
@@ -74,7 +74,7 @@ export const weeks: WeekMeta[] = [
     desc: "효율적 투자선. 비중을 1만 세트 뿌려보면 왜 우산 모양이 나오는지 직접 그려봅니다.",
     python: ["numpy 행렬연산", "몬테카를로 시뮬레이션", "scipy.optimize"],
     bonus: "코드 실행 시간 측정 (%timeit)",
-    available: false,
+    available: true,
   },
   {
     num: "07",
@@ -83,7 +83,7 @@ export const weeks: WeekMeta[] = [
     desc: "6주간 만든 것을 조립해 모의계좌에 실제 주문을 넣습니다. 모든 주문은 dry_run으로 먼저 확인합니다.",
     python: ["함수 모듈화", "csv 파일 입출력"],
     bonus: "클래스(class) 맛보기",
-    available: false,
+    available: true,
   },
   {
     num: "08",
