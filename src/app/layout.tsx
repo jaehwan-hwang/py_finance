@@ -62,14 +62,6 @@ export default function RootLayout({
         <BlobBackground />
         <Navbar />
         {children}
-        <footer className="mt-24 border-t border-(--border) py-11 text-[0.85rem] text-(--ink-3)">
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 sm:px-10">
-            <span>{SITE_NAME} · ITBT관 207호</span>
-            <span className="font-mono text-[0.75rem] tracking-[0.08em] uppercase">
-              {TEAM_NAME} · 2026 가을
-            </span>
-          </div>
-        </footer>
       </body>
     </html>
   );

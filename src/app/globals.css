@@ -72,7 +72,9 @@
 @theme inline {
   --font-display: var(--font-outfit), "Noto Sans KR", system-ui, sans-serif;
   --font-sans: var(--font-outfit), var(--font-noto), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* JetBrains Mono 에는 한글이 없다. 폴백을 시스템 고정폭이 아니라
+     Noto Sans KR 로 두어야 한글이 깨끗하게 나온다. */
+  --font-mono: var(--font-jetbrains), var(--font-noto), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 html {
@@ -120,6 +122,15 @@ h1, h2, h3, h4 {
 .scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* 슬라이드 전환 — 오른쪽에서 살짝 밀려 들어온다 */
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.slide-in {
+  animation: slide-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* FORIF 워드마크는 검정 단색이라 어두운 배경에서는 뒤집어 준다.

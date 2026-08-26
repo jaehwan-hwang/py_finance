@@ -22,12 +22,12 @@ export default function Callout({
       style={{ borderLeft: `3px solid ${s.accent}` }}
     >
       <div
-        className="mb-2 font-mono text-[0.7rem] tracking-[0.09em] uppercase"
+        className="mb-2 text-[0.92rem] font-semibold"
         style={{ color: s.accent }}
       >
         {title ?? s.label}
       </div>
-      <div className="prose-ko text-[0.94rem] leading-[1.75] text-(--ink-2)">
+      <div className="prose-ko text-[0.96rem] leading-[1.8] text-(--ink-2)">
         {children}
       </div>
     </div>

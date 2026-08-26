@@ -1,27 +1,6 @@
 /* ── Week 1 콘텐츠 데이터 ──
    글만 고치고 싶으면 이 파일만 건드리면 됩니다. 레이아웃은 Week1Content.tsx 에 있습니다. */
 
-export const WEEK1_TOC = [
-  { num: "01", title: "환경 구축", href: "#setup" },
-  { num: "02", title: "8주 지도", href: "#map" },
-  { num: "03", title: "파이썬 첫걸음", href: "#python" },
-  { num: "04", title: "금융 첫걸음", href: "#finance" },
-  { num: "05", title: "치트시트", href: "#cheatsheet" },
-  { num: "06", title: "미션 1", href: "#mission" },
-];
-
-export const WEEK1_GOAL =
-  "삼성전자 10년 주가 그래프를 내 화면에 띄운다.";
-
-export const WEEK1_TIMETABLE = [
-  { time: "0–40분", what: "환경 구축 (오리엔테이션 포함)" },
-  { time: "40–45분", what: "쉬는 시간" },
-  { time: "45–55분", what: "8주 지도 — 우리가 무엇을 만드는가" },
-  { time: "55–85분", what: "파이썬 첫걸음" },
-  { time: "85–95분", what: "금융 첫걸음 — 수익률 + 실습" },
-  { time: "95–100분", what: "정리와 미션" },
-];
-
 /* ── 01. 환경 구축 ── */
 
 export const ENV_OS_TABS = ["Windows", "macOS", "Linux"];

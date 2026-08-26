@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SectionTitle, Tag } from "@/components";
-import { SITE_META, PRINCIPLES } from "@/constants/site";
+import { Tag } from "@/components";
+import { SITE_META } from "@/constants/site";
 import { weeks, formatDate, findNextWeek, daysUntil } from "@/constants/weeks";
 
 const WRAP = "mx-auto max-w-[1200px] px-5 sm:px-10";
@@ -12,10 +12,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <Principles />
       <Curriculum />
-      <Setup />
-      <References />
     </main>
   );
 }
@@ -30,7 +27,7 @@ function Hero() {
             <div className="font-mono text-[0.72rem] font-semibold tracking-[0.09em] text-(--ink) uppercase">
               {m.key}
             </div>
-            <div className="mt-0.5 text-[0.95rem] text-(--ink-3)">{m.value}</div>
+            <div className="mt-1 text-[0.95rem] text-(--ink-3)">{m.value}</div>
           </div>
         ))}
       </div>
@@ -50,42 +47,6 @@ function Hero() {
         >
           커리큘럼 보기
         </Link>
-        <Link
-          href="#setup"
-          className="inline-flex items-center rounded-full border border-(--border) px-6 py-3 text-[0.9rem] font-medium text-(--ink) transition-colors hover:border-(--ink-3)"
-        >
-          환경 설정하기
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-/* ── 운영 원칙 3원 ── */
-function Principles() {
-  return (
-    <section className={`${WRAP} border-t border-(--border) py-14 sm:py-24`}>
-      <SectionTitle en="How it works" ko="이 스터디가 굴러가는 방식" />
-      <div className="grid gap-6 sm:gap-9 md:grid-cols-3">
-        {PRINCIPLES.map((p) => (
-          <article
-            key={p.en}
-            className="flex flex-col items-center gap-3.5 rounded-[24px] border border-(--border) p-8 text-center md:aspect-square md:rounded-full md:p-[14%]"
-            style={{
-              background:
-                "radial-gradient(120% 110% at 50% 120%, var(--accent-wash), transparent 62%)",
-            }}
-          >
-            <h3 className="font-display text-[1.3rem] font-medium text-(--ink)">
-              {p.en}
-            </h3>
-            <span className="h-px w-16 bg-(--border)" />
-            <p
-              className="prose-ko text-[0.9rem] leading-[1.7] text-(--ink-3)"
-              dangerouslySetInnerHTML={{ __html: p.desc }}
-            />
-          </article>
-        ))}
       </div>
     </section>
   );
@@ -98,7 +59,9 @@ function Curriculum() {
       id="curriculum"
       className={`${WRAP} border-t border-(--border) py-14 sm:py-24`}
     >
-      <SectionTitle en="Curriculum" ko="8주 · 자료가 열린 주차는 눌러서 들어갑니다" />
+      <h2 className="font-display mb-8 text-[clamp(1.9rem,5vw,3.2rem)] font-medium tracking-[-0.03em] text-(--ink) uppercase sm:mb-12">
+        Curriculum
+      </h2>
       <NextSession />
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {weeks.map((w) => (
@@ -111,7 +74,11 @@ function Curriculum() {
 
 function NextSession() {
   /* 날짜 계산은 클라이언트에서 — 서버/클라이언트 시각 차이로 인한 hydration 불일치를 피한다 */
-  const [info, setInfo] = useState<{ title: string; meta: string; dday: string; lab: string } | null>(null);
+  const [info, setInfo] = useState<{
+    title: string;
+    meta: string;
+    dday: string;
+  } | null>(null);
 
   useEffect(() => {
     const next = findNextWeek();
@@ -119,9 +86,8 @@ function NextSession() {
     const d = daysUntil(next.date);
     setInfo({
       title: `${Number(next.num)}주차 · ${next.title}`,
-      meta: `${formatDate(next.date)} · ITBT관 207호 · 오늘의 파이썬: ${next.python.join(", ")}`,
+      meta: `${formatDate(next.date)} · ITBT관 207호`,
       dday: d === 0 ? "D-DAY" : `D-${d}`,
-      lab: d === 0 ? "오늘 수업" : "남았습니다",
     });
   }, []);
 
@@ -142,15 +108,10 @@ function NextSession() {
         <div className="mt-2 text-[clamp(1.3rem,3vw,1.85rem)] font-semibold tracking-[-0.02em] text-(--ink)">
           {info.title}
         </div>
-        <div className="mt-2 text-[0.92rem] text-(--ink-3)">{info.meta}</div>
+        <div className="mt-1.5 text-[0.95rem] text-(--ink-3)">{info.meta}</div>
       </div>
-      <div className="text-left font-mono tabular-nums sm:text-center">
-        <b className="block text-[clamp(2rem,5vw,3rem)] leading-none font-medium tracking-[-0.04em] text-(--ink)">
-          {info.dday}
-        </b>
-        <span className="text-[0.72rem] tracking-[0.09em] text-(--ink-3) uppercase">
-          {info.lab}
-        </span>
+      <div className="font-display text-left text-[clamp(2rem,5vw,3rem)] leading-none font-medium tracking-[-0.04em] text-(--ink) tabular-nums sm:text-center">
+        {info.dday}
       </div>
     </div>
   );
@@ -161,11 +122,11 @@ function WeekCard({ week }: { week: (typeof weeks)[number] }) {
 
   const inner = (
     <>
-      <span className="absolute -top-4 left-6 grid h-8 min-w-14 place-items-center rounded-full border border-(--border) bg-(--ground) px-3.5 font-mono text-[0.85rem] text-(--ink-2) tabular-nums group-hover:border-(--ink-3) group-hover:text-(--ink)">
+      <span className="font-display absolute -top-4 left-6 grid h-8 min-w-14 place-items-center rounded-full border border-(--border) bg-(--ground) px-3.5 text-[0.9rem] font-medium text-(--ink-2) tabular-nums group-hover:border-(--ink-3) group-hover:text-(--ink)">
         {week.num}
       </span>
 
-      <span className="font-mono text-[0.78rem] text-(--ink-3) tabular-nums">
+      <span className="text-[0.88rem] font-medium text-(--ink-3)">
         {formatDate(week.date)}
       </span>
 
@@ -173,7 +134,7 @@ function WeekCard({ week }: { week: (typeof weeks)[number] }) {
         {week.title}
       </span>
 
-      <span className="flex-1 text-[0.88rem] leading-[1.6] text-(--ink-3)">
+      <span className="flex-1 text-[0.9rem] leading-[1.6] text-(--ink-3)">
         {week.desc}
       </span>
 
@@ -231,114 +192,5 @@ function WeekCard({ week }: { week: (typeof weeks)[number] }) {
     >
       {inner}
     </Link>
-  );
-}
-
-/* ── 환경 설정 ── */
-const OS_SETUP = [
-  {
-    name: "Windows",
-    code: `py -3.12 -m venv .venv\n.venv\\Scripts\\activate\npip install -r requirements.txt`,
-    note: "설치 시 Add python.exe to PATH 체크를 잊지 마세요.",
-  },
-  {
-    name: "macOS",
-    code: `brew install python@3.12\npython3.12 -m venv .venv\nsource .venv/bin/activate\npip install -r requirements.txt`,
-    note: "Apple Silicon이라면 터미널이 Rosetta로 실행 중인지 확인하세요.",
-  },
-  {
-    name: "Linux",
-    code: `sudo apt install python3.12 python3.12-venv\npython3.12 -m venv .venv\nsource .venv/bin/activate\npip install -r requirements.txt`,
-    note: "그래프 한글이 깨지면 sudo apt install fonts-nanum 후 커널을 재시작하세요.",
-  },
-];
-
-function Setup() {
-  return (
-    <section
-      id="setup"
-      className={`${WRAP} border-t border-(--border) py-14 sm:py-24`}
-    >
-      <SectionTitle en="Setup" ko="1주차 전까지 각자 준비해 오세요" />
-      <div className="grid gap-5 md:grid-cols-3">
-        {OS_SETUP.map((os) => (
-          <article
-            key={os.name}
-            className="flex flex-col gap-3.5 rounded-[18px] border border-(--border) bg-(--surface) p-6"
-            style={{ boxShadow: "var(--shadow)" }}
-          >
-            <h3 className="font-display text-[1.1rem] font-medium text-(--ink)">
-              {os.name}
-            </h3>
-            <div className="scroll-x rounded-xl border border-(--border-2) bg-(--surface-2)">
-              <pre className="m-0 px-4 py-3.5 font-mono text-[0.78rem] leading-[1.9] whitespace-pre text-(--ink-2)">
-                {os.code}
-              </pre>
-            </div>
-            <p className="text-[0.85rem] text-(--ink-3)">{os.note}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ── 참고자료 ── */
-const REFS = [
-  {
-    kind: "주 참고도서",
-    title: "파이썬으로 배우는 포트폴리오",
-    desc: "길벗 080227. 1~4장이 이 스터디 2~6주차의 뼈대입니다.",
-    href: "https://github.com/gilbutITbook/080227",
-  },
-  {
-    kind: "영상 · 파이썬 기초",
-    title: "헨리의 금융MBA",
-    desc: "1강 데이터 타입, 2강 제어문·함수는 1·2주차 전에 꼭 보고 오세요.",
-    href: "https://youtube.com/playlist?list=PLBcT2bWZuRNrSOu4vq8nM5eSWiN65-DvG",
-  },
-  {
-    kind: "영상 · 지표",
-    title: "브레인 빌딩",
-    desc: "15~19강 수익률·CAGR·MDD·변동성·샤프비율이 4주차와 그대로 맞습니다.",
-    href: "https://youtube.com/playlist?list=PLgAffhOqz2QHIf08FNaDDgC20Pevf5NXb",
-  },
-  {
-    kind: "공식 문서",
-    title: "파이썬 튜토리얼 (한국어)",
-    desc: "문법이 헷갈릴 때 찾아볼 곳. 치트시트로 안 풀리면 여기를 보세요.",
-    href: "https://docs.python.org/ko/3/tutorial/",
-  },
-];
-
-function References() {
-  return (
-    <section
-      id="refs"
-      className={`${WRAP} border-t border-(--border) py-14 sm:py-24`}
-    >
-      <SectionTitle en="References" ko="수업 전에 보고 오면 훨씬 수월합니다" />
-      <div className="grid gap-4 sm:grid-cols-2">
-        {REFS.map((r) => (
-          <a
-            key={r.title}
-            href={r.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col gap-2 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all hover:-translate-y-0.5 hover:border-(--ink-3)"
-          >
-            <span className="font-mono text-[0.68rem] tracking-[0.08em] text-(--ink-3) uppercase">
-              {r.kind}
-            </span>
-            <span className="text-[1rem] font-semibold text-(--ink)">
-              {r.title}
-            </span>
-            <span className="text-[0.85rem] leading-[1.6] text-(--ink-3)">
-              {r.desc}
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
   );
 }

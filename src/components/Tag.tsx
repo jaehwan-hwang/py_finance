@@ -20,7 +20,7 @@ export default function Tag({
     );
   }
   return (
-    <span className="inline-flex items-center rounded-md border border-(--border-2) bg-(--surface-2) px-2.5 py-1 font-mono text-[0.7rem] text-(--ink-3)">
+    <span className="inline-flex items-center rounded-md border border-(--border-2) bg-(--surface-2) px-2.5 py-1 text-[0.78rem] font-medium text-(--ink-2)">
       {children}
     </span>
   );
