@@ -37,7 +37,7 @@ function Hero() {
 
       <hr className="border-0 border-t border-(--border)" />
 
-      <h1 className="mt-[clamp(40px,9vw,110px)] text-[clamp(2.5rem,8vw,6rem)] leading-[1.03] font-semibold tracking-[-0.035em] text-(--ink)">
+      <h1 className="mt-[clamp(40px,9vw,110px)] text-[clamp(1.75rem,7.6vw,6rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-(--ink)">
         <span className="font-display">PYTHON</span>으로
         <br />
         알아보는 기초 금융공학

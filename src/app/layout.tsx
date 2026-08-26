@@ -45,6 +45,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
+      <head>
+        {/* 저장된 테마를 첫 페인트 전에 적용한다.
+            이게 없으면 다크를 고른 사람도 새로고침마다 흰 화면이 번쩍인다. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('pf-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body
         className={`${outfit.variable} ${noto.variable} ${jetbrains.variable} antialiased`}
       >

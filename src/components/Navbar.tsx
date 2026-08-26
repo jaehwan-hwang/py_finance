@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import ThemeToggle from "./ThemeProvider";
-import { SITE_SHORT, SEMESTER } from "@/constants/site";
 
 export default function Navbar() {
   return (
@@ -11,9 +11,24 @@ export default function Navbar() {
       <div className="mx-auto flex h-15 max-w-[1200px] items-center gap-6 px-5 sm:px-10">
         <Link
           href="/"
-          className="font-mono text-[0.75rem] tracking-[0.08em] whitespace-nowrap text-(--ink-3) uppercase transition-colors hover:text-(--ink)"
+          aria-label="FORIF 홈"
+          className="flex items-center gap-2.5 transition-opacity hover:opacity-70"
         >
-          {SITE_SHORT} · {SEMESTER}
+          <Image
+            src="/foxCircleBlue.svg"
+            alt=""
+            width={28}
+            height={28}
+            priority
+          />
+          <Image
+            src="/forif_wordmark.png"
+            alt="FORIF"
+            width={2274}
+            height={1056}
+            priority
+            className="forif-wordmark h-[21px] w-auto"
+          />
         </Link>
         <nav className="ml-auto flex flex-wrap items-center gap-1">
           <Link
