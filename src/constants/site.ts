@@ -12,8 +12,28 @@ export const SITE_META = [
   { key: "Period", value: "2026.09.09 – 11.11 · 8주 (예정)" },
   { key: "When", value: "매주 수요일 16:00 – 18:00" },
   { key: "Where", value: "ITBT관 207호" },
-  { key: "For", value: "파이썬과 기초 재무 지식에 관심있는 누구든" },
+  { key: "For", value: "파이썬과 기초 재무에 관심있는 누구든" },
 ];
+
+/** FORIF 공식 사이트 — 상단 로고가 여기로 연결된다. */
+export const FORIF_URL = "https://forif.org";
+
+/* ═══════════════════════════════════════════════════════════════════════
+   참고자료 — 링크·책 추천·추가 문법 등을 여기에 한 줄씩 추가하면
+   홈의 REFERENCE 칸에 카드로 나옵니다. 비어 있으면 안내 문구만 나옵니다.
+
+     { kind: '분류', title: '제목', desc: '한 줄 설명', href: '링크' }
+
+   href 를 빼면 링크가 아닌 그냥 카드가 됩니다.
+   ═══════════════════════════════════════════════════════════════════════ */
+export interface RefItem {
+  kind: string;
+  title: string;
+  desc: string;
+  href?: string;
+}
+
+export const REFERENCES: RefItem[] = [];
 
 export const MAIN_TAGS = ["Python", "Finance", "No experience needed"];
 

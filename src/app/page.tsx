@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Tag } from "@/components";
-import { SITE_META } from "@/constants/site";
+import { SITE_META, REFERENCES } from "@/constants/site";
 import { weeks, formatDate, findNextWeek, daysUntil } from "@/constants/weeks";
 
 const WRAP = "mx-auto max-w-[1200px] px-5 sm:px-10";
@@ -13,6 +13,7 @@ export default function Home() {
     <main>
       <Hero />
       <Curriculum />
+      <Reference />
     </main>
   );
 }
@@ -68,6 +69,66 @@ function Curriculum() {
           <WeekCard key={w.num} week={w} />
         ))}
       </div>
+    </section>
+  );
+}
+
+/* ── 참고자료 — site.ts 의 REFERENCES 배열을 채우면 카드가 늘어난다 ── */
+function Reference() {
+  return (
+    <section
+      id="reference"
+      className={`${WRAP} border-t border-(--border) py-14 sm:py-24`}
+    >
+      <h2 className="font-display mb-8 text-[clamp(1.9rem,5vw,3.2rem)] font-medium tracking-[-0.03em] text-(--ink) uppercase sm:mb-12">
+        Reference
+      </h2>
+
+      {REFERENCES.length === 0 ? (
+        <div className="rounded-[18px] border border-dashed border-(--border) px-6 py-12 text-center">
+          <p className="text-[1.02rem] font-medium text-(--ink-2)">
+            아직 올라온 자료가 없습니다.
+          </p>
+          <p className="mt-2 text-[0.92rem] text-(--ink-3)">
+            수업이 진행되면서 링크·책 추천·추가로 알아두면 좋은 문법을 이곳에 올립니다.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {REFERENCES.map((r) => {
+            const inner = (
+              <>
+                <span className="text-[0.82rem] font-medium text-(--ink-3)">
+                  {r.kind}
+                </span>
+                <span className="text-[1.05rem] font-semibold text-(--ink)">
+                  {r.title}
+                </span>
+                <span className="text-[0.9rem] leading-[1.6] text-(--ink-3)">
+                  {r.desc}
+                </span>
+              </>
+            );
+            const cls =
+              "flex flex-col gap-2 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all";
+            return r.href ? (
+              <a
+                key={r.title}
+                href={r.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${cls} hover:-translate-y-0.5 hover:border-(--ink-3)`}
+              >
+                {inner}
+              </a>
+            ) : (
+              <div key={r.title} className={cls}>
+                {inner}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
