@@ -130,13 +130,26 @@ export default function SlideDeck({
     >
       {/* 상단 — 주차 표시와 진행 상황 */}
       <div className="flex items-center justify-between gap-4 py-5 sm:py-7">
-        <Link
-          href="/#curriculum"
-          className="flex items-center gap-2 text-[0.9rem] font-medium text-(--ink-3) transition-colors hover:text-(--ink)"
-        >
-          <ArrowIcon dir="left" />
-          {weekNum}주차 · {weekTitle}
-        </Link>
+        {/* 나가는 링크와 현재 위치를 분리한다.
+            한 덩어리로 두면 화살표는 뒤로인데 글자는 현재 페이지 이름이라 헷갈린다. */}
+        <div className="flex min-w-0 items-center gap-2.5">
+          <Link
+            href="/#curriculum"
+            className="flex flex-none items-center gap-2 text-[0.9rem] font-medium text-(--ink-2) transition-colors hover:text-(--ink)"
+          >
+            <ArrowIcon dir="left" />
+            커리큘럼
+          </Link>
+          <span aria-hidden="true" className="text-(--border)">
+            |
+          </span>
+          <span className="truncate text-[0.9rem] text-(--ink-3)">
+            <span className="hidden sm:inline">
+              {weekNum}주차 · {weekTitle}
+            </span>
+            <span className="sm:hidden">{weekNum}주차</span>
+          </span>
+        </div>
         <span className="font-display text-[0.95rem] font-medium text-(--ink-3) tabular-nums">
           {done ? (
             "완료"
