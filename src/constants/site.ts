@@ -4,8 +4,9 @@ export const TEAM_NAME = "FORIF";
 export const SEMESTER = "2026-2";
 export const MENTOR_NAME = "멘토 황재환";
 
-export const SITE_DESC =
-  "변수가 무엇인지부터 시작합니다. 8주 동안 파이썬을 배우면서, 그 파이썬으로 복리·수익률·위험·포트폴리오를 직접 계산합니다.";
+/** 화면에는 안 나온다. 검색 결과와 카톡·디스코드 링크 미리보기에만 쓰인다. */
+export const SITE_SEO_DESC =
+  "FORIF 8주 스터디. 파이썬을 처음부터 배우면서 복리·수익률·위험·포트폴리오를 직접 계산하고, 모의계좌로 집행해 봅니다.";
 
 export const SITE_META = [
   { key: "Period", value: "2026.09.09 – 11.11 · 8주" },

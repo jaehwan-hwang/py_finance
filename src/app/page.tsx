@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SectionTitle, Tag } from "@/components";
-import { SITE_META, SITE_DESC, PRINCIPLES } from "@/constants/site";
+import { SITE_META, PRINCIPLES } from "@/constants/site";
 import { weeks, formatDate, findNextWeek, daysUntil } from "@/constants/weeks";
 
 const WRAP = "mx-auto max-w-[1200px] px-5 sm:px-10";
@@ -43,11 +43,7 @@ function Hero() {
         알아보는 기초 금융공학
       </h1>
 
-      <p className="mt-7 max-w-[56ch] text-[clamp(1rem,1.6vw,1.15rem)] text-(--ink-2)">
-        {SITE_DESC}
-      </p>
-
-      <div className="mt-9 flex flex-wrap items-center gap-3">
+      <div className="mt-10 flex flex-wrap items-center gap-3">
         <Link
           href="#curriculum"
           className="inline-flex items-center rounded-full bg-(--chip-bg) px-6 py-3 text-[0.9rem] font-medium text-(--chip-ink) transition-transform hover:-translate-y-0.5"
