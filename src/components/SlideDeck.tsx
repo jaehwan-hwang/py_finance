@@ -9,11 +9,9 @@ import {
   useRef,
   useState,
 } from "react";
+import { weeks } from "@/constants/weeks";
 
-/**
- * 슬라이드 한 장.
- * 마지막 장은 "마무리" 화면으로 취급한다 — 넘기기 버튼 대신 자체 버튼을 둔다.
- */
+/** 슬라이드 한 장. */
 export function Slide({
   children,
 }: {
@@ -29,26 +27,40 @@ const SWIPE_MIN = 55;
 export default function SlideDeck({
   weekNum,
   weekTitle,
+  outro,
   children,
 }: {
   weekNum: string;
   weekTitle: string;
+  /** 마지막 장에서 "완료"를 누르면 나오는 마무리 화면 */
+  outro?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const slides = Children.toArray(children).filter(isValidElement);
   const total = slides.length;
   const [i, setI] = useState(0);
+  const [done, setDone] = useState(false);
   const touch = useRef<{ x: number; y: number } | null>(null);
+
+  const toTop = () => window.scrollTo({ top: 0, behavior: "auto" });
 
   const go = useCallback(
     (next: number) => {
+      if (next > total - 1) {
+        if (outro) {
+          setDone(true);
+          toTop();
+        }
+        return;
+      }
+      setDone(false);
       setI((cur) => {
         const v = Math.max(0, Math.min(total - 1, next));
-        if (v !== cur) window.scrollTo({ top: 0, behavior: "auto" });
+        if (v !== cur) toTop();
         return v;
       });
     },
-    [total],
+    [total, outro],
   );
 
   useEffect(() => {
@@ -57,19 +69,23 @@ export default function SlideDeck({
       if (tag === "INPUT" || tag === "TEXTAREA") return;
       if (e.key === "ArrowRight" || e.key === "PageDown") {
         e.preventDefault();
-        setI((c) => Math.min(total - 1, c + 1));
+        go(i + 1);
       } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault();
-        setI((c) => Math.max(0, c - 1));
+        if (done) {
+          setDone(false);
+          toTop();
+        } else {
+          go(i - 1);
+        }
       } else if (e.key === "Home") {
+        setDone(false);
         setI(0);
-      } else if (e.key === "End") {
-        setI(total - 1);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [total]);
+  }, [go, i, done]);
 
   /* ── 스와이프 ──
      코드 블록·표처럼 가로로 스크롤되는 영역에서 시작한 손짓은 무시한다.
@@ -92,13 +108,19 @@ export default function SlideDeck({
     const dy = t.clientY - start.y;
     // 세로로 더 많이 움직였으면 스크롤이지 스와이프가 아니다
     if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.4) return;
-    go(dx < 0 ? i + 1 : i - 1);
+    if (dx < 0) {
+      go(i + 1);
+    } else if (done) {
+      setDone(false);
+      toTop();
+    } else {
+      go(i - 1);
+    }
   }
 
   const current = slides[i] as React.ReactElement<{ title?: string }>;
   const slideTitle = current?.props?.title;
-  const isLast = i === total - 1;
-  const nextIsLast = i === total - 2;
+  const nextWeek = weeks.find((w) => Number(w.num) === Number(weekNum) + 1);
 
   return (
     <div
@@ -112,25 +134,19 @@ export default function SlideDeck({
           href="/#curriculum"
           className="flex items-center gap-2 text-[0.9rem] font-medium text-(--ink-3) transition-colors hover:text-(--ink)"
         >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M19 12H5M11 18l-6-6 6-6" />
-          </svg>
+          <ArrowIcon dir="left" />
           {weekNum}주차 · {weekTitle}
         </Link>
         <span className="font-display text-[0.95rem] font-medium text-(--ink-3) tabular-nums">
-          {String(i + 1).padStart(2, "0")}
-          <span className="mx-1 opacity-50">/</span>
-          {String(total).padStart(2, "0")}
+          {done ? (
+            "완료"
+          ) : (
+            <>
+              {String(i + 1).padStart(2, "0")}
+              <span className="mx-1 opacity-50">/</span>
+              {String(total).padStart(2, "0")}
+            </>
+          )}
         </span>
       </div>
 
@@ -138,59 +154,104 @@ export default function SlideDeck({
       <div
         className="h-[3px] w-full overflow-hidden rounded-full bg-(--border-2)"
         role="progressbar"
-        aria-valuenow={i + 1}
+        aria-valuenow={done ? total : i + 1}
         aria-valuemin={1}
         aria-valuemax={total}
       >
         <div
           className="h-full rounded-full bg-(--ink) transition-[width] duration-300"
-          style={{ width: `${((i + 1) / total) * 100}%` }}
+          style={{ width: done ? "100%" : `${((i + 1) / total) * 100}%` }}
         />
       </div>
 
-      {/* 슬라이드 본문 */}
+      {/* 본문 */}
       <section
-        key={i}
+        key={done ? "outro" : i}
         className="slide-in flex flex-1 flex-col justify-center py-10 sm:py-14"
         aria-live="polite"
       >
-        {slideTitle && (
-          <h2 className="mb-7 text-[clamp(1.5rem,4.4vw,2.4rem)] leading-[1.2] font-semibold tracking-[-0.03em] text-(--ink)">
-            {slideTitle}
-          </h2>
+        {done ? (
+          outro
+        ) : (
+          <>
+            {slideTitle && (
+              <h2 className="mb-7 text-[clamp(1.5rem,4.4vw,2.4rem)] leading-[1.2] font-semibold tracking-[-0.03em] text-(--ink)">
+                {slideTitle}
+              </h2>
+            )}
+            <div>{current}</div>
+          </>
         )}
-        <div>{current}</div>
       </section>
 
-      {/* 하단 — 넘기기. 마지막 장에서는 자체 버튼을 쓰므로 다음 버튼을 감춘다. */}
-      <div className="flex items-center justify-between gap-4 border-t border-(--border) pt-5">
-        <NavButton dir="prev" disabled={i === 0} onClick={() => go(i - 1)} />
-        <div className="hidden items-center justify-center gap-1.5 sm:flex">
-          {slides.map((_, n) => (
+      {/* 하단 — 마무리 화면에서는 세 갈래 이동으로 바뀐다 */}
+      <div className="border-t border-(--border) pt-5">
+        {done ? (
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:justify-between">
             <button
-              key={n}
               type="button"
-              aria-label={`${n + 1}번째 슬라이드`}
-              aria-current={n === i}
-              onClick={() => go(n)}
-              className="h-1.5 rounded-full transition-all"
-              style={{
-                width: n === i ? 22 : 6,
-                background: n === i ? "var(--ink)" : "var(--border)",
+              onClick={() => {
+                setDone(false);
+                setI(0);
+                toTop();
               }}
-            />
-          ))}
-        </div>
-        {isLast ? (
-          <span className="w-[92px] flex-none sm:w-[108px]" aria-hidden="true" />
+              className="inline-flex items-center gap-2 rounded-full border border-(--border) px-5 py-2.5 text-[0.88rem] font-medium text-(--ink) transition-colors hover:border-(--ink-3)"
+            >
+              <ArrowIcon dir="left" />
+              {weekNum}주차로 돌아가기
+            </button>
+
+            <Link
+              href="/#curriculum"
+              className="inline-flex items-center rounded-full border border-(--border) px-5 py-2.5 text-[0.88rem] font-medium text-(--ink) transition-colors hover:border-(--ink-3)"
+            >
+              메인으로 돌아가기
+            </Link>
+
+            {nextWeek?.available ? (
+              <Link
+                href={`/week/${Number(nextWeek.num)}`}
+                className="inline-flex items-center gap-2 rounded-full bg-(--chip-bg) px-5 py-2.5 text-[0.88rem] font-medium text-(--chip-ink) transition-transform hover:-translate-y-0.5"
+              >
+                {Number(nextWeek.num)}주차로 넘어가기
+                <ArrowIcon dir="right" />
+              </Link>
+            ) : (
+              <span className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-dashed border-(--border) px-5 py-2.5 text-[0.88rem] font-medium text-(--ink-3)">
+                {nextWeek
+                  ? `${Number(nextWeek.num)}주차는 준비 중`
+                  : "마지막 주차입니다"}
+                <ArrowIcon dir="right" />
+              </span>
+            )}
+          </div>
         ) : (
-          <NavButton
-            dir="next"
-            label={nextIsLast ? "완료" : "다음"}
-            solid={nextIsLast}
-            disabled={false}
-            onClick={() => go(i + 1)}
-          />
+          <div className="flex items-center justify-between gap-4">
+            <NavButton dir="prev" disabled={i === 0} onClick={() => go(i - 1)} />
+            <div className="hidden items-center justify-center gap-1.5 sm:flex">
+              {slides.map((_, n) => (
+                <button
+                  key={n}
+                  type="button"
+                  aria-label={`${n + 1}번째 슬라이드`}
+                  aria-current={n === i}
+                  onClick={() => go(n)}
+                  className="h-1.5 rounded-full transition-all"
+                  style={{
+                    width: n === i ? 22 : 6,
+                    background: n === i ? "var(--ink)" : "var(--border)",
+                  }}
+                />
+              ))}
+            </div>
+            <NavButton
+              dir="next"
+              label={i === total - 1 && outro ? "완료" : "다음"}
+              solid={i === total - 1 && !!outro}
+              disabled={i === total - 1 && !outro}
+              onClick={() => go(i + 1)}
+            />
+          </div>
         )}
       </div>
     </div>
@@ -224,14 +285,22 @@ function NavButton({
           : "border-(--border) text-(--ink) hover:border-(--ink-3)"
       }`}
     >
-      {!isNext && <Chevron dir="left" />}
+      {!isNext && <ArrowIcon dir="left" chevron />}
       <span className={isNext ? "" : "hidden sm:inline"}>{text}</span>
-      {isNext && <Chevron dir="right" />}
+      {isNext && <ArrowIcon dir="right" chevron />}
     </button>
   );
 }
 
-function Chevron({ dir }: { dir: "left" | "right" }) {
+function ArrowIcon({
+  dir,
+  chevron = false,
+}: {
+  dir: "left" | "right";
+  chevron?: boolean;
+}) {
+  const left = chevron ? "M15 18l-6-6 6-6" : "M19 12H5M11 18l-6-6 6-6";
+  const right = chevron ? "M9 18l6-6-6-6" : "M5 12h14M13 6l6 6-6 6";
   return (
     <svg
       width="15"
@@ -243,8 +312,9 @@ function Chevron({ dir }: { dir: "left" | "right" }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      className="flex-none"
     >
-      {dir === "left" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+      <path d={dir === "left" ? left : right} />
     </svg>
   );
 }

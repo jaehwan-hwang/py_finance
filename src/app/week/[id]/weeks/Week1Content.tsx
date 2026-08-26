@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { SlideDeck, Slide, CodeBlock, Callout, Tabs } from "@/components";
 import { weeks, formatDate } from "@/constants/weeks";
@@ -34,7 +33,11 @@ export default function Week1Content() {
   const [os, setOs] = useState(0);
 
   return (
-    <SlideDeck weekNum={String(Number(W.num))} weekTitle={W.title}>
+    <SlideDeck
+      weekNum={String(Number(W.num))}
+      weekTitle={W.title}
+      outro={<Outro />}
+    >
       {/* 1 ── 표지 */}
       <Slide>
         <p className="text-[1rem] font-medium text-(--ink-3)">
@@ -352,94 +355,41 @@ export default function Week1Content() {
         </div>
       </Slide>
 
-      {/* 17 ── 마무리 */}
-      <Slide>
-        <p className="text-[1rem] font-medium text-(--ink-3)">1주차 끝</p>
-        <h2 className="mt-3 text-[clamp(1.8rem,5.5vw,3rem)] leading-[1.15] font-semibold tracking-[-0.03em] text-(--ink)">
-          오늘 배운 것
-        </h2>
-
-        <ol className="mt-8 flex flex-col gap-3.5">
-          {WEEK1_SUMMARY.map((s, n) => (
-            <li
-              key={s}
-              className="flex gap-4 rounded-[16px] border border-(--border) bg-(--surface) p-5"
-            >
-              <span className="font-display text-[1.1rem] font-medium text-(--ink-3) tabular-nums">
-                {String(n + 1).padStart(2, "0")}
-              </span>
-              <span className="text-[1.02rem] leading-[1.7] text-(--ink-2)">{s}</span>
-            </li>
-          ))}
-        </ol>
-
-        <div className="mt-8 rounded-[16px] border border-(--border) bg-(--surface-2) p-5">
-          <p className="text-[0.95rem] font-semibold text-(--ink)">다음 주 예고</p>
-          <p className="mt-2 text-[0.96rem] leading-[1.75] text-(--ink-2)">
-            오늘은 값 <b className="font-semibold">하나</b>를 다뤘습니다. 다음 주에는 값{" "}
-            <b className="font-semibold">여러 개</b>를 한꺼번에 다룹니다. 리스트와 반복문을
-            배우고, 오늘 배운 거듭제곱이 <b className="font-semibold">복리</b>가 됩니다.
-          </p>
-        </div>
-
-        <WrapUpActions />
-      </Slide>
     </SlideDeck>
   );
 }
 
-/** 마무리 화면의 두 버튼 — 메인으로, 다음 주차로 */
-function WrapUpActions() {
-  const next = weeks[1];
-  const ready = next?.available;
-
+/** 16장에서 "완료"를 누르면 나오는 마무리 화면 */
+function Outro() {
   return (
-    <div className="mt-9 flex flex-wrap gap-3">
-      <Link
-        href="/#curriculum"
-        className="inline-flex items-center gap-2 rounded-full border border-(--border) px-6 py-3 text-[0.92rem] font-medium text-(--ink) transition-colors hover:border-(--ink-3)"
-      >
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M19 12H5M11 18l-6-6 6-6" />
-        </svg>
-        메인으로 돌아가기
-      </Link>
+    <>
+      <p className="text-[1rem] font-medium text-(--ink-3)">1주차 끝</p>
+      <h2 className="mt-3 text-[clamp(1.8rem,5.5vw,3rem)] leading-[1.15] font-semibold tracking-[-0.03em] text-(--ink)">
+        오늘 배운 것
+      </h2>
 
-      {ready ? (
-        <Link
-          href={`/week/${Number(next.num)}`}
-          className="inline-flex items-center gap-2 rounded-full bg-(--chip-bg) px-6 py-3 text-[0.92rem] font-medium text-(--chip-ink) transition-transform hover:-translate-y-0.5"
-        >
-          {Number(next.num)}주차 · {next.title}
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+      <ol className="mt-8 flex flex-col gap-3.5">
+        {WEEK1_SUMMARY.map((s, n) => (
+          <li
+            key={s}
+            className="flex gap-4 rounded-[16px] border border-(--border) bg-(--surface) p-5"
           >
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </Link>
-      ) : (
-        <span className="inline-flex cursor-not-allowed items-center rounded-full border border-dashed border-(--border) px-6 py-3 text-[0.92rem] font-medium text-(--ink-3)">
-          {next ? `${Number(next.num)}주차는 준비 중입니다` : "마지막 주차입니다"}
-        </span>
-      )}
-    </div>
+            <span className="font-display text-[1.1rem] font-medium text-(--ink-3) tabular-nums">
+              {String(n + 1).padStart(2, "0")}
+            </span>
+            <span className="text-[1.02rem] leading-[1.7] text-(--ink-2)">{s}</span>
+          </li>
+        ))}
+      </ol>
+
+      <div className="mt-8 rounded-[16px] border border-(--border) bg-(--surface-2) p-5">
+        <p className="text-[0.95rem] font-semibold text-(--ink)">다음 주 예고</p>
+        <p className="mt-2 text-[0.96rem] leading-[1.75] text-(--ink-2)">
+          오늘은 값 <b className="font-semibold">하나</b>를 다뤘습니다. 다음 주에는 값{" "}
+          <b className="font-semibold">여러 개</b>를 한꺼번에 다룹니다. 리스트와 반복문을
+          배우고, 오늘 배운 거듭제곱이 <b className="font-semibold">복리</b>가 됩니다.
+        </p>
+      </div>
+    </>
   );
 }
