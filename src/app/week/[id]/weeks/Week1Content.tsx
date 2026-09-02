@@ -4,6 +4,7 @@ import { SlideDeck, Slide, CodeBlock, Callout } from "@/components";
 import { weeks, formatDate } from "@/constants/weeks";
 import {
   OS_GUIDES,
+  type Block,
   ENV_CHECK3,
   LADDER,
   PY_TYPES,
@@ -60,48 +61,33 @@ export default function Week1Content() {
         </ul>
       </Slide>
 
-      {/* 2~4 ── OS별 설치 (한 OS가 한 페이지) */}
+      {/* 2~4 ── OS별 설치 (setup_*.md 원문) */}
       {OS_GUIDES.map((g) => (
-        <Slide key={g.os} title={`환경 설치 — ${g.os}`}>
-          <p className="text-[1rem] text-(--ink-3)">{g.subtitle}</p>
+        <Slide key={g.os} title={`환경 설치 가이드 — ${g.os}`}>
+          <MdBlocks blocks={g.intro} />
 
-          <div className="mt-7 flex flex-col gap-7">
+          <div className="mt-8 flex flex-col gap-9">
             {g.sections.map((s) => (
               <section key={s.num}>
-                <h4 className="flex items-baseline gap-2.5 text-[1.08rem] font-semibold text-(--ink)">
-                  <span className="font-display text-(--ink-3) tabular-nums">
-                    {s.num}.
-                  </span>
-                  {s.title}
-                </h4>
-                {s.body && (
-                  <p
-                    className="mt-2 text-[0.95rem] leading-[1.75] text-(--ink-2)"
-                    dangerouslySetInnerHTML={{ __html: s.body }}
-                  />
-                )}
-                {s.code && <CodeBlock code={s.code} lang={g.lang} />}
+                <h3 className="text-[1.15rem] font-semibold text-(--ink)">
+                  {s.num}. {s.title}
+                </h3>
+                <MdBlocks blocks={s.blocks} />
               </section>
             ))}
           </div>
 
-          <h4 className="mt-10 mb-4 text-[1.08rem] font-semibold text-(--ink)">
+          <h3 className="mt-12 mb-1 border-t border-(--border) pt-8 text-[1.3rem] font-semibold text-(--ink)">
             자주 막히는 곳
-          </h4>
-          <div className="flex flex-col gap-3">
-            {g.troubles.map((t) => (
-              <div
-                key={t.symptom}
-                className="rounded-[14px] border border-(--border) bg-(--surface) p-5"
-              >
-                <p className="font-mono text-[0.9rem] font-medium text-(--ink)">
-                  {t.symptom}
-                </p>
-                <p
-                  className="mt-1.5 text-[0.92rem] leading-[1.7] text-(--ink-3)"
-                  dangerouslySetInnerHTML={{ __html: t.fix }}
-                />
-              </div>
+          </h3>
+          <div className="flex flex-col gap-8">
+            {g.troubles.map((tr) => (
+              <section key={tr.symptom}>
+                <h4 className="mt-6 font-mono text-[0.95rem] font-medium text-(--ink)">
+                  {tr.symptom}
+                </h4>
+                <MdBlocks blocks={tr.blocks} />
+              </section>
             ))}
           </div>
         </Slide>
@@ -367,6 +353,71 @@ function Outro() {
           배우고, 오늘 배운 거듭제곱이 <b className="font-semibold">복리</b>가 됩니다.
         </p>
       </div>
+    </>
+  );
+}
+
+/** setup_*.md 의 문단·목록·인용구·코드를 원문 순서대로 그린다. */
+function MdBlocks({ blocks }: { blocks: Block[] }) {
+  return (
+    <>
+      {blocks.map((b, i) => {
+        if (b.t === "p")
+          return (
+            <p
+              key={i}
+              className="md mt-3 text-[1rem] leading-[1.8] text-(--ink-2)"
+              dangerouslySetInnerHTML={{ __html: b.text }}
+            />
+          );
+
+        if (b.t === "h")
+          return (
+            <h4 key={i} className="mt-6 text-[1rem] font-semibold text-(--ink)">
+              {b.text}
+            </h4>
+          );
+
+        if (b.t === "note")
+          return (
+            <div
+              key={i}
+              className="md mt-4 border-l-[3px] border-(--border) pl-4 text-[0.96rem] leading-[1.8] text-(--ink-3)"
+              dangerouslySetInnerHTML={{ __html: b.text }}
+            />
+          );
+
+        if (b.t === "ol")
+          return (
+            <ol key={i} className="md mt-3 flex flex-col gap-2">
+              {b.items.map((it, n) => (
+                <li key={n} className="flex gap-3 text-[1rem] leading-[1.8] text-(--ink-2)">
+                  <span className="font-display flex-none text-(--ink-3) tabular-nums">
+                    {n + 1}.
+                  </span>
+                  <span dangerouslySetInnerHTML={{ __html: it }} />
+                </li>
+              ))}
+            </ol>
+          );
+
+        if (b.t === "ul")
+          return (
+            <ul key={i} className="md mt-3 flex flex-col gap-2">
+              {b.items.map((it, n) => (
+                <li key={n} className="flex gap-3 text-[1rem] leading-[1.8] text-(--ink-2)">
+                  <span
+                    aria-hidden="true"
+                    className="mt-[0.7em] h-1.5 w-1.5 flex-none rounded-full bg-(--ink-3)"
+                  />
+                  <span dangerouslySetInnerHTML={{ __html: it }} />
+                </li>
+              ))}
+            </ul>
+          );
+
+        return <CodeBlock key={i} code={b.code} lang="bash" />;
+      })}
     </>
   );
 }
