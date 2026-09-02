@@ -34,16 +34,12 @@ export default function WeekSlides({
         <h1 className="mt-3 text-[clamp(2rem,7vw,3.8rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-(--ink)">
           {week.title}
         </h1>
-        <p
-          className="mt-6 max-w-[46ch] text-[1.05rem] leading-[1.75] text-(--ink-2)"
-          dangerouslySetInnerHTML={{ __html: content.cover.lead }}
-        />
-        <div className="mt-8 rounded-[18px] border border-(--border) bg-(--surface) p-6">
-          <p className="text-[0.9rem] font-medium text-(--ink-3)">오늘의 목표</p>
-          <p className="mt-1.5 text-[1.15rem] font-semibold text-(--ink)">
-            {content.cover.goal}
-          </p>
-        </div>
+        {content.cover.lead && (
+          <p
+            className="mt-6 max-w-[52ch] text-[1.05rem] leading-[1.75] text-(--ink-2)"
+            dangerouslySetInnerHTML={{ __html: content.cover.lead }}
+          />
+        )}
       </Slide>
 
       {content.slides.map((s, n) => (

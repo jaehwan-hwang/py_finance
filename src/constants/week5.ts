@@ -5,8 +5,7 @@ import type { WeekContent } from "./weekContent";
 
 export const WEEK5: WeekContent = {
   cover: {
-    lead: "지금까지는 종목을 하나씩 봤습니다. 오늘부터는 <b>둘 이상을 같이</b> 봅니다. 서로 반대로 움직이는 두 종목을 섞으면 위험이 줄어듭니다.",
-    goal: "상관계수를 계산하고, 분산투자로 위험이 줄어드는 것을 눈으로 확인한다.",
+    lead: "여러 종목을 한 표로 다루고, 공분산·상관계수·베타·CAPM 을 계산합니다.",
   },
 
   slides: [
@@ -31,7 +30,7 @@ print(rets.shape)     # (날짜 수, 4)`,
       ],
       callout: {
         kind: "note",
-        title: "이 표가 오늘의 재료입니다",
+        title: "이 표를 계속 씁니다",
         body: "<b>행이 날짜, 열이 종목</b>인 수익률 표. 6주차 포트폴리오도 이 표에서 시작합니다.",
       },
     },

@@ -5,8 +5,7 @@ import type { WeekContent } from "./weekContent";
 
 export const WEEK3: WeekContent = {
   cover: {
-    lead: "지난주에는 숫자 몇 개를 다뤘습니다. 오늘은 <b>10년치 주가 수천 개</b>를 한꺼번에 다룹니다. 값을 담는 그릇부터 배웁니다.",
-    goal: "실제 주가를 코드로 가져와 일별 수익률로 바꾼다.",
+    lead: "리스트·딕셔너리·pandas DataFrame 을 배우고, 실제 주가를 가져와 단순수익률과 로그수익률로 바꿉니다.",
   },
 
   slides: [

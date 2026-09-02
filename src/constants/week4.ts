@@ -5,8 +5,7 @@ import type { WeekContent } from "./weekContent";
 
 export const WEEK4: WeekContent = {
   cover: {
-    lead: "수익률만 보면 전부 좋아 보입니다. 하지만 <b>얼마나 흔들렸는지</b>를 같이 보지 않으면 아무 판단도 할 수 없습니다.",
-    goal: "종목 성과표를 만들어 수익률 1위와 위험 1위가 다르다는 것을 확인한다.",
+    lead: "numpy 배열 연산과 pandas 통계 메서드로 변동성·CAGR·샤프지수·MDD 를 계산해 성과표로 묶습니다.",
   },
 
   slides: [
@@ -158,7 +157,7 @@ def summary(ret):
       callout: {
         kind: "tip",
         title: "확인할 것",
-        body: "관심 종목 5개의 성과표를 나란히 놓아 보세요. <b>수익률 1위·샤프 1위·MDD 1위가 전부 다른 종목</b>입니다. 이게 오늘의 결론입니다.",
+        body: "관심 종목 5개의 성과표를 나란히 놓으면 <b>수익률 1위·샤프 1위·MDD 1위가 전부 다른 종목</b>입니다.",
       },
     },
 

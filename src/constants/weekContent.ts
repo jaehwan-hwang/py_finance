@@ -33,8 +33,8 @@ export interface SlideData {
 }
 
 export interface WeekContent {
-  /** 표지 — 주차 제목 아래에 붙는 한 문단과 오늘의 목표 */
-  cover: { lead: string; goal: string };
+  /** 표지 — 그날 다루는 범위를 짧게. 없으면 제목만 나온다 */
+  cover: { lead?: string };
   slides: SlideData[];
   /** 마무리 화면의 "오늘 배운 것" 3줄 */
   summary: string[];
