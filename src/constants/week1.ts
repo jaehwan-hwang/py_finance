@@ -3,447 +3,383 @@
 
 /* ── 01. 환경 구축 ── */
 
-/** OS별 설치 가이드
- *  py_portfolio/1week/setup_windows.md / setup_macos.md / setup_linux.md 의 내용을
- *  그대로 옮긴 것. 문장·순서·코드를 바꾸지 않는다. */
+/** OS별 환경 세팅
+ *  py_portfolio/1주차_환경세팅.md 를 그대로 옮긴 것.
+ *  문장·순서·번호·코드를 바꾸지 않는다. 이모지 표시만 뺀다. */
 
 export type Block =
   | { t: "p"; text: string }
-  | { t: "ol"; items: string[] }
+  | { t: "ol"; items: { text: string; sub?: string[] }[] }
   | { t: "ul"; items: string[] }
   | { t: "note"; text: string }
   | { t: "h"; text: string }
-  | { t: "code"; code: string };
+  | { t: "code"; code: string; lang?: string }
+  | { t: "out"; text: string };
 
 export interface OsGuide {
   os: string;
-  intro: Block[];
   sections: { num: string; title: string; blocks: Block[] }[];
-  troubles: { symptom: string; blocks: Block[] }[];
 }
 
+const TEST_CODE = `import numpy as np
+import pandas as pd
+
+print(np.array([1, 2, 3]))
+print(pd.DataFrame({"a": [1, 2, 3]}))`;
+
+const TEST_OUT = `[1 2 3]
+   a
+0  1
+1  2
+2  3`;
+
+const TEST_P =
+  "VSCode 왼쪽 탐색기에서 새 파일 <code>test.py</code> 를 만들고 아래 코드를 붙여넣습니다.";
+const TEST_RUN =
+  "우측 상단 실행(▷) 버튼을 클릭하거나, 터미널에 <code>python test.py</code> 를 입력해 실행합니다. 아래의 배열과 표가 출력되면 환경 구축 완료입니다.";
+
 export const OS_GUIDES: OsGuide[] = [
-  /* ═══════════════════ Windows ═══════════════════ */
+  /* ═══════════════════ Window ═══════════════════ */
   {
-    os: "Windows",
-    intro: [
-      {
-        t: "note",
-        text: "<b>스터디 3일 전까지 여기까지 끝내고 오세요.</b><br>막히면 에러 화면을 캡처해서 스터디 채널에 올려주세요. (OS와 함께)",
-      },
-    ],
+    os: "Window",
     sections: [
       {
-        num: "1",
-        title: "Python 3.12 설치",
+        num: "1단계",
+        title: "Python 설치",
         blocks: [
           {
             t: "ol",
             items: [
-              "https://www.python.org/downloads/windows/ 접속",
-              "<b>Python 3.12.x → Windows installer (64-bit)</b> 다운로드",
-              "설치 프로그램 실행 → 맨 아래 <code>Add python.exe to PATH</code> 반드시 체크",
-              "<code>Install Now</code> 클릭",
+              { text: "브라우저를 열고 주소창에 <code>https://www.python.org/downloads/</code> 입력 후 이동합니다." },
+              { text: '페이지 중앙의 노란 버튼 <b>"Download Python 3.x.x"</b> 를 클릭해 설치 파일(.exe)을 내려받습니다. (3.11 이상 권장)' },
+              { text: "다운로드 폴더에서 받은 <code>python-3.x.x-amd64.exe</code> 파일을 더블클릭해 실행합니다." },
+              {
+                text: '설치 창 <b>맨 아래</b>에 있는 체크박스 <b>"Add python.exe to PATH"</b> 를 반드시 체크합니다.',
+                sub: ["이걸 체크하지 않으면 나중에 터미널에서 <code>python</code> 명령어가 전혀 인식되지 않습니다. 가장 많이 하는 실수이니 꼭 확인하세요."],
+              },
+              { text: '<b>"Install Now"</b> 를 클릭합니다.' },
+              { text: '설치가 끝나면 "Disable path length limit"라는 링크가 나올 수 있는데, 클릭해서 해제해 줍니다 (긴 경로 이름 문제를 예방, 선택 사항이지만 권장).' },
+              { text: '<b>"Close"</b> 를 눌러 마칩니다.' },
             ],
+          },
+        ],
+      },
+      {
+        num: "2단계",
+        title: "PowerShell 열기",
+        blocks: [
+          { t: "h", text: "방법 A (검색으로 열기)" },
+          {
+            t: "ol",
+            items: [
+              { text: "키보드에서 Windows 로고 키(⊞)를 누릅니다. 화면 하단에 시작 메뉴 검색창이 열립니다." },
+              { text: "키보드로 <code>PowerShell</code> 을 입력합니다." },
+              { text: '검색 결과 맨 위에 <b>"Windows PowerShell"</b> 앱이 나타납니다. 클릭하거나 Enter를 누릅니다.' },
+            ],
+          },
+          { t: "h", text: "방법 B (우클릭 메뉴로 열기)" },
+          {
+            t: "ol",
+            items: [
+              { text: "Windows 로고 키를 누른 채로 X 키를 누릅니다 (Win + X)." },
+              { text: '나타나는 메뉴에서 <b>"Windows PowerShell"</b> 또는 <b>"터미널"</b> 항목을 클릭합니다.' },
+            ],
+          },
+          {
+            t: "ul",
+            items: ["파란색(또는 검은색) 창이 뜨고 <code>PS C:\\Users\\사용자이름&gt;</code> 같은 문구가 보이면 정상적으로 열린 것입니다."],
+          },
+        ],
+      },
+      {
+        num: "3단계",
+        title: "Python 설치 확인",
+        blocks: [
+          { t: "ul", items: ["PowerShell 창에 아래 명령어를 입력하고 Enter를 누릅니다."] },
+          { t: "code", code: "python --version", lang: "powershell" },
+          { t: "ul", items: ["<code>Python 3.14.7</code> 처럼 버전이 출력되면 성공입니다."] },
+          {
+            t: "note",
+            text: '만약 "python은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는 배치 파일이 아닙니다"라는 에러가 뜬다면 1단계에서 "Add to PATH" 체크를 놓친 것입니다. Python을 삭제(제어판 &gt; 프로그램 제거) 후 다시 설치하면서 체크박스를 확인하세요.',
           },
           {
             t: "note",
-            text: "<b>왜 3.12인가</b>: 스터디원 전원이 같은 버전을 써야 문제가 생겼을 때 원인을 좁힐 수 있기 때문입니다. 이 스터디는 무거운 라이브러리를 쓰지 않아 <b>이미 3.13이 깔려 있다면 그대로 쓰셔도 됩니다.</b>",
+            text: "에러 없이 실행됐는데 갑자기 Microsoft Store가 열린다면, Windows 설정 &gt; 앱 &gt; 고급 앱 설정 &gt; 앱 실행 별칭에서 <code>python.exe</code>, <code>python3.exe</code> 스위치를 꺼주세요. (스토어용 가짜 실행 파일이 우선 실행되는 현상입니다.)",
           },
-          { t: "h", text: "설치 확인" },
-          { t: "p", text: "<b>시작 → PowerShell</b> 을 열고:" },
-          { t: "code", code: "python --version" },
-          { t: "p", text: "<code>Python 3.12.x</code> 가 나오면 성공입니다." },
         ],
       },
       {
-        num: "2",
-        title: "VS Code 설치",
+        num: "4단계",
+        title: "VSCode 설치",
         blocks: [
           {
             t: "ol",
             items: [
-              "https://code.visualstudio.com 에서 다운로드 후 설치",
-              "VS Code 실행 → 왼쪽 확장(Extensions) 아이콘 클릭 → 아래 두 개 설치",
-            ],
-          },
-          { t: "ul", items: ["<b>Python</b> (Microsoft)", "<b>Jupyter</b> (Microsoft)"] },
-        ],
-      },
-      {
-        num: "3",
-        title: "Git 설치와 저장소 내려받기",
-        blocks: [
-          {
-            t: "ol",
-            items: [
-              "https://git-scm.com/download/win 에서 설치 (옵션은 전부 기본값)",
-              "프로젝트를 둘 폴더에서 PowerShell을 열고:",
-            ],
-          },
-          {
-            t: "code",
-            code: `git clone <스터디_저장소_주소> py_portfolio
-cd py_portfolio`,
-          },
-        ],
-      },
-      {
-        num: "4",
-        title: "가상환경(.venv) 만들기",
-        blocks: [
-          { t: "p", text: "프로젝트마다 패키지를 따로 관리하는 공간입니다." },
-          { t: "code", code: "python -m venv .venv" },
-          { t: "h", text: "활성화" },
-          { t: "code", code: ".venv\\Scripts\\activate" },
-          { t: "p", text: "성공하면 프롬프트 앞에 <code>(.venv)</code> 가 붙습니다." },
-        ],
-      },
-      {
-        num: "5",
-        title: "패키지 설치",
-        blocks: [
-          {
-            t: "code",
-            code: `python -m pip install --upgrade pip
-python -m pip install -r requirements.txt`,
-          },
-          { t: "p", text: "3~5분 정도 걸립니다." },
-        ],
-      },
-      {
-        num: "6",
-        title: "VS Code에 가상환경 연결",
-        blocks: [
-          {
-            t: "ol",
-            items: [
-              "VS Code에서 <code>py_portfolio</code> 폴더 열기 (File → Open Folder)",
-              "<code>Ctrl + Shift + P</code> → <code>Python: Select Interpreter</code> 입력",
-              "목록에서 <b><code>.venv</code> 가 포함된 항목</b> 선택",
+              { text: "브라우저에서 <code>https://code.visualstudio.com/</code> 로 이동합니다." },
+              { text: '큰 파란 버튼 <b>"Download for Windows"</b> 를 클릭합니다.' },
+              { text: "다운로드된 <code>VSCodeUserSetup-x64-x.xx.x.exe</code> 파일을 더블클릭합니다." },
+              { text: '라이선스 동의 후 계속 진행하다가, "추가 작업 선택" 화면에서 <b>"PATH에 추가"</b> 항목이 체크되어 있는지 확인합니다 (보통 기본 체크됨).' },
+              { text: '"설치"를 클릭하고 완료되면 VSCode를 실행합니다.' },
             ],
           },
         ],
       },
       {
-        num: "7",
-        title: "최종 확인",
+        num: "5단계",
+        title: "VSCode에 Python 확장 설치",
         blocks: [
-          { t: "code", code: "python 1week/check_env.py" },
-          { t: "p", text: "전부 <code>[ OK ]</code> 로 끝나면 준비 완료입니다." },
+          {
+            t: "ol",
+            items: [
+              { text: "VSCode 왼쪽 세로 아이콘 바에서 네모 4개가 겹친 모양의 <b>확장(Extensions)</b> 아이콘을 클릭합니다. (단축키 <code>Ctrl+Shift+X</code>)" },
+              { text: "검색창에 <code>Python</code> 을 입력합니다." },
+              { text: '게시자가 <b>Microsoft</b> 로 되어 있는 "Python" 확장을 찾아 <b>Install</b> 버튼을 클릭합니다.' },
+            ],
+          },
         ],
       },
-    ],
-    troubles: [
       {
-        symptom: "python : 명령을 찾을 수 없습니다",
+        num: "6단계",
+        title: "프로젝트 폴더 만들고 VSCode로 열기",
         blocks: [
-          { t: "p", text: "설치 시 <code>Add python.exe to PATH</code> 를 체크하지 않은 경우입니다." },
+          {
+            t: "ol",
+            items: [
+              { text: "원하는 위치에 폴더를 하나 만듭니다. 예: <code>C:\\Users\\사용자이름\\projects\\pyfinance-study</code>" },
+              { text: "VSCode에서 상단 메뉴 <b>File &gt; Open Folder...</b> 를 클릭하고, 방금 만든 폴더를 선택합니다." },
+            ],
+          },
+        ],
+      },
+      {
+        num: "7단계",
+        title: "통합 터미널에서 가상환경(venv) 만들기",
+        blocks: [
+          {
+            t: "ol",
+            items: [
+              { text: "VSCode 상단 메뉴 <b>Terminal &gt; New Terminal</b> 을 클릭합니다 (단축키 <code>Ctrl+`</code>). 화면 하단에 터미널 패널이 열리며 기본적으로 PowerShell이 실행됩니다." },
+              { text: "아래 명령어를 입력합니다." },
+            ],
+          },
+          { t: "code", code: "python -m venv venv", lang: "powershell" },
+          {
+            t: "ul",
+            items: ["현재 폴더 안에 <code>venv</code> 라는 하위 폴더가 생성됩니다. 이 안에 독립된 Python 실행 환경이 들어 있습니다."],
+          },
+        ],
+      },
+      {
+        num: "8단계",
+        title: "가상환경 활성화",
+        blocks: [
+          { t: "code", code: ".\\venv\\Scripts\\Activate.ps1", lang: "powershell" },
+          { t: "p", text: "이 명령을 실행했을 때 아래와 같은 에러가 뜰 수 있습니다." },
+          { t: "out", text: "이 시스템에서 스크립트를 실행할 수 없으므로 ... 파일을 로드할 수 없습니다." },
           {
             t: "p",
-            text: "<b>해결</b>: Python 설치 프로그램을 다시 실행 → <code>Modify</code> → <code>Next</code> → <code>Add Python to environment variables</code> 체크 → <code>Install</code> → <b>PowerShell을 완전히 닫고 새로 여세요.</b>",
+            text: "이는 PowerShell의 보안 정책(실행 정책) 때문입니다. 아래 명령으로 현재 사용자에 한해 정책을 완화해주면 해결됩니다.",
           },
-        ],
-      },
-      {
-        symptom: "pip : 명령을 찾을 수 없습니다",
-        blocks: [
-          {
-            t: "p",
-            text: "<code>pip</code> 만 PATH에 없는 경우입니다. 다시 설치할 필요 없이 <b><code>python -m pip</code></b> 를 쓰면 됩니다.",
-          },
-          { t: "code", code: "python -m pip install -r requirements.txt" },
-          { t: "p", text: "스터디 자료는 전부 <code>python -m pip</code> 형태로 안내합니다." },
-        ],
-      },
-      {
-        symptom: "이 시스템에서 스크립트를 실행할 수 없으므로 ... activate.ps1을 로드할 수 없습니다",
-        blocks: [
-          { t: "p", text: "PowerShell 실행 정책 때문입니다. 가장 흔한 문제입니다." },
           {
             t: "code",
             code: "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser",
+            lang: "powershell",
           },
-          { t: "p", text: "<code>Y</code> 입력 후 다시 <code>.venv\\Scripts\\activate</code> 를 실행하세요." },
+          { t: "p", text: "입력 후 <code>Y</code> 를 누르고 Enter로 확인합니다. 그 다음 8단계의 활성화 명령을 다시 실행합니다." },
+          { t: "p", text: "성공적으로 활성화되면 프롬프트 맨 앞에 <code>(venv)</code> 표시가 붙습니다." },
+          { t: "out", text: "(venv) PS C:\\Users\\사용자이름\\projects\\pyfinance-study>" },
+        ],
+      },
+      {
+        num: "9단계",
+        title: "NumPy, Pandas 설치",
+        blocks: [
+          { t: "code", code: "pip install numpy pandas", lang: "powershell" },
+          { t: "p", text: "설치 로그가 쭉 나오고 <code>Successfully installed ...</code> 문구가 뜨면 완료입니다." },
+        ],
+      },
+      {
+        num: "10단계",
+        title: "VSCode에서 인터프리터 선택",
+        blocks: [
           {
-            t: "note",
-            text: "이 설정은 현재 사용자에게만 적용되며, 인터넷에서 받은 서명 없는 스크립트는 여전히 막습니다.",
+            t: "ol",
+            items: [
+              { text: "<code>Ctrl+Shift+P</code> 를 눌러 명령 팔레트를 엽니다." },
+              { text: "<code>Python: Select Interpreter</code> 를 입력하고 Enter를 누릅니다." },
+              { text: "목록에서 경로에 <code>.\\venv\\Scripts\\python.exe</code> 가 포함된 항목을 선택합니다." },
+            ],
           },
         ],
       },
       {
-        symptom: "VS Code에서 ModuleNotFoundError: No module named 'pandas'",
+        num: "11단계",
+        title: "테스트",
         blocks: [
-          {
-            t: "p",
-            text: "터미널에서는 되는데 노트북에서만 안 되는 경우 = <b>VS Code가 다른 파이썬을 보고 있는 것</b>입니다.",
-          },
-          {
-            t: "p",
-            text: "<b>해결</b>: <code>Ctrl + Shift + P</code> → <code>Python: Select Interpreter</code> → <code>.venv</code> 항목 선택 → 노트북 오른쪽 위 커널 표시를 눌러 <code>.venv</code> 로 변경 → <b>커널 재시작</b>",
-          },
-        ],
-      },
-      {
-        symptom: "ModuleNotFoundError: No module named 'finance'",
-        blocks: [
-          { t: "p", text: "프로젝트 최상위 폴더가 아닌 곳에서 실행한 경우입니다." },
-          {
-            t: "code",
-            code: `cd C:\\...\\py_portfolio      # 최상위로 이동
-python 1week/check_env.py`,
-          },
-        ],
-      },
-      {
-        symptom: "그래프의 한글이 네모(□□□)로 나옴",
-        blocks: [
-          {
-            t: "p",
-            text: "Windows는 보통 <code>맑은 고딕(Malgun Gothic)</code>이 기본 설치되어 있어 자동 해결됩니다. 그래도 깨지면 노트북 첫 셀에서 <code>setup_korean_font(verbose=True)</code> 출력을 확인하고, <code>[WARN]</code> 이 뜨면 스터디 채널에 알려주세요.",
-          },
-        ],
-      },
-      {
-        symptom: "pip install 중 SSL: CERTIFICATE_VERIFY_FAILED",
-        blocks: [
-          {
-            t: "p",
-            text: "학교·회사 네트워크의 보안 장비 때문입니다. 개인 핫스팟으로 바꿔서 시도해 보세요.",
-          },
+          { t: "p", text: TEST_P },
+          { t: "code", code: TEST_CODE, lang: "python" },
+          { t: "p", text: TEST_RUN },
+          { t: "out", text: TEST_OUT },
         ],
       },
     ],
   },
 
-  /* ═══════════════════ macOS ═══════════════════ */
+  /* ═══════════════════ MacOS ═══════════════════ */
   {
-    os: "macOS",
-    intro: [
-      {
-        t: "note",
-        text: "<b>스터디 3일 전까지 여기까지 끝내고 오세요.</b><br>막히면 에러 화면을 캡처해서 스터디 채널에 올려주세요. (OS와 함께)",
-      },
-    ],
+    os: "MacOS",
     sections: [
       {
-        num: "0",
-        title: "내 맥 확인하기",
+        num: "1단계",
+        title: "Python 설치",
         blocks: [
-          { t: "p", text: "메뉴 →  → <code>이 Mac에 관하여</code> 에서 칩 종류를 확인하세요." },
           {
-            t: "ul",
+            t: "p",
+            text: "macOS에는 구버전 Python이 기본 내장되어 있을 수 있으나 사용하지 않는 것을 권장합니다. 아래 두 방법 중 하나를 선택하세요.",
+          },
+          { t: "h", text: "방법 A. python.org에서 설치 (가장 쉬움, 처음이라면 이 방법 추천)" },
+          {
+            t: "ol",
             items: [
-              "<b>Apple M1/M2/M3/M4</b> → Apple Silicon",
-              "<b>Intel Core</b> → Intel",
+              { text: "브라우저에서 <code>https://www.python.org/downloads/macos/</code> 로 이동합니다." },
+              { text: '<b>"Download macOS 64-bit universal2 installer"</b> 를 클릭해 <code>.pkg</code> 파일을 내려받습니다.' },
+              { text: "다운로드된 <code>.pkg</code> 파일을 더블클릭합니다." },
+              { text: "설치 마법사에서 계속(Continue) → 동의(Agree) → 설치(Install) 순서로 진행합니다." },
+              { text: "macOS 로그인 비밀번호 입력을 요구할 수 있습니다. 입력 후 진행합니다." },
             ],
           },
-          { t: "p", text: "둘 다 아래 절차는 같습니다. Homebrew 설치 경로만 다릅니다." },
-        ],
-      },
-      {
-        num: "1",
-        title: "Homebrew 설치",
-        blocks: [
-          { t: "p", text: "터미널(⌘ + Space → <code>터미널</code>)을 열고:" },
+          { t: "h", text: "방법 B. Homebrew 사용 (터미널 사용이 익숙하다면 추천)" },
+          {
+            t: "ol",
+            items: [
+              { text: "아래 3단계를 참고해 터미널을 먼저 엽니다." },
+              { text: "Homebrew가 없다면 아래 명령을 붙여넣고 실행합니다." },
+            ],
+          },
           {
             t: "code",
             code: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+            lang: "bash",
           },
-          {
-            t: "p",
-            text: "설치가 끝나면 화면에 나오는 <code>Next steps:</code> 안내를 <b>그대로 복사해서 실행</b>하세요. 보통 아래 두 줄입니다 (Apple Silicon 기준).",
-          },
-          {
-            t: "code",
-            code: `echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"`,
-          },
-          { t: "p", text: "확인:" },
-          { t: "code", code: "brew --version" },
+          { t: "ol", items: [{ text: "설치가 끝나면 다음 명령으로 Python을 설치합니다." }] },
+          { t: "code", code: "brew install python", lang: "bash" },
         ],
       },
       {
-        num: "2",
-        title: "Python 3.12 설치",
+        num: "2단계",
+        title: "터미널 열기",
         blocks: [
-          {
-            t: "code",
-            code: `brew install python@3.12
-python3.12 --version`,
-          },
-          {
-            t: "note",
-            text: "<b>왜 3.12인가</b>: 스터디원 전원이 같은 버전을 써야 문제가 생겼을 때 원인을 좁힐 수 있기 때문입니다. 이 스터디는 무거운 라이브러리를 쓰지 않아 <b>이미 3.13이 깔려 있다면 그대로 쓰셔도 됩니다.</b>",
-          },
-          {
-            t: "note",
-            text: "macOS에 원래 있는 <code>python3</code> (3.9.x)는 <b>쓰지 않습니다.</b> 반드시 <code>python3.12</code> 를 씁니다.",
-          },
-        ],
-      },
-      {
-        num: "3",
-        title: "VS Code 설치",
-        blocks: [
+          { t: "h", text: "방법 A (Spotlight 검색)" },
           {
             t: "ol",
             items: [
-              "https://code.visualstudio.com 에서 다운로드 → 응용 프로그램 폴더로 이동",
-              "VS Code 실행 → 왼쪽 확장(Extensions) 아이콘 → 아래 두 개 설치",
+              { text: "<code>Cmd + Space</code> 를 눌러 Spotlight 검색창을 엽니다." },
+              { text: "<code>Terminal</code> 을 입력하고 Enter를 누릅니다." },
             ],
           },
-          { t: "ul", items: ["<b>Python</b> (Microsoft)", "<b>Jupyter</b> (Microsoft)"] },
-        ],
-      },
-      {
-        num: "4",
-        title: "저장소 내려받기",
-        blocks: [
-          {
-            t: "code",
-            code: `git --version     # 없으면 설치 안내창이 뜬다. 설치 후 진행
-cd ~/Documents
-git clone <스터디_저장소_주소> py_portfolio
-cd py_portfolio`,
-          },
-        ],
-      },
-      {
-        num: "5",
-        title: "가상환경(.venv) 만들기",
-        blocks: [
-          {
-            t: "code",
-            code: `python3.12 -m venv .venv
-source .venv/bin/activate`,
-          },
-          { t: "p", text: "성공하면 프롬프트 앞에 <code>(.venv)</code> 가 붙습니다." },
-        ],
-      },
-      {
-        num: "6",
-        title: "패키지 설치",
-        blocks: [
-          {
-            t: "code",
-            code: `python -m pip install --upgrade pip
-python -m pip install -r requirements.txt`,
-          },
-          {
-            t: "note",
-            text: "가상환경을 켠 뒤에는 <code>python3.12</code> 가 아니라 그냥 <code>python</code> 을 쓰면 됩니다.",
-          },
-        ],
-      },
-      {
-        num: "7",
-        title: "한글 폰트 (권장)",
-        blocks: [
-          {
-            t: "p",
-            text: "macOS 기본 <code>AppleGothic</code> 으로도 되지만, 나눔고딕이 더 깔끔합니다.",
-          },
-          { t: "code", code: "brew install --cask font-nanum-gothic" },
-          { t: "p", text: "설치 후 <b>노트북 커널을 재시작</b>해야 인식됩니다." },
-        ],
-      },
-      {
-        num: "8",
-        title: "VS Code에 가상환경 연결",
-        blocks: [
+          { t: "h", text: "방법 B (Finder에서 직접 찾기)" },
           {
             t: "ol",
             items: [
-              "VS Code에서 <code>py_portfolio</code> 폴더 열기",
-              "<code>⌘ + Shift + P</code> → <code>Python: Select Interpreter</code>",
-              "<b><code>.venv</code> 가 포함된 항목</b> 선택",
+              { text: "Finder를 엽니다." },
+              { text: "상단 메뉴 <b>이동(Go) &gt; 유틸리티(Utilities)</b> 를 클릭합니다." },
+              { text: "<b>Terminal.app</b> 을 더블클릭합니다." },
             ],
           },
         ],
       },
       {
-        num: "9",
-        title: "최종 확인",
+        num: "3단계",
+        title: "Python 설치 확인",
         blocks: [
-          { t: "code", code: "python 1week/check_env.py" },
-          { t: "p", text: "전부 <code>[ OK ]</code> 로 끝나면 준비 완료입니다." },
+          { t: "code", code: "python3 --version", lang: "bash" },
+          {
+            t: "p",
+            text: "macOS에서는 <code>python</code> 이 아닌 <code>python3</code> 명령을 사용해야 하는 경우가 대부분입니다. <code>Python 3.14.7</code> 처럼 버전이 출력되면 성공입니다.",
+          },
         ],
       },
-    ],
-    troubles: [
       {
-        symptom: "brew: command not found",
+        num: "4단계",
+        title: "VSCode 설치",
+        blocks: [
+          {
+            t: "ol",
+            items: [
+              { text: '<code>https://code.visualstudio.com/</code> 에서 <b>"Download for Mac"</b> 을 클릭합니다.' },
+              { text: "다운로드된 <code>.zip</code> 파일이 자동으로 풀리며 <code>Visual Studio Code.app</code> 이 생성됩니다 (안 풀리면 더블클릭)." },
+              { text: "이 앱을 <b>Applications(응용 프로그램)</b> 폴더로 드래그해 옮깁니다." },
+              { text: "Launchpad 또는 Spotlight(<code>Cmd+Space</code> → <code>Visual Studio Code</code>)에서 실행합니다." },
+              { text: '처음 실행 시 "인터넷에서 다운로드한 앱인데 여시겠습니까?" 경고가 뜨면 <b>열기</b> 를 클릭합니다.' },
+            ],
+          },
+        ],
+      },
+      {
+        num: "5단계",
+        title: "VSCode에 Python 확장 설치",
         blocks: [
           {
             t: "p",
-            text: "Homebrew 설치 후 PATH 등록을 안 한 경우입니다. 1번의 <code>echo ... &gt;&gt; ~/.zprofile</code> 두 줄을 실행한 뒤 <b>터미널을 완전히 닫고 새로 여세요.</b>",
+            text: "Windows와 동일합니다. <code>Cmd+Shift+X</code> 로 확장 탭을 열고 <code>Python</code> 검색 후 Microsoft 제작 확장을 설치합니다.",
           },
-          { t: "p", text: "Intel 맥이라면 경로가 <code>/usr/local/bin/brew</code> 입니다." },
         ],
       },
       {
-        symptom: "python3.12: command not found",
+        num: "6단계",
+        title: "프로젝트 폴더 만들고 열기",
         blocks: [
-          { t: "p", text: "<code>brew install python@3.12</code> 가 끝났는지 확인하고, 그래도 안 되면:" },
-          { t: "code", code: "brew link python@3.12" },
+          {
+            t: "ol",
+            items: [
+              { text: "Finder에서 원하는 위치에 새 폴더를 만듭니다. 예: <code>~/projects/pyfinance-study</code>" },
+              { text: "VSCode 상단 메뉴 <b>File &gt; Open...</b> 을 클릭하고 해당 폴더를 선택합니다." },
+            ],
+          },
         ],
       },
       {
-        symptom: "터미널이 Rosetta로 돌고 있음 (Apple Silicon)",
-        blocks: [
-          { t: "code", code: "uname -m" },
-          {
-            t: "ul",
-            items: ["<code>arm64</code> → 정상", "<code>x86_64</code> → Rosetta로 실행 중입니다"],
-          },
-          {
-            t: "p",
-            text: "<b>해결</b>: 응용 프로그램 → 유틸리티 → 터미널 우클릭 → <code>정보 가져오기</code> → <b><code>Rosetta를 사용하여 열기</code> 체크 해제</b> → 터미널 재시작",
-          },
-          { t: "p", text: "Rosetta 상태로 설치하면 numpy·scipy가 느리거나 설치가 실패합니다." },
-        ],
-      },
-      {
-        symptom: "zsh: permission denied",
+        num: "7단계",
+        title: "가상환경 만들기",
         blocks: [
           {
             t: "p",
-            text: "<code>sudo</code> 를 붙이지 마세요. 가상환경 안에서는 관리자 권한이 필요 없습니다. <code>sudo pip install</code> 은 시스템 파이썬을 망가뜨리므로 <b>절대 쓰지 않습니다.</b>",
+            text: "<code>Ctrl+`</code> 로 VSCode 통합 터미널을 열고 (기본값은 zsh) 아래 명령을 입력합니다.",
+          },
+          { t: "code", code: "python3 -m venv venv", lang: "bash" },
+        ],
+      },
+      {
+        num: "8단계",
+        title: "가상환경 활성화",
+        blocks: [
+          { t: "code", code: "source venv/bin/activate", lang: "bash" },
+          { t: "p", text: "프롬프트 앞에 <code>(venv)</code> 가 붙으면 성공입니다." },
+        ],
+      },
+      {
+        num: "9단계",
+        title: "NumPy, Pandas 설치",
+        blocks: [{ t: "code", code: "pip install numpy pandas", lang: "bash" }],
+      },
+      {
+        num: "10단계",
+        title: "VSCode에서 인터프리터 선택",
+        blocks: [
+          {
+            t: "p",
+            text: "<code>Cmd+Shift+P</code> → <code>Python: Select Interpreter</code> 입력 → 경로에 <code>./venv/bin/python</code> 이 포함된 항목 선택.",
           },
         ],
       },
       {
-        symptom: "VS Code에서 ModuleNotFoundError: No module named 'pandas'",
+        num: "11단계",
+        title: "테스트",
         blocks: [
-          {
-            t: "p",
-            text: "터미널에서는 되는데 노트북만 안 되면 <b>VS Code가 다른 파이썬을 보고 있는 것</b>입니다.",
-          },
-          {
-            t: "p",
-            text: "<code>⌘ + Shift + P</code> → <code>Python: Select Interpreter</code> → <code>.venv</code> 선택 → 노트북 오른쪽 위 커널 표시를 <code>.venv</code> 로 변경 → <b>커널 재시작</b>",
-          },
-        ],
-      },
-      {
-        symptom: "ModuleNotFoundError: No module named 'finance'",
-        blocks: [
-          { t: "p", text: "프로젝트 최상위 폴더에서 실행해야 합니다." },
-          {
-            t: "code",
-            code: `cd ~/Documents/py_portfolio
-python 1week/check_env.py`,
-          },
-        ],
-      },
-      {
-        symptom: "그래프의 한글이 네모(□□□)로 나옴",
-        blocks: [
-          {
-            t: "p",
-            text: "7번의 나눔고딕을 설치하고 <b>커널을 재시작</b>하세요. 그래도 안 되면 <code>setup_korean_font(verbose=True)</code> 출력을 채널에 공유해 주세요.",
-          },
+          { t: "p", text: TEST_P },
+          { t: "code", code: TEST_CODE, lang: "python" },
+          { t: "p", text: TEST_RUN },
+          { t: "out", text: TEST_OUT },
         ],
       },
     ],
@@ -452,203 +388,131 @@ python 1week/check_env.py`,
   /* ═══════════════════ Linux ═══════════════════ */
   {
     os: "Linux",
-    intro: [
-      {
-        t: "note",
-        text: "<b>스터디 3일 전까지 여기까지 끝내고 오세요.</b><br>막히면 에러 화면을 캡처해서 스터디 채널에 올려주세요. (배포판 이름과 함께)",
-      },
-      { t: "p", text: "Ubuntu / Debian 기준입니다. Fedora·Arch 등 다른 배포판은 패키지 관리자만 바꾸면 동일합니다." },
-    ],
     sections: [
       {
-        num: "1",
-        title: "Python 3.12 설치",
+        num: "1단계",
+        title: "터미널 열기",
         blocks: [
           {
-            t: "code",
-            code: `sudo apt update
-sudo apt install -y python3.12 python3.12-venv python3-pip
-python3.12 --version`,
-          },
-          { t: "p", text: "Ubuntu 22.04 이하라 3.12가 없다면:" },
-          {
-            t: "code",
-            code: `sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install -y python3.12 python3.12-venv`,
-          },
-          {
-            t: "note",
-            text: "<b>왜 3.12인가</b>: 스터디원 전원이 같은 버전을 써야 문제가 생겼을 때 원인을 좁힐 수 있기 때문입니다. 이 스터디는 무거운 라이브러리를 쓰지 않아 <b>이미 3.13이 깔려 있다면 그대로 쓰셔도 됩니다.</b>",
-          },
-        ],
-      },
-      {
-        num: "2",
-        title: "Git과 빌드 도구",
-        blocks: [
-          { t: "code", code: "sudo apt install -y git build-essential" },
-          { t: "p", text: "<code>build-essential</code> 은 일부 패키지를 소스에서 빌드할 때 필요합니다." },
-        ],
-      },
-      {
-        num: "3",
-        title: "한글 폰트 설치 — 리눅스는 필수",
-        blocks: [
-          {
-            t: "p",
-            text: "리눅스에는 한글 폰트가 기본으로 없어서 <b>설치하지 않으면 그래프의 한글이 전부 깨집니다.</b>",
-          },
-          {
-            t: "code",
-            code: `sudo apt install -y fonts-nanum
-fc-cache -fv`,
-          },
-          { t: "p", text: "설치 후 <b>노트북 커널을 반드시 재시작</b>해야 인식됩니다." },
-        ],
-      },
-      {
-        num: "4",
-        title: "VS Code 설치",
-        blocks: [
-          { t: "code", code: "sudo snap install code --classic" },
-          {
-            t: "p",
-            text: "또는 https://code.visualstudio.com 에서 <code>.deb</code> 파일을 받아 설치합니다.",
-          },
-          { t: "p", text: "실행 후 확장(Extensions)에서 아래 두 개를 설치하세요." },
-          { t: "ul", items: ["<b>Python</b> (Microsoft)", "<b>Jupyter</b> (Microsoft)"] },
-        ],
-      },
-      {
-        num: "5",
-        title: "저장소 내려받기",
-        blocks: [
-          {
-            t: "code",
-            code: `cd ~
-git clone <스터디_저장소_주소> py_portfolio
-cd py_portfolio`,
-          },
-        ],
-      },
-      {
-        num: "6",
-        title: "가상환경(.venv) 만들기",
-        blocks: [
-          {
-            t: "code",
-            code: `python3.12 -m venv .venv
-source .venv/bin/activate`,
-          },
-          { t: "p", text: "성공하면 프롬프트 앞에 <code>(.venv)</code> 가 붙습니다." },
-        ],
-      },
-      {
-        num: "7",
-        title: "패키지 설치",
-        blocks: [
-          {
-            t: "code",
-            code: `python -m pip install --upgrade pip
-python -m pip install -r requirements.txt`,
-          },
-          {
-            t: "note",
-            text: "가상환경을 켠 뒤에는 <code>python3.12</code> 가 아니라 그냥 <code>python</code> 을 쓰면 됩니다.",
-          },
-        ],
-      },
-      {
-        num: "8",
-        title: "VS Code에 가상환경 연결",
-        blocks: [
-          {
-            t: "ol",
+            t: "ul",
             items: [
-              "VS Code에서 <code>py_portfolio</code> 폴더 열기",
-              "<code>Ctrl + Shift + P</code> → <code>Python: Select Interpreter</code>",
-              "<b><code>.venv</code> 가 포함된 항목</b> 선택",
+              "단축키 <code>Ctrl + Alt + T</code> 를 누르면 대부분의 배포판에서 터미널이 바로 열립니다.",
+              "또는 애플리케이션 메뉴(작업 표시줄의 프로그램 목록)에서 <code>Terminal</code> 을 검색해 실행합니다.",
             ],
           },
         ],
       },
       {
-        num: "9",
-        title: "최종 확인",
-        blocks: [
-          { t: "code", code: "python 1week/check_env.py" },
-          { t: "p", text: "전부 <code>[ OK ]</code> 로 끝나면 준비 완료입니다." },
-        ],
-      },
-    ],
-    troubles: [
-      {
-        symptom: "The virtual environment was not created ... ensurepip is not available",
-        blocks: [
-          { t: "p", text: "<code>python3.12-venv</code> 패키지가 빠진 경우입니다." },
-          { t: "code", code: "sudo apt install -y python3.12-venv" },
-        ],
-      },
-      {
-        symptom: "error: externally-managed-environment",
+        num: "2단계",
+        title: "Python 설치 확인 및 설치",
         blocks: [
           {
             t: "p",
-            text: "최근 배포판이 시스템 파이썬에 직접 설치하는 것을 막아서 나는 오류입니다. <b>가상환경을 켜지 않은 상태</b>에서 <code>pip install</code> 을 했다는 뜻입니다.",
+            text: "대부분의 Ubuntu/Debian 계열에는 Python 3가 기본 설치되어 있습니다. 확인:",
+          },
+          { t: "code", code: "python3 --version", lang: "bash" },
+          {
+            t: "p",
+            text: "만약 설치되어 있지 않거나, 가상환경 모듈(<code>venv</code>)과 <code>pip</code>가 없다면 아래 명령으로 설치합니다.",
           },
           {
             t: "code",
-            code: `source .venv/bin/activate     # 먼저 활성화
-python -m pip install -r requirements.txt`,
+            code: `sudo apt update
+sudo apt install python3 python3-pip python3-venv`,
+            lang: "bash",
           },
           {
             t: "p",
-            text: "<code>--break-system-packages</code> 옵션으로 강제하지 마세요. 시스템이 망가집니다.",
+            text: "<code>sudo</code> 명령 실행 시 로그인 비밀번호 입력을 요구하면 입력합니다 (입력해도 화면에 글자가 안 보이는 게 정상입니다).",
           },
         ],
       },
       {
-        symptom: "그래프의 한글이 네모(□□□)로 나옴",
+        num: "3단계",
+        title: "VSCode 설치",
         blocks: [
-          { t: "p", text: "3번을 건너뛴 경우입니다. 리눅스에서 가장 흔한 문제입니다." },
+          { t: "h", text: "방법 A. .deb 패키지로 설치" },
+          {
+            t: "ol",
+            items: [
+              { text: '<code>https://code.visualstudio.com/</code> 에서 <b>".deb"</b> 버튼을 클릭해 다운로드합니다.' },
+              { text: "터미널에서 다운로드 폴더로 이동 후 설치합니다." },
+            ],
+          },
           {
             t: "code",
-            code: `sudo apt install -y fonts-nanum
-fc-cache -fv`,
+            code: `cd ~/Downloads
+sudo apt install ./code_*.deb`,
+            lang: "bash",
           },
-          { t: "p", text: "그다음 <b>matplotlib 폰트 캐시를 지우고</b> 커널을 재시작하세요." },
-          { t: "code", code: "rm -rf ~/.cache/matplotlib" },
+          { t: "h", text: "방법 B. Snap으로 설치 (더 간단)" },
+          { t: "code", code: "sudo snap install --classic code", lang: "bash" },
         ],
       },
       {
-        symptom: "ModuleNotFoundError: No module named 'finance'",
-        blocks: [
-          { t: "p", text: "프로젝트 최상위 폴더에서 실행해야 합니다." },
-          {
-            t: "code",
-            code: `cd ~/py_portfolio
-python 1week/check_env.py`,
-          },
-        ],
-      },
-      {
-        symptom: "sudo pip install 을 써도 되나요?",
+        num: "4단계",
+        title: "VSCode에 Python 확장 설치",
         blocks: [
           {
             t: "p",
-            text: "<b>안 됩니다.</b> 시스템 파이썬이 망가져서 OS 도구가 동작하지 않을 수 있습니다. 반드시 가상환경 안에서 <code>python -m pip</code> 를 쓰세요.",
+            text: "동일하게 <code>Ctrl+Shift+X</code> 로 확장 탭을 열고 <code>Python</code>(Microsoft 제작)을 검색해 설치합니다.",
           },
+        ],
+      },
+      {
+        num: "5단계",
+        title: "프로젝트 폴더 만들고 열기",
+        blocks: [
+          { t: "code", code: "mkdir -p ~/projects/pyfinance-study", lang: "bash" },
+          {
+            t: "p",
+            text: "VSCode에서 <b>File &gt; Open Folder</b> 로 해당 폴더를 엽니다. (또는 터미널에서 <code>code ~/projects/pyfinance-study</code> 로 바로 열 수도 있습니다.)",
+          },
+        ],
+      },
+      {
+        num: "6단계",
+        title: "가상환경 만들기",
+        blocks: [
+          { t: "p", text: "VSCode 통합 터미널(<code>Ctrl+`</code>, 기본 bash)에서:" },
+          { t: "code", code: "python3 -m venv venv", lang: "bash" },
+        ],
+      },
+      {
+        num: "7단계",
+        title: "가상환경 활성화",
+        blocks: [
+          { t: "code", code: "source venv/bin/activate", lang: "bash" },
+          { t: "p", text: "프롬프트 앞에 <code>(venv)</code> 가 붙으면 성공입니다." },
+        ],
+      },
+      {
+        num: "8단계",
+        title: "NumPy, Pandas 설치",
+        blocks: [{ t: "code", code: "pip install numpy pandas", lang: "bash" }],
+      },
+      {
+        num: "9단계",
+        title: "VSCode에서 인터프리터 선택",
+        blocks: [
+          {
+            t: "p",
+            text: "<code>Ctrl+Shift+P</code> → <code>Python: Select Interpreter</code> → <code>./venv/bin/python</code> 경로 선택.",
+          },
+        ],
+      },
+      {
+        num: "10단계",
+        title: "테스트",
+        blocks: [
+          { t: "p", text: TEST_P },
+          { t: "code", code: TEST_CODE, lang: "python" },
+          { t: "p", text: TEST_RUN },
+          { t: "out", text: TEST_OUT },
         ],
       },
     ],
   },
-];
-
-export const ENV_CHECK3 = [
-  { q: "파이썬이 잡히는가", a: "python --version" },
-  { q: "가상환경이 켜졌는가", a: "프롬프트 앞의 (.venv)" },
-  { q: "VS Code가 같은 파이썬을 보는가", a: "노트북 오른쪽 위 커널 표시" },
 ];
 
 /* ── 02. 8주 지도 ── */

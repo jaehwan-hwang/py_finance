@@ -5,7 +5,6 @@ import { weeks, formatDate } from "@/constants/weeks";
 import {
   OS_GUIDES,
   type Block,
-  ENV_CHECK3,
   LADDER,
   PY_TYPES,
   PY_PRINT,
@@ -43,8 +42,7 @@ export default function Week1Content() {
         </h1>
         <ul className="mt-8 flex flex-col gap-2.5">
           {[
-            "환경 설치 — Windows / macOS / Linux",
-            "설치 확인 세 가지",
+            "환경 세팅 — Window / MacOS / Linux",
             "8주 커리큘럼",
             "파이썬 첫걸음 — 변수 · 연산 · f-문자열 · 함수 호출 · import",
             "수익률과 첫 실습",
@@ -63,10 +61,8 @@ export default function Week1Content() {
 
       {/* 2~4 ── OS별 설치 (setup_*.md 원문) */}
       {OS_GUIDES.map((g) => (
-        <Slide key={g.os} title={`환경 설치 가이드 — ${g.os}`}>
-          <MdBlocks blocks={g.intro} />
-
-          <div className="mt-8 flex flex-col gap-9">
+        <Slide key={g.os} title={`환경 세팅 — ${g.os}`}>
+          <div className="flex flex-col gap-9">
             {g.sections.map((s) => (
               <section key={s.num}>
                 <h3 className="text-[1.15rem] font-semibold text-(--ink)">
@@ -77,40 +73,8 @@ export default function Week1Content() {
             ))}
           </div>
 
-          <h3 className="mt-12 mb-1 border-t border-(--border) pt-8 text-[1.3rem] font-semibold text-(--ink)">
-            자주 막히는 곳
-          </h3>
-          <div className="flex flex-col gap-8">
-            {g.troubles.map((tr) => (
-              <section key={tr.symptom}>
-                <h4 className="mt-6 font-mono text-[0.95rem] font-medium text-(--ink)">
-                  {tr.symptom}
-                </h4>
-                <MdBlocks blocks={tr.blocks} />
-              </section>
-            ))}
-          </div>
         </Slide>
       ))}
-
-      {/* 5 ── 확인 3가지 */}
-      <Slide title="설치 확인 세 가지">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {ENV_CHECK3.map((c) => (
-            <div
-              key={c.q}
-              className="rounded-[16px] border border-(--border) bg-(--surface) p-5"
-            >
-              <div className="text-[0.98rem] font-semibold text-(--ink)">{c.q}</div>
-              <div className="mt-2 text-[0.9rem] text-(--ink-3)">{c.a}</div>
-            </div>
-          ))}
-        </div>
-        <Callout kind="warn" title="세 번째에서 가장 많이 막힙니다">
-          터미널에서는 되는데 노트북에서만 ModuleNotFoundError 가 나면 100% 이 문제입니다.
-          VS Code 인터프리터를 .venv 로 바꾸고 커널을 재시작하세요.
-        </Callout>
-      </Slide>
 
       {/* 6 ── 8주 지도 */}
       <Slide title="8주 커리큘럼">
@@ -395,7 +359,16 @@ function MdBlocks({ blocks }: { blocks: Block[] }) {
                   <span className="font-display flex-none text-(--ink-3) tabular-nums">
                     {n + 1}.
                   </span>
-                  <span dangerouslySetInnerHTML={{ __html: it }} />
+                  <span className="min-w-0">
+                    <span dangerouslySetInnerHTML={{ __html: it.text }} />
+                    {it.sub?.map((s, m) => (
+                      <span
+                        key={m}
+                        className="mt-1.5 block text-[0.95rem] text-(--ink-3)"
+                        dangerouslySetInnerHTML={{ __html: s }}
+                      />
+                    ))}
+                  </span>
                 </li>
               ))}
             </ol>
@@ -416,7 +389,17 @@ function MdBlocks({ blocks }: { blocks: Block[] }) {
             </ul>
           );
 
-        return <CodeBlock key={i} code={b.code} lang="bash" />;
+        if (b.t === "out")
+          return (
+            <pre
+              key={i}
+              className="scroll-x mt-4 rounded-[12px] border border-(--border-2) bg-(--surface-2) px-4 py-3.5 font-mono text-[0.85rem] leading-[1.8] whitespace-pre text-(--ink-2)"
+            >
+              {b.text}
+            </pre>
+          );
+
+        return <CodeBlock key={i} code={b.code} lang={b.lang ?? "bash"} />;
       })}
     </>
   );
