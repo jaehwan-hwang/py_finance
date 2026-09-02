@@ -3,27 +3,173 @@
 
 /* ── 01. 환경 구축 ── */
 
-export const ENV_OS_TABS = ["Windows", "macOS", "Linux"];
+/** OS별 설치 가이드 — py_portfolio/1week/setup_*.md 에서 옮겨왔습니다.
+    한 OS가 한 페이지입니다. */
+export interface OsGuide {
+  os: string;
+  intro: string;
+  steps: { num: number; title: string; body: string }[];
+  code: string;
+  lang: string;
+  pitfall: { title: string; body: string };
+}
 
-export const ENV_COMMANDS = [
-  `py -3.12 -m venv .venv\n.venv\\Scripts\\activate\npython -m pip install -r requirements.txt`,
-  `brew install python@3.12\npython3.12 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements.txt`,
-  `sudo apt install python3.12 python3.12-venv\npython3.12 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements.txt`,
-];
+export const OS_GUIDES: OsGuide[] = [
+  {
+    os: "Windows",
+    intro:
+      "PowerShell 로 진행합니다. <b>시작 → PowerShell</b> 을 열어 두세요.",
+    steps: [
+      {
+        num: 1,
+        title: "Python 3.12 설치",
+        body: "python.org 에서 <b>Windows installer (64-bit)</b> 를 받습니다. 설치 화면 맨 아래 <b>Add python.exe to PATH</b> 를 반드시 체크하세요. 이미 3.13 이 있다면 그대로 쓰셔도 됩니다.",
+      },
+      {
+        num: 2,
+        title: "VS Code + 확장",
+        body: "code.visualstudio.com 에서 설치하고 확장에서 <b>Python</b> 과 <b>Jupyter</b> 를 추가합니다.",
+      },
+      {
+        num: 3,
+        title: "Git 설치 후 저장소 내려받기",
+        body: "git-scm.com 에서 설치(옵션 전부 기본값) 후 <b>git clone</b> 으로 받습니다.",
+      },
+      {
+        num: 4,
+        title: "가상환경 만들고 활성화",
+        body: "프롬프트 앞에 <b>(.venv)</b> 가 붙으면 성공입니다.",
+      },
+      {
+        num: 5,
+        title: "패키지 설치",
+        body: "3~5분 걸립니다. <b>pip</b> 가 없다고 나오면 <b>python -m pip</b> 를 쓰세요.",
+      },
+      {
+        num: 6,
+        title: "VS Code 연결과 확인",
+        body: "<b>Ctrl + Shift + P</b> → Python: Select Interpreter → .venv 선택 후 <b>python 1week/check_env.py</b> 실행.",
+      },
+    ],
+    code: `python -m venv .venv
+.venv\\Scripts\\activate
 
-export const ENV_OS_NOTES = [
-  "설치 프로그램 맨 아래 <b>Add python.exe to PATH</b> 체크를 반드시 하세요. PowerShell에서 실행정책 오류가 나면 진행자에게 말씀해 주세요.",
-  "Apple Silicon(M1~)이라면 터미널이 Rosetta로 실행 중인지 먼저 확인하세요.",
-  "그래프 한글이 깨지면 <b>sudo apt install fonts-nanum</b> 후 커널을 재시작해야 합니다.",
-];
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 
-export const ENV_STEPS = [
-  { num: 1, title: "Python 3.12 설치", body: "python.org에서 받습니다. 3.13이 이미 깔려 있어도 그대로 쓰셔도 됩니다." },
-  { num: 2, title: "VS Code + 확장 설치", body: "Python·Jupyter 확장을 함께 설치합니다." },
-  { num: 3, title: "가상환경 만들고 활성화", body: "프롬프트 앞에 <b>(.venv)</b> 가 보이면 성공입니다." },
-  { num: 4, title: "패키지 설치", body: "requirements.txt 에 적힌 것을 한 번에 받습니다." },
-  { num: 5, title: "VS Code 인터프리터 지정", body: "오른쪽 아래 또는 노트북 우상단에서 .venv 를 고릅니다." },
-  { num: 6, title: "환경 검증", body: "python 1week/check_env.py 를 실행해 전부 [ OK ] 인지 확인합니다." },
+python 1week/check_env.py`,
+    lang: "powershell",
+    pitfall: {
+      title: "가장 흔한 문제 — 스크립트를 실행할 수 없습니다",
+      body: "activate.ps1 을 로드할 수 없다는 오류는 PowerShell 실행 정책 때문입니다. <b>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</b> 를 실행하고 Y 를 누른 뒤 다시 활성화하세요. 현재 사용자에게만 적용됩니다.",
+    },
+  },
+
+  {
+    os: "macOS",
+    intro:
+      "터미널(⌘ + Space → 터미널)로 진행합니다. Apple Silicon 과 Intel 모두 절차는 같고 Homebrew 경로만 다릅니다.",
+    steps: [
+      {
+        num: 1,
+        title: "Homebrew 설치",
+        body: "설치가 끝나면 화면에 나오는 <b>Next steps:</b> 안내 두 줄을 그대로 복사해 실행해야 PATH 가 잡힙니다.",
+      },
+      {
+        num: 2,
+        title: "Python 3.12 설치",
+        body: "macOS 에 원래 있는 <b>python3(3.9.x)는 쓰지 않습니다.</b> 반드시 python3.12 를 씁니다. 이미 3.13 이 있다면 그대로 쓰셔도 됩니다.",
+      },
+      {
+        num: 3,
+        title: "VS Code + 확장",
+        body: "다운로드 후 응용 프로그램 폴더로 옮기고 <b>Python</b>·<b>Jupyter</b> 확장을 설치합니다.",
+      },
+      {
+        num: 4,
+        title: "저장소 내려받기",
+        body: "<b>git --version</b> 을 치면 없을 때 설치 안내창이 뜹니다. 설치 후 clone 하세요.",
+      },
+      {
+        num: 5,
+        title: "가상환경과 패키지",
+        body: "가상환경을 켠 뒤에는 python3.12 대신 그냥 <b>python</b> 을 쓰면 됩니다.",
+      },
+      {
+        num: 6,
+        title: "한글 폰트 (권장)",
+        body: "<b>brew install --cask font-nanum-gothic</b> 후 커널을 재시작하면 그래프가 더 깔끔합니다.",
+      },
+    ],
+    code: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+brew install python@3.12
+python3.12 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+python 1week/check_env.py`,
+    lang: "bash",
+    pitfall: {
+      title: "Apple Silicon 이라면 — 터미널이 Rosetta 로 돌고 있지 않은지",
+      body: "<b>uname -m</b> 을 쳐서 <b>arm64</b> 가 나오면 정상이고 <b>x86_64</b> 면 Rosetta 입니다. 터미널 우클릭 → 정보 가져오기 → <b>Rosetta를 사용하여 열기 체크 해제</b> 후 재시작하세요. Rosetta 상태로 설치하면 numpy·scipy 가 느리거나 설치가 실패합니다.",
+    },
+  },
+
+  {
+    os: "Linux",
+    intro:
+      "Ubuntu·Debian 기준입니다. Fedora·Arch 는 패키지 관리자만 바꾸면 동일합니다.",
+    steps: [
+      {
+        num: 1,
+        title: "Python 3.12 설치",
+        body: "Ubuntu 22.04 이하라 3.12 가 없다면 <b>ppa:deadsnakes/ppa</b> 를 추가한 뒤 설치합니다.",
+      },
+      {
+        num: 2,
+        title: "Git 과 빌드 도구",
+        body: "<b>build-essential</b> 은 일부 패키지를 소스에서 빌드할 때 필요합니다.",
+      },
+      {
+        num: 3,
+        title: "한글 폰트 — 리눅스는 필수",
+        body: "리눅스에는 한글 폰트가 기본으로 없어 <b>설치하지 않으면 그래프의 한글이 전부 깨집니다.</b> 설치 후 커널을 반드시 재시작하세요.",
+      },
+      {
+        num: 4,
+        title: "VS Code + 확장",
+        body: "<b>sudo snap install code --classic</b> 또는 .deb 파일로 설치하고 Python·Jupyter 확장을 추가합니다.",
+      },
+      {
+        num: 5,
+        title: "가상환경과 패키지",
+        body: "가상환경을 켠 뒤에는 python3.12 대신 그냥 <b>python</b> 을 씁니다.",
+      },
+      {
+        num: 6,
+        title: "확인",
+        body: "인터프리터를 .venv 로 지정하고 <b>python 1week/check_env.py</b> 를 실행합니다.",
+      },
+    ],
+    code: `sudo apt update
+sudo apt install -y python3.12 python3.12-venv python3-pip \\
+                    git build-essential fonts-nanum
+fc-cache -fv
+
+python3.12 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install -r requirements.txt
+python 1week/check_env.py`,
+    lang: "bash",
+    pitfall: {
+      title: "externally-managed-environment 오류",
+      body: "<b>가상환경을 켜지 않은 상태</b>에서 pip install 을 했다는 뜻입니다. 먼저 <b>source .venv/bin/activate</b> 를 실행하세요. <b>--break-system-packages 로 강제하지 마세요.</b> 시스템 파이썬이 망가져 OS 도구가 동작하지 않을 수 있습니다.",
+    },
+  },
 ];
 
 export const ENV_CHECK3 = [

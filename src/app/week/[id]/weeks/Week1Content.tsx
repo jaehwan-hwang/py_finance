@@ -1,13 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { SlideDeck, Slide, CodeBlock, Callout, Tabs } from "@/components";
+import { SlideDeck, Slide, CodeBlock, Callout } from "@/components";
 import { weeks, formatDate } from "@/constants/weeks";
 import {
-  ENV_OS_TABS,
-  ENV_COMMANDS,
-  ENV_OS_NOTES,
-  ENV_STEPS,
+  OS_GUIDES,
   ENV_CHECK3,
   LADDER,
   PY_TYPES,
@@ -30,8 +26,6 @@ import {
 const W = weeks[0];
 
 export default function Week1Content() {
-  const [os, setOs] = useState(0);
-
   return (
     <SlideDeck
       weekNum={String(Number(W.num))}
@@ -71,38 +65,41 @@ export default function Week1Content() {
         </Callout>
       </Slide>
 
-      {/* 3 ── OS별 설치 */}
-      <Slide title="내 OS에 맞는 명령">
-        <Tabs tabs={ENV_OS_TABS} activeTab={os} onTabChange={setOs} />
-        <CodeBlock code={ENV_COMMANDS[os]} lang="bash" />
-        <p
-          className="mt-2 text-[0.92rem] leading-[1.7] text-(--ink-3)"
-          dangerouslySetInnerHTML={{ __html: ENV_OS_NOTES[os] }}
-        />
-      </Slide>
+      {/* 3~5 ── OS별 설치 (한 OS가 한 페이지) */}
+      {OS_GUIDES.map((g) => (
+        <Slide key={g.os} title={`환경 설치 — ${g.os}`}>
+          <p
+            className="text-[1rem] leading-[1.8] text-(--ink-2)"
+            dangerouslySetInnerHTML={{ __html: g.intro }}
+          />
 
-      {/* 4 ── 설치 순서 */}
-      <Slide title="설치 순서">
-        <ol className="grid gap-3 sm:grid-cols-2">
-          {ENV_STEPS.map((s) => (
-            <li
-              key={s.num}
-              className="flex gap-4 rounded-[16px] border border-(--border) bg-(--surface) p-5"
-            >
-              <span className="font-display grid h-8 w-8 flex-none place-items-center rounded-full border border-(--border) text-[0.85rem] font-medium text-(--ink-2)">
-                {s.num}
-              </span>
-              <div className="min-w-0">
-                <h4 className="text-[1rem] font-semibold text-(--ink)">{s.title}</h4>
-                <p
-                  className="mt-1 text-[0.9rem] leading-[1.65] text-(--ink-3)"
-                  dangerouslySetInnerHTML={{ __html: s.body }}
-                />
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Slide>
+          <ol className="mt-6 grid gap-3 sm:grid-cols-2">
+            {g.steps.map((s) => (
+              <li
+                key={s.num}
+                className="flex gap-4 rounded-[16px] border border-(--border) bg-(--surface) p-5"
+              >
+                <span className="font-display grid h-8 w-8 flex-none place-items-center rounded-full border border-(--border) text-[0.85rem] font-medium text-(--ink-2)">
+                  {s.num}
+                </span>
+                <div className="min-w-0">
+                  <h4 className="text-[1rem] font-semibold text-(--ink)">{s.title}</h4>
+                  <p
+                    className="mt-1 text-[0.9rem] leading-[1.65] text-(--ink-3)"
+                    dangerouslySetInnerHTML={{ __html: s.body }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <CodeBlock code={g.code} lang={g.lang} caption="위에서 아래로 차례대로 실행합니다." />
+
+          <Callout kind="warn" title={g.pitfall.title}>
+            <span dangerouslySetInnerHTML={{ __html: g.pitfall.body }} />
+          </Callout>
+        </Slide>
+      ))}
 
       {/* 5 ── 확인 3가지 */}
       <Slide title="오늘 반드시 확인할 세 가지">
