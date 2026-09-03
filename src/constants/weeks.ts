@@ -25,10 +25,10 @@ export const weeks: WeekMeta[] = [
   {
     num: "01",
     date: "2026-09-16",
-    title: "환경 구축",
-    desc: "OS별 환경 설치(Windows·macOS·Linux), 파이썬 첫걸음, 수익률 개념과 첫 실습.",
-    python: ["변수·자료형", "print", "주석"],
-    bonus: "Jupyter 단축키, 가상환경(venv) 개념",
+    title: "OT",
+    desc: "Windows·MacOS·Linux 환경 세팅. NumPy와 Pandas가 잘 돌아가는지 확인합니다.",
+    python: ["Python 설치", "venv", "VSCode"],
+    bonus: "NumPy · Pandas 설치와 test.py 실행",
     available: true,
   },
   {
