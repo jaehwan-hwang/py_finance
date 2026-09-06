@@ -1,8 +1,14 @@
 "use client";
 
-import { SlideDeck, Slide, CodeBlock } from "@/components";
+import { SlideDeck, Slide, MdBlocks } from "@/components";
 import { weeks, formatDate } from "@/constants/weeks";
-import { OS_GUIDES, type Block } from "@/constants/week1";
+import { OS_GUIDES, MENTOR, STUDY_INFO } from "@/constants/week1";
+import {
+  BASICS,
+  WEEK1_INTRO,
+  WEEK1_INTRO_P,
+  WEEK1_NEXT,
+} from "@/constants/week1Basics";
 
 const W = weeks[0];
 
@@ -12,12 +18,17 @@ export default function Week1Content() {
       weekNum={String(Number(W.num))}
       weekTitle={W.title}
       outro={
-        <h2 className="text-[clamp(1.8rem,5.5vw,3rem)] leading-[1.15] font-semibold tracking-[-0.03em] text-(--ink)">
-          1주차 끝
-        </h2>
+        <>
+          <h2 className="text-[clamp(1.8rem,5.5vw,3rem)] leading-[1.15] font-semibold tracking-[-0.03em] text-(--ink)">
+            다음 주 예고
+          </h2>
+          <div className="mt-6">
+            <MdBlocks blocks={WEEK1_NEXT} />
+          </div>
+        </>
       }
     >
-      {/* 1 ── 표지 */}
+      {/* 1 ── OT */}
       <Slide>
         <p className="text-[1rem] font-medium text-(--ink-3)">
           {formatDate(W.date)}
@@ -26,19 +37,100 @@ export default function Week1Content() {
           OT
         </h1>
         <ul className="mt-8 flex flex-col gap-2.5">
-          {OS_GUIDES.map((g) => (
-            <li key={g.os} className="flex gap-3 text-[1.02rem] text-(--ink-2)">
+          {[
+            "멘토 및 스터디 소개",
+            "8주 방향",
+            "환경 세팅 — Windows / MacOS / Linux",
+            "파이썬 기초 — 변수 · 자료형 · print() · input() · f-string · 주석",
+            "오늘의 코드 · 오늘의 테스트",
+          ].map((s) => (
+            <li key={s} className="flex gap-3 text-[1.02rem] text-(--ink-2)">
               <span
                 aria-hidden="true"
                 className="mt-[0.62em] h-1.5 w-1.5 flex-none rounded-full bg-(--ink-3)"
               />
-              환경 세팅 — {g.os}
+              {s}
             </li>
           ))}
         </ul>
       </Slide>
 
-      {/* 2~4 ── OS별 환경 세팅 (1주차_환경세팅.md 원문) */}
+      {/* 2 ── 멘토 및 스터디 소개 */}
+      <Slide title="멘토 및 스터디 소개">
+        <div className="rounded-[18px] border border-(--border) bg-(--surface) p-6">
+          <p className="text-[0.9rem] font-medium text-(--ink-3)">멘토</p>
+          <p className="mt-1.5 text-[1.4rem] font-semibold tracking-[-0.02em] text-(--ink)">
+            {MENTOR.name}
+          </p>
+          <p className="mt-1 text-[0.95rem] text-(--ink-3)">
+            {MENTOR.team} · {MENTOR.semester}
+            {MENTOR.belong && ` · ${MENTOR.belong}`}
+          </p>
+          {MENTOR.intro && (
+            <p className="mt-3 text-[0.96rem] leading-[1.75] text-(--ink-2)">
+              {MENTOR.intro}
+            </p>
+          )}
+          {MENTOR.contact && (
+            <p className="mt-3 font-mono text-[0.88rem] text-(--ink-3)">
+              {MENTOR.contact}
+            </p>
+          )}
+        </div>
+
+        <div className="scroll-x mt-6 rounded-[16px] border border-(--border)">
+          <table className="w-full border-collapse text-left text-[0.95rem]">
+            <tbody>
+              {STUDY_INFO.map((r) => (
+                <tr key={r.k} className="border-b border-(--border-2) last:border-0">
+                  <td className="w-28 px-5 py-3 font-medium whitespace-nowrap text-(--ink-3)">
+                    {r.k}
+                  </td>
+                  <td className="px-5 py-3 text-(--ink)">{r.v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Slide>
+
+      {/* 3 ── 8주 방향 */}
+      <Slide title="8주 방향">
+        <div className="scroll-x rounded-[16px] border border-(--border)">
+          <table className="w-full border-collapse text-left text-[0.93rem]">
+            <thead>
+              <tr className="border-b border-(--border) bg-(--surface-2)">
+                {["주차", "날짜", "주제", "함께 배우는 파이썬"].map((h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-[0.83rem] font-semibold whitespace-nowrap text-(--ink-3)"
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {weeks.map((w) => (
+                <tr key={w.num} className="border-b border-(--border-2) last:border-0">
+                  <td className="font-display px-4 py-3 whitespace-nowrap text-(--ink-3) tabular-nums">
+                    {w.num}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-(--ink-3)">
+                    {formatDate(w.date)}
+                  </td>
+                  <td className="px-4 py-3 font-medium whitespace-nowrap text-(--ink)">
+                    {w.title}
+                  </td>
+                  <td className="px-4 py-3 text-(--ink-2)">{w.python.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Slide>
+
+      {/* 4~6 ── OS별 환경 세팅 (1주차_환경세팅.md 원문) */}
       {OS_GUIDES.map((g) => (
         <Slide key={g.os} title={`환경 세팅 — ${g.os}`}>
           <div className="flex flex-col gap-9">
@@ -53,96 +145,21 @@ export default function Week1Content() {
           </div>
         </Slide>
       ))}
+
+      {/* 7 ── 파이썬 기초 표지 */}
+      <Slide title="파이썬 기초">
+        <p className="text-[1.05rem] font-medium text-(--ink-3)">{WEEK1_INTRO}</p>
+        <p className="mt-5 text-[1.02rem] leading-[1.85] text-(--ink-2)">
+          {WEEK1_INTRO_P}
+        </p>
+      </Slide>
+
+      {/* 8~ ── 파이썬 기초 (week1-python-basics.md 원문) */}
+      {BASICS.map((s) => (
+        <Slide key={s.title} title={s.title}>
+          <MdBlocks blocks={s.blocks} />
+        </Slide>
+      ))}
     </SlideDeck>
-  );
-}
-
-/** 1주차_환경세팅.md 의 문단·목록·인용구·코드·출력을 원문 순서대로 그린다. */
-function MdBlocks({ blocks }: { blocks: Block[] }) {
-  return (
-    <>
-      {blocks.map((b, i) => {
-        if (b.t === "p")
-          return (
-            <p
-              key={i}
-              className="md mt-3 text-[1rem] leading-[1.8] text-(--ink-2)"
-              dangerouslySetInnerHTML={{ __html: b.text }}
-            />
-          );
-
-        if (b.t === "h")
-          return (
-            <h4 key={i} className="mt-6 text-[1rem] font-semibold text-(--ink)">
-              {b.text}
-            </h4>
-          );
-
-        if (b.t === "note")
-          return (
-            <div
-              key={i}
-              className="md mt-4 border-l-[3px] border-(--border) pl-4 text-[0.96rem] leading-[1.8] text-(--ink-3)"
-              dangerouslySetInnerHTML={{ __html: b.text }}
-            />
-          );
-
-        if (b.t === "ol")
-          return (
-            <ol key={i} className="md mt-3 flex flex-col gap-2">
-              {b.items.map((it, n) => (
-                <li
-                  key={n}
-                  className="flex gap-3 text-[1rem] leading-[1.8] text-(--ink-2)"
-                >
-                  <span className="font-display flex-none text-(--ink-3) tabular-nums">
-                    {n + 1}.
-                  </span>
-                  <span className="min-w-0">
-                    <span dangerouslySetInnerHTML={{ __html: it.text }} />
-                    {it.sub?.map((s, m) => (
-                      <span
-                        key={m}
-                        className="mt-1.5 block text-[0.95rem] text-(--ink-3)"
-                        dangerouslySetInnerHTML={{ __html: s }}
-                      />
-                    ))}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          );
-
-        if (b.t === "ul")
-          return (
-            <ul key={i} className="md mt-3 flex flex-col gap-2">
-              {b.items.map((it, n) => (
-                <li
-                  key={n}
-                  className="flex gap-3 text-[1rem] leading-[1.8] text-(--ink-2)"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="mt-[0.7em] h-1.5 w-1.5 flex-none rounded-full bg-(--ink-3)"
-                  />
-                  <span dangerouslySetInnerHTML={{ __html: it }} />
-                </li>
-              ))}
-            </ul>
-          );
-
-        if (b.t === "out")
-          return (
-            <pre
-              key={i}
-              className="scroll-x mt-4 rounded-[12px] border border-(--border-2) bg-(--surface-2) px-4 py-3.5 font-mono text-[0.85rem] leading-[1.8] whitespace-pre text-(--ink-2)"
-            >
-              {b.text}
-            </pre>
-          );
-
-        return <CodeBlock key={i} code={b.code} lang={b.lang ?? "bash"} />;
-      })}
-    </>
   );
 }

@@ -3,18 +3,11 @@
 
 /* ── 01. 환경 구축 ── */
 
+import type { Block } from "./mdBlock";
+
 /** OS별 환경 세팅
  *  py_portfolio/1주차_환경세팅.md 를 그대로 옮긴 것.
  *  문장·순서·번호·코드를 바꾸지 않는다. 이모지 표시만 뺀다. */
-
-export type Block =
-  | { t: "p"; text: string }
-  | { t: "ol"; items: { text: string; sub?: string[] }[] }
-  | { t: "ul"; items: string[] }
-  | { t: "note"; text: string }
-  | { t: "h"; text: string }
-  | { t: "code"; code: string; lang?: string }
-  | { t: "out"; text: string };
 
 export interface OsGuide {
   os: string;
@@ -513,4 +506,29 @@ sudo apt install ./code_*.deb`,
       },
     ],
   },
+];
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   멘토 소개 — 빈 칸은 채워 넣으면 화면에 나오고, 비워 두면 나오지 않습니다.
+   ═══════════════════════════════════════════════════════════════════════ */
+export const MENTOR = {
+  name: "황재환",
+  team: "FORIF",
+  semester: "2026-2",
+  /** 학과·학년. 예: "정보시스템학과 3학년" */
+  belong: "정보시스템학과 2학년",
+  /** 연락처나 GitHub. 예: "github.com/jaehwan-hwang" */
+  contact: "jaehwanhwang06@gmail.com",
+  /** 한두 줄 소개 */
+  intro: "",
+};
+
+/** 스터디 소개 — 홈 상단 정보와 같은 내용 */
+export const STUDY_INFO: { k: string; v: string }[] = [
+  { k: "스터디명", v: "PYTHON으로 알아보는 기초 금융공학" },
+  { k: "기간", v: "2026.09.16 – 11.18 · 8주 (예정)" },
+  { k: "시간", v: "매주 수요일 16:00 – 18:00" },
+  { k: "장소", v: "ITBT관 207호" },
+  { k: "대상", v: "파이썬과 기초 재무에 관심있는 누구든" },
 ];
