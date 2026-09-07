@@ -1,8 +1,8 @@
 "use client";
 
-import { SlideDeck, Slide, MdBlocks } from "@/components";
+import { SlideDeck, Slide, MdBlocks, MentorCard } from "@/components";
 import { weeks, formatDate } from "@/constants/weeks";
-import { OS_GUIDES, MENTOR, STUDY_INFO } from "@/constants/week1";
+import { OS_GUIDES, STUDY_INFO } from "@/constants/week1";
 import {
   BASICS,
   WEEK1_INTRO,
@@ -57,27 +57,7 @@ export default function Week1Content() {
 
       {/* 2 ── 멘토 및 스터디 소개 */}
       <Slide title="멘토 및 스터디 소개">
-        <div className="rounded-[18px] border border-(--border) bg-(--surface) p-6">
-          <p className="text-[0.9rem] font-medium text-(--ink-3)">멘토</p>
-          <p className="mt-1.5 text-[1.4rem] font-semibold tracking-[-0.02em] text-(--ink)">
-            {MENTOR.name}
-          </p>
-          <p className="mt-1 text-[0.95rem] text-(--ink-3)">
-            {MENTOR.team} · {MENTOR.semester}
-            {MENTOR.belong && ` · ${MENTOR.belong}`}
-          </p>
-          {MENTOR.intro && (
-            <p className="mt-3 text-[0.96rem] leading-[1.75] text-(--ink-2)">
-              {MENTOR.intro}
-            </p>
-          )}
-          {MENTOR.contact && (
-            <p className="mt-3 font-mono text-[0.88rem] text-(--ink-3)">
-              {MENTOR.contact}
-            </p>
-          )}
-        </div>
-
+        <MentorCard />
         <div className="scroll-x mt-6 rounded-[16px] border border-(--border)">
           <table className="w-full border-collapse text-left text-[0.95rem]">
             <tbody>
