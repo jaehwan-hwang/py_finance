@@ -3,6 +3,7 @@ export { default as Callout } from "./Callout";
 export { default as Card } from "./Card";
 export { default as CodeBlock } from "./CodeBlock";
 export { default as MdBlocks } from "./MdBlocks";
+export { default as MentorCard } from "./MentorCard";
 export { default as Navbar } from "./Navbar";
 export { default as Quiz } from "./Quiz";
 export { default as SlideDeck, Slide } from "./SlideDeck";
