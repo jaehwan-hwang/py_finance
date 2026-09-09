@@ -46,5 +46,6 @@ export type Block =
   | { t: "h"; text: string }
   | { t: "code"; code: string; lang?: string }
   | { t: "out"; text: string }
+  | { t: "math"; tex: string }
   | { t: "table"; head: string[]; rows: string[][] }
   | QuizBlock;

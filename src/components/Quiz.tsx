@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CodeBlock from "./CodeBlock";
 import type { QuizBlock } from "@/constants/mdBlock";
+import { withMath } from "@/lib/tex";
 
 /** 표기 차이를 흡수해서 비교한다. 공백·대소문자·끝의 마침표를 무시. */
 function norm(s: string, multiline = false): string {
@@ -92,7 +93,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
     <div className="mt-5 rounded-[16px] border border-(--border) bg-(--surface) p-5">
       <p className="md text-[1rem] leading-[1.7] font-semibold text-(--ink)">
         <span className="font-display mr-1.5 text-(--ink-3)">{data.no}.</span>
-        <span dangerouslySetInnerHTML={{ __html: data.q }} />
+        <span dangerouslySetInnerHTML={{ __html: withMath(data.q) }} />
       </p>
 
       {data.code && <CodeBlock code={data.code} lang="python" />}
@@ -121,7 +122,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
                     <span className="font-display flex-none tabular-nums">{n}.</span>
                     <span
                       className="md min-w-0 flex-1"
-                      dangerouslySetInnerHTML={{ __html: o }}
+                      dangerouslySetInnerHTML={{ __html: withMath(o) }}
                     />
                     {graded && st === "right" && <Mark ok />}
                     {graded && st === "wrong" && <Mark />}
@@ -271,7 +272,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
           <p className="mb-1 text-[0.82rem] font-semibold text-(--accent)">해설</p>
           <p
             className="md text-[0.96rem] leading-[1.8] text-(--ink-2)"
-            dangerouslySetInnerHTML={{ __html: data.explain }}
+            dangerouslySetInnerHTML={{ __html: withMath(data.explain) }}
           />
           {data.explainCode && <CodeBlock code={data.explainCode} lang="python" />}
         </div>
