@@ -72,7 +72,7 @@ else:
 
 ```python
 if rate > 0.03:
-print("고금리")        # ❌ IndentationError: 들여쓰기가 없다
+print("고금리")        # IndentationError: 들여쓰기가 없다
 ```
 
 ### 여러 갈래: `elif`
@@ -243,14 +243,14 @@ print(f"{year}년 후 {balance:,.0f}원으로 목표를 달성합니다")
 
 "자산이 두 배가 되는 데 몇 년이 걸리는가"는 횟수를 미리 알 수 없는 문제이므로 `while`이 적합하다.
 
-### ⚠️ 무한 루프 주의
+### 무한 루프 주의
 
 `while`문의 조건이 영원히 참이면 프로그램이 멈추지 않는다.
 
 ```python
 balance = 1000000
 while balance < 2000000:
-    print(balance)      # ❌ balance가 변하지 않아 영원히 반복
+    print(balance)      # balance가 변하지 않아 영원히 반복
 ```
 
 반복문 안에서 **조건에 쓰인 변수가 반드시 변해야 한다.** 실수로 무한 루프에 빠졌다면 터미널에서 `Ctrl + C`를 눌러 강제 종료한다.

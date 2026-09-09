@@ -5,6 +5,7 @@ import { weeks, formatDate } from "@/constants/weeks";
 import { OS_GUIDES, STUDY_INFO } from "@/constants/week1";
 import {
   BASICS,
+  VENV_WHY,
   WEEK1_INTRO,
   WEEK1_INTRO_P,
   WEEK1_NEXT,
@@ -119,14 +120,19 @@ export default function Week1Content() {
                 <h3 className="text-[1.15rem] font-semibold text-(--ink)">
                   {s.num}. {s.title}
                 </h3>
-                <MdBlocks blocks={s.blocks} />
+                <MdBlocks blocks={s.blocks} headingLevel={4} />
               </section>
             ))}
           </div>
         </Slide>
       ))}
 
-      {/* 7 ── 파이썬 기초 표지 */}
+      {/* 7 ── 가상환경을 왜 쓰는가 (방금 만들어 봤으니 바로 이어서) */}
+      <Slide title={VENV_WHY.title}>
+        <MdBlocks blocks={VENV_WHY.blocks} />
+      </Slide>
+
+      {/* 8 ── 파이썬 기초 표지 */}
       <Slide title="파이썬 기초">
         <p className="text-[1.05rem] font-medium text-(--ink-3)">{WEEK1_INTRO}</p>
         <p className="mt-5 text-[1.02rem] leading-[1.85] text-(--ink-2)">
@@ -134,7 +140,7 @@ export default function Week1Content() {
         </p>
       </Slide>
 
-      {/* 8~ ── 파이썬 기초 (week1-python-basics.md 원문) */}
+      {/* 9~ ── 파이썬 기초 (week1-python-basics.md 원문) */}
       {BASICS.map((s) => (
         <Slide key={s.title} title={s.title}>
           <MdBlocks blocks={s.blocks} />

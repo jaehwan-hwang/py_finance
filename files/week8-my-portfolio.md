@@ -66,11 +66,11 @@
 ### 원칙 1 — 매직 넘버를 상수로
 
 ```python
-# ❌ 252가 무엇인지 코드만 봐서는 알 수 없다
+# 나쁜 예 — 252가 무엇인지 코드만 봐서는 알 수 없다
 vol = returns.std() * np.sqrt(252)
 sharpe = (returns.mean() * 252 - 0.03) / vol
 
-# ⭕ 이름이 곧 설명이 된다
+# 좋은 예 — 이름이 곧 설명이 된다
 TRADING_DAYS = 252
 RISK_FREE = 0.03
 
@@ -83,12 +83,12 @@ sharpe = (returns.mean() * TRADING_DAYS - RISK_FREE) / vol
 ### 원칙 2 — 반복되는 코드는 함수로
 
 ```python
-# ❌ 같은 계산이 세 번
+# 나쁜 예 — 같은 계산이 세 번
 samsung_vol = samsung_returns.std() * np.sqrt(252)
 hynix_vol = hynix_returns.std() * np.sqrt(252)
 kodex_vol = kodex_returns.std() * np.sqrt(252)
 
-# ⭕ 한 번 정의하고 세 번 호출
+# 좋은 예 — 한 번 정의하고 세 번 호출
 def volatility(returns, periods=TRADING_DAYS):
     return returns.std() * np.sqrt(periods)
 ```
@@ -98,14 +98,14 @@ def volatility(returns, periods=TRADING_DAYS):
 ### 원칙 3 — 함수는 한 가지 일만
 
 ```python
-# ❌ 계산과 출력이 섞여 있어 재사용할 수 없다
+# 나쁜 예 — 계산과 출력이 섞여 있어 재사용할 수 없다
 def analyze(prices):
     cagr = ...
     vol = ...
     print(f"CAGR {cagr:.2%}")
     print(f"변동성 {vol:.2%}")
 
-# ⭕ 계산은 값을 반환하고, 출력은 따로
+# 좋은 예 — 계산은 값을 반환하고, 출력은 따로
 def summarize(prices):
     return {"CAGR": ..., "변동성": ...}
 
@@ -120,11 +120,11 @@ def print_summary(prices):
 ### 원칙 4 — 이름이 주석을 대신하게
 
 ```python
-# ❌
+# 나쁜 예
 d = p / p.cummax() - 1        # 전고점 대비 하락률
 m = d.min()                    # 최대낙폭
 
-# ⭕
+# 좋은 예
 drawdown = prices / prices.cummax() - 1
 max_drawdown = drawdown.min()
 ```
@@ -134,10 +134,10 @@ max_drawdown = drawdown.min()
 ### 원칙 5 — 하드코딩된 종목명 제거
 
 ```python
-# ❌ 종목이 바뀌면 코드를 고쳐야 한다
+# 나쁜 예 — 종목이 바뀌면 코드를 고쳐야 한다
 total = df["삼성전자"] * 0.4 + df["SK하이닉스"] * 0.3 + df["KODEX200"] * 0.3
 
-# ⭕ 종목 수와 무관하게 동작한다
+# 좋은 예 — 종목 수와 무관하게 동작한다
 weights = pd.Series({"삼성전자": 0.4, "SK하이닉스": 0.3, "KODEX200": 0.3})
 total = (df * weights).sum(axis=1)
 ```
@@ -375,7 +375,7 @@ pip install backtesting
 파라미터를 계속 바꿔가며 과거 성적이 가장 좋은 조합을 찾는 행위다. 그렇게 찾은 값은 **과거의 우연에 맞춰진 것**이지 미래에 통하는 규칙이 아니다.
 
 ```python
-# ❌ 이런 짓을 하고 있다면 과최적화 중이다
+# 나쁜 예 — 이런 짓을 하고 있다면 과최적화 중이다
 for lookback in range(20, 250, 5):
     for top_n in range(1, 10):
         # ... 46 × 9 = 414개 조합 중 최고 성적을 고른다
@@ -390,11 +390,11 @@ for lookback in range(20, 250, 5):
 의사결정 시점에 알 수 없었던 정보를 사용하는 오류다.
 
 ```python
-# ❌ 오늘 종가를 알아야 계산되는 값으로 오늘 매수 결정을 내린다
+# 나쁜 예 — 오늘 종가를 알아야 계산되는 값으로 오늘 매수 결정을 내린다
 signal = prices > prices.rolling(20).mean()
 position = signal            # 같은 날에 바로 매수
 
-# ⭕ 신호는 어제까지의 정보로, 매매는 오늘
+# 좋은 예 — 신호는 어제까지의 정보로, 매매는 오늘
 position = signal.shift(1)
 ```
 
@@ -444,6 +444,7 @@ import matplotlib.pyplot as plt
 
 from quantkit import data, metrics, portfolio
 from quantkit.config import TRADING_DAYS, RISK_FREE
+from quantkit.text import pad
 
 plt.rcParams["font.family"] = "Malgun Gothic"     # Windows
 # plt.rcParams["font.family"] = "AppleGothic"     # macOS
@@ -532,7 +533,7 @@ def evaluate(curve, label):
 
 
 def print_row(r):
-    print(f"{r['구간']:<12}{r['수익률']:>12.2%}{r['CAGR']:>10.2%}"
+    print(f"{pad(r['구간'], 12)}{r['수익률']:>12.2%}{r['CAGR']:>10.2%}"
           f"{r['변동성']:>10.2%}{r['샤프']:>8.2f}{r['MDD']:>10.2%}")
 
 
@@ -558,7 +559,7 @@ def main():
     print("=" * 62)
     for name, w in weights.items():
         bar = "█" * int(w * 40)
-        print(f"  {name:<14}{w:>7.2%}  {bar}")
+        print(f"  {pad(name, 14)}{w:>7.2%}  {bar}")
 
     # ── 3) 개별 자산 성과 ──────────────────────────────
     print()
@@ -581,8 +582,8 @@ def main():
     print("=" * 62)
     print("성과 비교")
     print("=" * 62)
-    print(f"{'구간':<12}{'수익률':>12}{'CAGR':>10}"
-          f"{'변동성':>10}{'샤프':>8}{'MDD':>10}")
+    print(f"{pad('구간', 12)}{pad('수익률', 12, '>')}{'CAGR':>10}"
+          f"{pad('변동성', 10, '>')}{pad('샤프', 8, '>')}{'MDD':>10}")
     print("-" * 62)
     print_row(evaluate(curve_train, "학습구간"))
     print_row(evaluate(curve_test, "검증구간"))
@@ -595,10 +596,10 @@ def main():
 
     print()
     if test_sharpe < train_sharpe * 0.5:
-        print("⚠️  검증구간 샤프가 학습구간의 절반 미만이다.")
+        print("검증구간 샤프가 학습구간의 절반 미만이다.")
         print("    과최적화를 의심해볼 것.")
     else:
-        print("✓  학습구간과 검증구간의 성과가 크게 어긋나지 않는다.")
+        print("학습구간과 검증구간의 성과가 크게 어긋나지 않는다.")
 
     # ── 5) 그래프 ──────────────────────────────────────
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 8),

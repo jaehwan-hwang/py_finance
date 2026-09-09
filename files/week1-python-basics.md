@@ -36,7 +36,7 @@ principal = 1000000
 **반드시 지켜야 하는 규칙 (어기면 에러)**
 
 - 영문자, 숫자, 언더스코어(`_`)만 사용할 수 있다.
-- 숫자로 시작할 수 없다. → `1rate` ❌ / `rate1` ⭕
+- 숫자로 시작할 수 없다. → `1rate` 불가 / `rate1` 가능
 - 파이썬 예약어(`if`, `for`, `def`, `class`, `True` 등)는 사용할 수 없다.
 - 대소문자를 구분한다. `Rate`와 `rate`는 서로 다른 변수다.
 
@@ -112,9 +112,9 @@ print(type(empty))           # <class 'NoneType'>
 ### 문자열은 반드시 따옴표로 감싼다
 
 ```python
-currency = "KRW"    # ⭕ 문자열
-currency = 'KRW'    # ⭕ 작은따옴표도 동일
-# currency = KRW    # ❌ 에러: KRW라는 변수를 찾다가 실패
+currency = "KRW"    # 문자열
+currency = 'KRW'    # 작은따옴표도 동일
+# currency = KRW    # 에러: KRW라는 변수를 찾다가 실패
 ```
 
 작은따옴표와 큰따옴표는 기능이 완전히 같다. 다만 문자열 안에 따옴표가 들어가야 할 때는 서로 다른 쪽을 쓰면 편하다.
@@ -133,7 +133,7 @@ b = "5"      # str
 
 print(a + a)   # 10   → 숫자 덧셈
 print(b + b)   # 55   → 문자열 이어붙이기(연결)
-# print(a + b) # ❌ TypeError: int와 str은 더할 수 없음
+# print(a + b) # TypeError: int와 str은 더할 수 없음
 ```
 
 ### 형변환 (Type Casting)
@@ -257,7 +257,7 @@ name = input("이름을 입력하세요: ")
 print(f"안녕하세요, {name}님!")
 ```
 
-### ⚠️ 가장 중요한 규칙: input()의 결과는 항상 문자열이다
+### 가장 중요한 규칙: input()의 결과는 항상 문자열이다
 
 사용자가 숫자를 입력했더라도, `input()`이 돌려주는 값은 예외 없이 `str`이다.
 
@@ -265,7 +265,7 @@ print(f"안녕하세요, {name}님!")
 principal = input("원금을 입력하세요: ")   # 사용자가 1000000 입력
 print(type(principal))    # <class 'str'>  ← 숫자가 아니다
 
-# print(principal * 1.05)  # ❌ TypeError
+# print(principal * 1.05)  # TypeError
 ```
 
 그래서 숫자 계산에 쓰려면 반드시 형변환을 거쳐야 한다.
@@ -283,20 +283,20 @@ print(interest)
 ### 흔한 실수
 
 ```python
-# ❌ 변환을 잊음
+# 변환을 잊음
 years = input("기간(년): ")
 # total = principal * (1 + rate) ** years   → TypeError
 
-# ⭕ 변환함
+# 변환함
 years = int(input("기간(년): "))
 total = principal * (1 + rate) ** years
 ```
 
 ```python
-# ❌ 소수점이 있는 값을 int()로 변환 시도
+# 소수점이 있는 값을 int()로 변환 시도
 rate = int(input("이자율: "))     # 사용자가 0.05 입력 → ValueError
 
-# ⭕ 소수점이 있는 값은 float()로
+# 소수점이 있는 값은 float()로
 rate = float(input("이자율: "))
 ```
 
@@ -435,10 +435,10 @@ VSCode에서는 줄을 선택하고 `Ctrl + /` (macOS는 `Cmd + /`)를 누르면
 ### 좋은 주석과 나쁜 주석
 
 ```python
-# ❌ 나쁜 주석: 코드를 그대로 읽어준다
+# 나쁜 주석: 코드를 그대로 읽어준다
 principal = 1000000   # principal에 1000000을 대입한다
 
-# ⭕ 좋은 주석: 코드에 드러나지 않는 '왜'를 설명한다
+# 좋은 주석: 코드에 드러나지 않는 '왜'를 설명한다
 principal = 1000000   # 예시용 원금. 실제 값은 사용자 입력으로 대체 예정
 rate = 0.05           # 2026년 기준 정기예금 평균 금리 가정
 ```

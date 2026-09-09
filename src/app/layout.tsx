@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Noto_Sans_KR, JetBrains_Mono } from "next/font/google";
 import { BlobBackground, Navbar } from "@/components";
-import { SITE_NAME, SITE_SEO_DESC, TEAM_NAME } from "@/constants/site";
+import { SITE_NAME, SITE_SEO_DESC, SITE_URL, TEAM_NAME } from "@/constants/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -26,6 +26,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,
@@ -35,8 +36,16 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: SITE_SEO_DESC,
     siteName: `${SITE_NAME} · ${TEAM_NAME}`,
+    url: SITE_URL,
     locale: "ko_KR",
     type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_SEO_DESC,
+    images: ["/og.png"],
   },
 };
 

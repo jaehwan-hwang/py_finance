@@ -605,6 +605,7 @@ import matplotlib.pyplot as plt
 
 from quantkit import data, metrics, portfolio
 from quantkit.config import TRADING_DAYS, RISK_FREE
+from quantkit.text import pad
 
 plt.rcParams["font.family"] = "Malgun Gothic"     # Windows
 # plt.rcParams["font.family"] = "AppleGothic"     # macOS
@@ -693,7 +694,7 @@ def evaluate(curve, label):
 
 
 def print_row(r):
-    print(f"{r['구간']:<12}{r['수익률']:>12.2%}{r['CAGR']:>10.2%}"
+    print(f"{pad(r['구간'], 12)}{r['수익률']:>12.2%}{r['CAGR']:>10.2%}"
           f"{r['변동성']:>10.2%}{r['샤프']:>8.2f}{r['MDD']:>10.2%}")
 
 
@@ -719,7 +720,7 @@ def main():
     print("=" * 62)
     for name, w in weights.items():
         bar = "█" * int(w * 40)
-        print(f"  {name:<14}{w:>7.2%}  {bar}")
+        print(f"  {pad(name, 14)}{w:>7.2%}  {bar}")
 
     # ── 3) 개별 자산 성과 ──────────────────────────────
     print()
@@ -742,8 +743,8 @@ def main():
     print("=" * 62)
     print("성과 비교")
     print("=" * 62)
-    print(f"{'구간':<12}{'수익률':>12}{'CAGR':>10}"
-          f"{'변동성':>10}{'샤프':>8}{'MDD':>10}")
+    print(f"{pad('구간', 12)}{pad('수익률', 12, '>')}{'CAGR':>10}"
+          f"{pad('변동성', 10, '>')}{pad('샤프', 8, '>')}{'MDD':>10}")
     print("-" * 62)
     print_row(evaluate(curve_train, "학습구간"))
     print_row(evaluate(curve_test, "검증구간"))

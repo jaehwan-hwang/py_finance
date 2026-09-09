@@ -6,7 +6,15 @@ import type { Block } from "@/constants/mdBlock";
 import { tex, withMath } from "@/lib/tex";
 
 /** md 원문의 문단·목록·인용구·코드·출력·표·문제를 순서대로 그린다. */
-export default function MdBlocks({ blocks }: { blocks: Block[] }) {
+export default function MdBlocks({
+  blocks,
+  headingLevel = 3,
+}: {
+  blocks: Block[];
+  /** 이 블록들이 놓이는 자리의 제목 단계. 슬라이드 제목이 h2이므로 기본 3. */
+  headingLevel?: 3 | 4;
+}) {
+  const H = (headingLevel === 4 ? "h4" : "h3") as "h3" | "h4";
   return (
     <>
       {blocks.map((b, i) => {
@@ -21,9 +29,9 @@ export default function MdBlocks({ blocks }: { blocks: Block[] }) {
 
         if (b.t === "h")
           return (
-            <h4 key={i} className="mt-7 text-[1.02rem] font-semibold text-(--ink)">
+            <H key={i} className="mt-7 text-[1.02rem] font-semibold text-(--ink)">
               {b.text}
-            </h4>
+            </H>
           );
 
         if (b.t === "note")

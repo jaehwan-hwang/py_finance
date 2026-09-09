@@ -205,26 +205,26 @@ def portfolio_volatility(weights, cov_matrix):
 ```python
 import numpy as np
 
-np.random.seed(42)     # 결과를 재현 가능하게 고정
+rng = np.random.default_rng(42)   # 42는 씨앗(seed). 아무 정수나 된다
 
-print(np.random.random(3))        # 0~1 사이 난수 3개
-print(np.random.random((4, 3)))   # 4행 3열의 난수 배열
+print(rng.random(3))              # 0~1 사이 난수 3개
+print(rng.random((4, 3)))         # 4행 3열의 난수 배열
 ```
 
-`np.random.seed()`를 지정하면 실행할 때마다 같은 난수가 나온다. **결과를 남과 비교하거나 재현해야 할 때 반드시 넣는다.**
+`default_rng(42)`처럼 씨앗을 지정하면 실행할 때마다 같은 난수가 나온다. **결과를 남과 비교하거나 재현해야 할 때 반드시 넣는다.** 예전 방식인 `np.random.seed()`도 아직 동작하지만 지금은 `default_rng()`로 생성기를 따로 만들어 쓰는 쪽이 권장된다. **같은 42를 넣어도 두 방식의 난수는 서로 다르므로 하나로 통일해야 한다.**
 
 ### 무작위 비중 만들기
 
 비중에는 조건이 있다. **합이 1이어야 하고, (공매도를 금지한다면) 모두 0 이상이어야 한다.** 난수를 만든 뒤 합으로 나누면 두 조건이 동시에 만족된다.
 
 ```python
-np.random.seed(42)
+rng = np.random.default_rng(42)
 
-w = np.random.random(3)
-print(w)              # [0.3745 0.9507 0.7320]
+w = rng.random(3)
+print(w)              # [0.77395605 0.43887844 0.85859792]
 
 w = w / w.sum()
-print(w)              # [0.1822 0.4625 0.3562]
+print(w)              # [0.37363326 0.21187196 0.41449478]
 print(w.sum())        # 1.0
 ```
 
@@ -236,7 +236,7 @@ print(w.sum())        # 1.0
 N = 20000
 n_assets = 3
 
-W = np.random.random((N, n_assets))
+W = rng.random((N, n_assets))
 W = W / W.sum(axis=1, keepdims=True)    # 각 행의 합을 1로
 
 print(W.shape)              # (20000, 3)
@@ -355,7 +355,7 @@ print(f"  샤프 {sharpe_arr[best_sharpe_idx]:.4f}")
 |---|---|---|
 | **2차원 배열** | 행렬을 표현하는 numpy 자료구조 | `.shape`로 크기 확인 |
 | **`*` vs `@`** | 원소별 곱 vs 행렬 곱 | 포트폴리오 계산은 `@` |
-| **`np.random.seed()`** | 난수 고정 | 재현 가능한 결과 |
+| **`np.random.default_rng(seed)`** | 씨앗을 넣어 난수 생성기를 만든다 | 재현 가능한 결과 |
 | **`.argmax()` / `.argmin()`** | 극값의 **위치** 반환 | 최적 비중을 꺼내는 열쇠 |
 | **`axis`, `keepdims`** | 연산 방향과 모양 유지 | 비중 정규화에 사용 |
 
@@ -395,8 +395,7 @@ plt.rcParams["axes.unicode_minus"] = False
 TRADING_DAYS = 252
 RISK_FREE = 0.03
 N_SIMULATIONS = 20000
-
-np.random.seed(42)      # 재현 가능한 결과
+SEED = 42               # 씨앗을 고정해야 매번 같은 결과가 나온다
 
 
 # ── 포트폴리오 계산 함수 ─────────────────────────────────
@@ -418,9 +417,10 @@ def portfolio_sharpe(weights, mean_returns, cov_matrix, risk_free=RISK_FREE):
     return (ret - risk_free) / vol
 
 
-def random_weights(n_assets, n_samples):
+def random_weights(n_assets, n_samples, seed=None):
     """합이 1이고 모두 0 이상인 무작위 비중 행렬을 만든다."""
-    W = np.random.random((n_samples, n_assets))
+    rng = np.random.default_rng(seed)
+    W = rng.random((n_samples, n_assets))
     return W / W.sum(axis=1, keepdims=True)
 
 
@@ -468,7 +468,7 @@ print(returns.corr().round(3))
 print()
 print(f"{N_SIMULATIONS:,}개 포트폴리오 시뮬레이션 중...")
 
-W = random_weights(n_assets, N_SIMULATIONS)
+W = random_weights(n_assets, N_SIMULATIONS, SEED)
 
 sim_returns = W @ mean_returns
 sim_vols = np.sqrt(np.einsum("ij,jk,ik->i", W, cov_matrix, W))
@@ -590,7 +590,7 @@ print(optimal.map(lambda x: f"{x:.2%}"))
 """데이터를 못 받을 때 — 가정한 3자산으로 최적화 실습"""
 import numpy as np
 
-np.random.seed(42)
+rng = np.random.default_rng(42)
 
 names = ["주식A", "주식B", "채권C"]
 mu = np.array([0.12, 0.10, 0.07])        # 기대수익률
@@ -601,7 +601,7 @@ corr = np.array([[1.0, 0.6, 0.2],
 cov = np.outer(vols, vols) * corr
 
 N = 200000
-W = np.random.random((N, 3))
+W = rng.random((N, 3))
 W = W / W.sum(axis=1, keepdims=True)
 
 rets = W @ mu
@@ -624,8 +624,8 @@ print(f"균등비중  비중 {np.round(eq, 4)}  수익 {eq @ mu:.2%}  "
 **실행 결과** (seed 42, 20만 회 기준)
 
 ```
-최대 샤프  비중 [0.2803 0.1693 0.5504]  수익 8.91%  변동성 15.76%  샤프 0.3751
-최소분산  비중 [0.0835 0.1184 0.7981]  수익 7.77%  변동성 14.16%
+최대 샤프  비중 [0.2807 0.1689 0.5504]  수익 8.91%  변동성 15.76%  샤프 0.3751
+최소분산  비중 [0.0848 0.1145 0.8007]  수익 7.77%  변동성 14.16%
 균등비중  비중 [0.3333 0.3333 0.3333]  수익 9.67%  변동성 18.42%
 ```
 
@@ -750,9 +750,10 @@ $w^T\Sigma w$는 **분산**이므로, 변동성(표준편차)을 얻으려면 �
 ```python
 import numpy as np
 
-def random_weights(n_assets, n_samples):
+def random_weights(n_assets, n_samples, seed=None):
     """합이 1이고 모두 0 이상인 무작위 비중 행렬을 만든다."""
-    W = np.random.______((n_samples, n_assets))
+    rng = np.random.default_rng(seed)
+    W = rng.______((n_samples, n_assets))
     return W / W.sum(axis=____, keepdims=True)
 ```
 
@@ -760,9 +761,10 @@ def random_weights(n_assets, n_samples):
 <summary>정답 보기</summary>
 
 ```python
-def random_weights(n_assets, n_samples):
+def random_weights(n_assets, n_samples, seed=None):
     """합이 1이고 모두 0 이상인 무작위 비중 행렬을 만든다."""
-    W = np.random.random((n_samples, n_assets))
+    rng = np.random.default_rng(seed)
+    W = rng.random((n_samples, n_assets))
     return W / W.sum(axis=1, keepdims=True)
 ```
 

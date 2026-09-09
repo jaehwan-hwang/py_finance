@@ -64,13 +64,13 @@ def max_drawdown(prices):
 ### 나쁜 방식과 좋은 방식
 
 ```python
-# ❌ 종목이 늘어날 때마다 코드를 고쳐야 한다
+# 나쁜 예 — 종목이 늘어날 때마다 코드를 고쳐야 한다
 samsung = 70000
 hynix = 180000
 naver = 210000
 total = samsung + hynix + naver
 
-# ⭕ 종목이 몇 개든 코드는 그대로다
+# 좋은 예 — 종목이 몇 개든 코드는 그대로다
 portfolio = {"삼성전자": 70000, "SK하이닉스": 180000, "NAVER": 210000}
 total = sum(portfolio.values())
 ```
@@ -143,7 +143,7 @@ def validate_weights(weights, tolerance=1e-6):
     """비중의 합이 1인지 검사한다."""
     total = sum(weights.values())
     if abs(total - 1) > tolerance:
-        print(f"⚠️  비중 합계가 {total:.4f}입니다. 1이 되도록 조정하세요.")
+        print(f"비중 합계가 {total:.4f}입니다. 1이 되도록 조정하세요.")
         return False
     return True
 ```
@@ -388,8 +388,8 @@ $$\beta_i = \frac{\text{Cov}(R_i, R_m)}{\text{Var}(R_m)}$$
 
 | 구분 | 내용 | 분산투자로 제거 가능? |
 |---|---|---|
-| **체계적 위험** | 시장 전체에 영향 (금리, 경기, 전쟁) | ❌ 불가능 |
-| **비체계적 위험** | 개별 기업 고유 (경영진 교체, 신제품 실패) | ⭕ 가능 |
+| **체계적 위험** | 시장 전체에 영향 (금리, 경기, 전쟁) | 불가능 |
+| **비체계적 위험** | 개별 기업 고유 (경영진 교체, 신제품 실패) | 가능 |
 
 종목을 늘리면 비체계적 위험은 상쇄되어 사라지지만, 체계적 위험은 남는다. **베타는 이 남는 위험, 즉 피할 수 없는 위험의 크기를 재는 지표다.** 다음 절의 CAPM이 "피할 수 없는 위험만큼만 보상받는다"고 말하는 근거가 여기에 있다.
 
@@ -597,7 +597,7 @@ def validate_weights(weights, tolerance=1e-6):
     """비중 합계가 1인지 검사한다."""
     total = sum(weights.values())
     if abs(total - 1) > tolerance:
-        print(f"⚠️  비중 합계가 {total:.4f}입니다.")
+        print(f"비중 합계가 {total:.4f}입니다.")
         return False
     return True
 

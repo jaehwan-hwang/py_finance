@@ -18,7 +18,7 @@ export const WEEK7_DOC: WeekDoc = {
           head: ["개념", "핵심"],
           rows: [
             ["<b>numpy 행렬 연산</b>", "<code>@</code>는 행렬 곱, <code>w @ cov @ w</code>가 포트폴리오 분산"],
-            ["<b>난수 생성</b>", "<code>np.random.random()</code>, <code>np.random.seed(42)</code>로 재현성 확보"],
+            ["<b>난수 생성</b>", "<code>rng = np.random.default_rng(42)</code> 로 생성기를 만들고 <code>rng.random()</code>"],
             ["<b>정규화</b>", "<code>W / W.sum(axis=1, keepdims=True)</code> — 비중 합을 1로"],
             ["<b>argmax / argmin</b>", "최댓값·최솟값이 있는 <b>위치(인덱스)</b> 를 반환"],
           ],
@@ -113,7 +113,7 @@ print(greet("황재환"))`,
         },
         {
           t: "out",
-          text: `py-finance/
+          text: `pyfinance-study/
 ├─ quantkit/
 │  ├─ __init__.py       ← 빈 파일이어도 됨
 │  ├─ metrics.py
@@ -449,7 +449,7 @@ print(account)   # [계좌] 현금 10,000,000원`,
         },
         {
           t: "out",
-          text: `py-finance/
+          text: `pyfinance-study/
 ├─ venv/
 ├─ quantkit/
 │  ├─ __init__.py
@@ -461,6 +461,7 @@ print(account)   # [계좌] 현금 10,000,000원`,
 ├─ run_optimize.py     ① 최적 비중 산출
 ├─ run_invest.py       ② 모의투자 집행
 ├─ run_report.py       ③ 성과 리포트
+├─ run_rebalance.py    ④ 리밸런싱
 ├─ prices.csv
 ├─ optimal_weights.csv
 ├─ account.json
@@ -618,6 +619,7 @@ import numpy as np
 import pandas as pd
 
 from quantkit.config import TRADING_DAYS, RISK_FREE
+from quantkit.text import pad
 
 
 def to_returns(prices):
@@ -690,11 +692,11 @@ def print_summary(prices_df):
     """지표 표를 보기 좋게 출력한다."""
     table = summary_table(prices_df)
 
-    print(f"{'종목':<12}{'기간수익률':>12}{'CAGR':>10}"
-          f"{'변동성':>10}{'샤프':>8}{'MDD':>10}")
+    print(f"{pad('종목', 12)}{pad('기간수익률', 12, '>')}{'CAGR':>10}"
+          f"{pad('변동성', 10, '>')}{pad('샤프', 8, '>')}{'MDD':>10}")
     print("-" * 62)
     for name, row in table.iterrows():
-        print(f"{name:<12}{row['기간수익률']:>12.2%}{row['CAGR']:>10.2%}"
+        print(f"{pad(name, 12)}{row['기간수익률']:>12.2%}{row['CAGR']:>10.2%}"
               f"{row['변동성']:>10.2%}{row['샤프지수']:>8.2f}{row['MDD']:>10.2%}")`,
         },
       ],
@@ -847,6 +849,7 @@ from quantkit.config import (
     INITIAL_CASH, BUY_FEE_RATE, SELL_FEE_RATE, SELL_TAX_RATE,
     ACCOUNT_FILE, TRANSACTIONS_FILE, ENCODING,
 )
+from quantkit.text import pad
 
 
 class Account:
@@ -871,7 +874,7 @@ class Account:
 
     # ── 거래 ────────────────────────────────────────────
 
-    def buy(self, name, price, quantity, when=None):
+    def buy(self, name, price, quantity, when=None, memo=""):
         """지정 수량을 매수한다. 현금이 부족하면 에러를 낸다."""
         if quantity <= 0:
             raise ValueError("수량은 1주 이상이어야 한다.")
@@ -893,10 +896,10 @@ class Account:
         self.holdings[name] = new_qty
         self.cash -= total_cost
 
-        self._log("매수", name, price, quantity, fee, 0, when)
+        self._log("매수", name, price, quantity, fee, 0, when, memo)
         return total_cost
 
-    def sell(self, name, price, quantity, when=None):
+    def sell(self, name, price, quantity, when=None, memo=""):
         """지정 수량을 매도한다. 보유 수량이 부족하면 에러를 낸다."""
         held = self.holdings.get(name, 0)
         if quantity <= 0:
@@ -916,10 +919,10 @@ class Account:
 
         self.cash += proceeds
 
-        self._log("매도", name, price, quantity, fee, tax, when)
+        self._log("매도", name, price, quantity, fee, tax, when, memo)
         return proceeds
 
-    def _log(self, action, name, price, quantity, fee, tax, when=None):
+    def _log(self, action, name, price, quantity, fee, tax, when=None, memo=""):
         """거래 내역을 기록한다. 앞의 언더스코어는 내부용이라는 표시다."""
         day = str(when or date.today())
 
@@ -936,6 +939,7 @@ class Account:
             "수수료": round(fee, 2),
             "세금": round(tax, 2),
             "거래후현금": round(self.cash, 2),
+            "메모": memo,          # 왜 이 매매를 했는지 한 줄
         })`,
         },
       ],
@@ -1002,21 +1006,22 @@ class Account:
 
         rows = self.position_table(prices)
         if rows:
-            print(f"{'종목':<12}{'수량':>6}{'평균단가':>12}{'현재가':>12}"
-                  f"{'평가금액':>14}{'수익률':>10}")
+            print(f"{pad('종목', 12)}{pad('수량', 6, '>')}{pad('평균단가', 12, '>')}"
+                  f"{pad('현재가', 12, '>')}{pad('평가금액', 14, '>')}"
+                  f"{pad('수익률', 10, '>')}")
             print("-" * 72)
             for r in rows:
-                print(f"{r['종목']:<12}{r['수량']:>6}{r['평균단가']:>12,.0f}"
+                print(f"{pad(r['종목'], 12)}{r['수량']:>6}{r['평균단가']:>12,.0f}"
                       f"{r['현재가']:>12,.0f}{r['평가금액']:>14,.0f}"
                       f"{r['수익률']:>10.2%}")
             print("-" * 72)
         else:
             print("보유 종목 없음")
 
-        print(f"{'현금':<12}{self.cash:>56,.0f}원")
-        print(f"{'평가금액':<11}{self.market_value(prices):>56,.0f}원")
-        print(f"{'총자산':<12}{total:>56,.0f}원")
-        print(f"{'손익':<13}{self.profit(prices):>55,.0f}원"
+        print(f"{pad('현금', 12)}{self.cash:>56,.0f}원")
+        print(f"{pad('평가금액', 12)}{self.market_value(prices):>56,.0f}원")
+        print(f"{pad('총자산', 12)}{total:>56,.0f}원")
+        print(f"{pad('손익', 12)}{self.profit(prices):>56,.0f}원"
               f"  ({self.profit_rate(prices):+.2%})")
         print("=" * 72)`,
         },
@@ -1100,6 +1105,7 @@ import sys
 
 from quantkit import data, metrics, portfolio
 from quantkit.config import TICKERS
+from quantkit.text import pad
 
 
 def main(refresh=False):
@@ -1141,7 +1147,7 @@ def main(refresh=False):
         print(f"\\n[{label}]  수익률 {ret:.2%}  변동성 {vol:.2%}  샤프 {sharpe:.3f}")
         for name, weight in w.items():
             bar = "█" * int(weight * 40)
-            print(f"  {name:<12}{weight:>7.2%}  {bar}")
+            print(f"  {pad(name, 12)}{weight:>7.2%}  {bar}")
 
     # 선택: 여기서 원하는 전략을 고른다
     chosen = candidates["최대샤프"]
@@ -1171,6 +1177,7 @@ import math
 from quantkit import data, portfolio
 from quantkit.account import Account
 from quantkit.config import TICKERS
+from quantkit.text import pad
 
 
 def plan_orders(weights, prices, budget):
@@ -1210,26 +1217,30 @@ def main():
     print("=" * 72)
     print("매수 계획")
     print("=" * 72)
-    print(f"{'종목':<12}{'목표비중':>10}{'현재가':>12}{'수량':>8}{'예상금액':>16}")
+    print(f"{pad('종목', 12)}{pad('목표비중', 10, '>')}{pad('현재가', 12, '>')}"
+          f"{pad('수량', 8, '>')}{pad('예상금액', 16, '>')}")
     print("-" * 72)
 
     for o in orders:
-        print(f"{o['종목']:<12}{o['목표비중']:>10.2%}{o['현재가']:>12,.0f}"
+        print(f"{pad(o['종목'], 12)}{o['목표비중']:>10.2%}{o['현재가']:>12,.0f}"
               f"{o['수량']:>8}{o['예상금액']:>16,.0f}")
 
     planned = sum(o["예상금액"] for o in orders)
     print("-" * 72)
-    print(f"{'합계':<12}{planned:>58,.0f}원")
-    print(f"{'잔여현금(예상)':<10}{account.cash - planned:>58,.0f}원")
+    print(f"{pad('합계', 12)}{planned:>58,.0f}원")
+    print(f"{pad('잔여현금(예상)', 16)}{account.cash - planned:>54,.0f}원")
     print("=" * 72)
 
     answer = input("\\n이대로 집행하시겠습니까? (y/n): ")
-    if answer.lower() != "y":
+    if answer.strip().lower() != "y":
         print("집행을 취소했다.")
         return
 
+    # 8주차 발표의 재료가 되므로 반드시 남긴다
+    reason = input("이번 매수를 결정한 이유를 한 줄로 적는다: ").strip()
+
     for o in orders:
-        cost = account.buy(o["종목"], o["현재가"], o["수량"])
+        cost = account.buy(o["종목"], o["현재가"], o["수량"], memo=reason)
         print(f"  매수 체결: {o['종목']} {o['수량']}주 ({cost:,.0f}원)")
 
     print()
@@ -1239,6 +1250,15 @@ def main():
 
 if __name__ == "__main__":
     main()`,
+        },
+      ],
+    },
+    {
+      title: "매수 계획의 두 가지 한계",
+      blocks: [
+        {
+          t: "note",
+          text: "<b>현금이 조금 남는다.</b> 주식은 1주 단위로만 살 수 있어 <code>math.floor</code>로 내림하기 때문이다. 값이 비싼 종목이 섞이면 남는 돈이 커진다. 이 자료의 다섯 종목으로 1,000만 원을 집행하면 4% 안팎이 현금으로 남는다. 목표 비중과 실제 비중이 조금 어긋나는 것도 같은 이유이며, <code>run_rebalance.py</code>로 주기적으로 맞춰준다.",
         },
       ],
     },
@@ -1317,6 +1337,137 @@ if __name__ == "__main__":
       ],
     },
 
+    {
+      title: "run_rebalance.py — ④ 리밸런싱",
+      blocks: [
+        {
+          t: "p",
+          text: "시간이 지나면 잘 오른 자산의 비중이 저절로 커진다. 목표 비중으로 되돌리는 것이 리밸런싱이다. 여기서 처음으로 <code>Account.sell()</code>을 쓴다.",
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `"""
+④ 현재 보유 비중을 목표 비중에 맞춰 다시 맞춘다.
+
+실행:  python run_rebalance.py
+"""
+
+import math
+
+from quantkit import data, portfolio
+from quantkit.account import Account
+from quantkit.config import TICKERS
+from quantkit.text import pad
+
+
+def current_weights(account, prices):
+    """평가금액 기준 현재 비중을 딕셔너리로 반환한다."""
+    total = account.market_value(prices)
+    if total == 0:
+        return {}
+
+    return {name: prices[name] * qty / total
+            for name, qty in account.holdings.items()}
+
+
+def plan_rebalance(account, weights, prices):
+    """목표 비중에 맞추기 위한 매도·매수 계획을 만든다."""
+    total = account.total_value(prices) * 0.995    # 수수료 여유
+    orders = []
+
+    for name in weights.index:
+        price = prices[name]
+        target_qty = math.floor(total * weights[name] / price)
+        diff = target_qty - account.holdings.get(name, 0)
+
+        if diff != 0:
+            orders.append({
+                "종목": name,
+                "구분": "매수" if diff > 0 else "매도",
+                "수량": abs(diff),
+                "현재가": price,
+                "금액": abs(diff) * price,
+            })
+
+    return orders
+
+
+def main():
+    account = Account.load()
+
+    if not account.holdings:
+        print("보유 종목이 없다. run_invest.py로 먼저 집행한다.")
+        return
+
+    weights = portfolio.load_weights()
+    prices = data.latest_prices(TICKERS)
+    current = current_weights(account, prices)
+
+    print(account)
+    print()
+    print("=" * 72)
+    print("현재 비중 → 목표 비중")
+    print("=" * 72)
+    for name in weights.index:
+        print(f"{pad(name, 12)}{current.get(name, 0):>10.2%}  →  {weights[name]:>8.2%}")
+
+    orders = plan_rebalance(account, weights, prices)
+
+    if not orders:
+        print()
+        print("이미 목표 비중에 맞다. 할 일이 없다.")
+        return
+
+    print()
+    print("=" * 72)
+    print("리밸런싱 계획")
+    print("=" * 72)
+    print(f"{pad('종목', 12)}{pad('구분', 6, '>')}{pad('수량', 8, '>')}"
+          f"{pad('현재가', 12, '>')}{pad('금액', 16, '>')}")
+    print("-" * 72)
+    for o in orders:
+        print(f"{pad(o['종목'], 12)}{pad(o['구분'], 6, '>')}{o['수량']:>8}"
+              f"{o['현재가']:>12,.0f}{o['금액']:>16,.0f}")
+    print("=" * 72)
+
+    answer = input("이대로 집행하시겠습니까? (y/n): ")
+    if answer.strip().lower() != "y":
+        print("집행을 취소했다.")
+        return
+
+    reason = input("리밸런싱을 결정한 이유를 한 줄로 적는다: ").strip()
+
+    # 현금을 먼저 확보해야 하므로 매도부터 처리한다
+    for o in sorted(orders, key=lambda x: x["구분"] != "매도"):
+        try:
+            if o["구분"] == "매도":
+                account.sell(o["종목"], o["현재가"], o["수량"], memo=reason)
+            else:
+                account.buy(o["종목"], o["현재가"], o["수량"], memo=reason)
+            print(f"  {o['구분']} 체결: {o['종목']} {o['수량']}주")
+        except ValueError as e:
+            print(f"  {o['종목']} 건너뜀 — {e}")
+
+    print()
+    account.report(prices)
+    account.save()
+
+
+if __name__ == "__main__":
+    main()`,
+        },
+        {
+          t: "p",
+          text: "<code>sorted(orders, key=lambda x: x[&quot;구분&quot;] != &quot;매도&quot;)</code>는 <b>매도를 먼저 처리하기 위한 정렬</b>이다. 현금이 들어와야 매수가 가능하기 때문이다. <code>False</code>가 <code>0</code>, <code>True</code>가 <code>1</code>로 취급되는 성질을 이용했다.",
+        },
+        {
+          t: "p",
+          text: "<code>try</code> / <code>except ValueError</code>는 현금이 모자라 한 종목이 실패해도 나머지는 계속 진행하게 한다. <code>Account.buy()</code>가 잘못된 상태를 막으려고 <code>raise ValueError</code>를 던진 것이 여기서 쓰인다.",
+        },
+      ],
+    },
+
     /* ── 5. 진행 방법 ── */
     {
       title: "5. 모의투자 진행 방법",
@@ -1332,8 +1483,9 @@ python run_invest.py       # 매수 집행
 # 매주 반복
 python run_report.py       # 성과 확인
 
-# 주가를 최신으로 다시 받고 싶을 때
-python run_optimize.py --refresh`,
+# 비중이 목표에서 벗어났을 때 (스터디 기간 중 최대 1회)
+python run_optimize.py --refresh   # 최신 데이터로 목표 비중 갱신
+python run_rebalance.py            # 목표 비중으로 되돌리기`,
         },
         { t: "h", text: "운용 규칙" },
         {
@@ -1348,7 +1500,7 @@ python run_optimize.py --refresh`,
             ["종목 수", "3~10개"],
             ["최소 보유 기간", "1주"],
             ["리밸런싱", "8주차 발표 전까지 최대 1회"],
-            ["기록", "매매할 때마다 이유를 한 줄로 남긴다"],
+            ["기록", "매매할 때마다 이유를 한 줄로 남긴다 (<code>transactions.csv</code>의 <code>메모</code> 칸에 자동 저장)"],
             ["벤치마크", "KOSPI 지수"],
           ],
         },

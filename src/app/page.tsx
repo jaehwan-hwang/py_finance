@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Tag } from "@/components";
@@ -98,19 +99,36 @@ function Reference() {
           {REFERENCES.map((r) => {
             const inner = (
               <>
-                <span className="text-[0.82rem] font-medium text-(--ink-3)">
-                  {r.kind}
-                </span>
-                <span className="text-[1.05rem] font-semibold text-(--ink)">
-                  {r.title}
-                </span>
-                <span className="text-[0.9rem] leading-[1.6] text-(--ink-3)">
-                  {r.desc}
+                {r.cover && (
+                  <span className="flex-none self-start overflow-hidden rounded-[4px] border border-(--border-2) bg-(--surface-2)">
+                    <Image
+                      src={r.cover}
+                      alt=""
+                      width={r.coverW ?? 41}
+                      height={r.coverH ?? 56}
+                      unoptimized
+                      className="block"
+                    />
+                  </span>
+                )}
+                <span className="flex min-w-0 flex-col gap-2">
+                  <span className="text-[0.82rem] font-medium text-(--ink-3)">
+                    {r.kind}
+                  </span>
+                  <span className="text-[1.05rem] font-semibold text-(--ink)">
+                    {r.title}
+                  </span>
+                  {r.by && (
+                    <span className="text-[0.88rem] text-(--ink-2)">{r.by}</span>
+                  )}
+                  <span className="text-[0.9rem] leading-[1.6] text-(--ink-3)">
+                    {r.desc}
+                  </span>
                 </span>
               </>
             );
             const cls =
-              "flex flex-col gap-2 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all";
+              "flex gap-5 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all";
             return r.href ? (
               <a
                 key={r.title}

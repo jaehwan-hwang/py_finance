@@ -159,7 +159,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
                   }}
                   disabled={graded}
                   spellCheck={false}
-                  className={`min-w-0 flex-1 rounded-[10px] border bg-(--surface-2) px-3 py-2 font-mono text-[0.9rem] text-(--ink) outline-none ${
+                  className={`min-w-0 flex-1 rounded-[10px] border bg-(--surface-2) px-3 py-2 font-mono text-[0.9rem] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                     graded
                       ? ok
                         ? "border-(--ok) bg-(--ok-wash)"
@@ -196,7 +196,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
               rows={4}
               spellCheck={false}
               placeholder={data.input.placeholder}
-              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-3 font-mono text-[0.88rem] leading-[1.8] text-(--ink) outline-none ${
+              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-3 font-mono text-[0.88rem] leading-[1.8] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                 graded
                   ? inputOk
                     ? "border-(--ok) bg-(--ok-wash)"
@@ -214,7 +214,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
               disabled={graded}
               spellCheck={false}
               placeholder={data.input.placeholder}
-              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-2.5 font-mono text-[0.92rem] text-(--ink) outline-none ${
+              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-2.5 font-mono text-[0.92rem] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                 graded
                   ? inputOk
                     ? "border-(--ok) bg-(--ok-wash)"
