@@ -9,7 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { weeks } from "@/constants/weeks";
+import { weeks, isOpen } from "@/constants/weeks";
+import { MENTOR_UI_COOKIE } from "@/lib/mentorCookie";
 
 /** 슬라이드 한 장. */
 export function Slide({
@@ -40,9 +41,16 @@ export default function SlideDeck({
   const total = slides.length;
   const [i, setI] = useState(0);
   const [done, setDone] = useState(false);
+  const [mentor, setMentor] = useState(false);
   const touch = useRef<{ x: number; y: number } | null>(null);
 
   const toTop = () => window.scrollTo({ top: 0, behavior: "auto" });
+
+  useEffect(() => {
+    setMentor(
+      document.cookie.split("; ").some((c) => c.startsWith(`${MENTOR_UI_COOKIE}=`)),
+    );
+  }, []);
 
   const go = useCallback(
     (next: number) => {
@@ -221,7 +229,7 @@ export default function SlideDeck({
               메인으로 돌아가기
             </Link>
 
-            {nextWeek?.available ? (
+            {nextWeek && (isOpen(nextWeek) || mentor) ? (
               <Link
                 href={`/week/${Number(nextWeek.num)}`}
                 className="inline-flex items-center gap-2 rounded-full bg-(--chip-bg) px-5 py-2.5 text-[0.88rem] font-medium text-(--chip-ink) transition-transform hover:-translate-y-0.5"
@@ -232,7 +240,7 @@ export default function SlideDeck({
             ) : (
               <span className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-dashed border-(--border) px-5 py-2.5 text-[0.88rem] font-medium text-(--ink-3)">
                 {nextWeek
-                  ? `${Number(nextWeek.num)}주차는 준비 중`
+                  ? `${Number(nextWeek.num)}주차는 수업 후에 열립니다`
                   : "마지막 주차입니다"}
                 <ArrowIcon dir="right" />
               </span>

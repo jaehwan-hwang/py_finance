@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CodeBlock from "./CodeBlock";
 import type { QuizBlock } from "@/constants/mdBlock";
+import { withMath } from "@/lib/tex";
 
 /** 표기 차이를 흡수해서 비교한다. 공백·대소문자·끝의 마침표를 무시. */
 function norm(s: string, multiline = false): string {
@@ -92,7 +93,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
     <div className="mt-5 rounded-[16px] border border-(--border) bg-(--surface) p-5">
       <p className="md text-[1rem] leading-[1.7] font-semibold text-(--ink)">
         <span className="font-display mr-1.5 text-(--ink-3)">{data.no}.</span>
-        <span dangerouslySetInnerHTML={{ __html: data.q }} />
+        <span dangerouslySetInnerHTML={{ __html: withMath(data.q) }} />
       </p>
 
       {data.code && <CodeBlock code={data.code} lang="python" />}
@@ -121,7 +122,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
                     <span className="font-display flex-none tabular-nums">{n}.</span>
                     <span
                       className="md min-w-0 flex-1"
-                      dangerouslySetInnerHTML={{ __html: o }}
+                      dangerouslySetInnerHTML={{ __html: withMath(o) }}
                     />
                     {graded && st === "right" && <Mark ok />}
                     {graded && st === "wrong" && <Mark />}
@@ -158,7 +159,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
                   }}
                   disabled={graded}
                   spellCheck={false}
-                  className={`min-w-0 flex-1 rounded-[10px] border bg-(--surface-2) px-3 py-2 font-mono text-[0.9rem] text-(--ink) outline-none ${
+                  className={`min-w-0 flex-1 rounded-[10px] border bg-(--surface-2) px-3 py-2 font-mono text-[0.9rem] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                     graded
                       ? ok
                         ? "border-(--ok) bg-(--ok-wash)"
@@ -195,7 +196,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
               rows={4}
               spellCheck={false}
               placeholder={data.input.placeholder}
-              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-3 font-mono text-[0.88rem] leading-[1.8] text-(--ink) outline-none ${
+              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-3 font-mono text-[0.88rem] leading-[1.8] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                 graded
                   ? inputOk
                     ? "border-(--ok) bg-(--ok-wash)"
@@ -213,7 +214,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
               disabled={graded}
               spellCheck={false}
               placeholder={data.input.placeholder}
-              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-2.5 font-mono text-[0.92rem] text-(--ink) outline-none ${
+              className={`w-full rounded-[12px] border bg-(--surface-2) px-4 py-2.5 font-mono text-[0.92rem] text-(--ink) outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${
                 graded
                   ? inputOk
                     ? "border-(--ok) bg-(--ok-wash)"
@@ -271,7 +272,7 @@ export default function Quiz({ data }: { data: QuizBlock }) {
           <p className="mb-1 text-[0.82rem] font-semibold text-(--accent)">해설</p>
           <p
             className="md text-[0.96rem] leading-[1.8] text-(--ink-2)"
-            dangerouslySetInnerHTML={{ __html: data.explain }}
+            dangerouslySetInnerHTML={{ __html: withMath(data.explain) }}
           />
           {data.explainCode && <CodeBlock code={data.explainCode} lang="python" />}
         </div>

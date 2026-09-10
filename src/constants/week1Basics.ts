@@ -555,35 +555,6 @@ rate = 0.05           # 2026년 기준 정기예금 평균 금리 가정`,
 
   /* ── 정리 ── */
   {
-    title: "가상환경을 왜 쓰는가",
-    blocks: [
-      {
-        t: "p",
-        text: "가상환경(virtual environment)은 프로젝트별로 독립된 파이썬 실행 환경을 만드는 도구다. 프로젝트마다 별도의 옷장을 두는 것과 같다.",
-      },
-      {
-        t: "ul",
-        items: [
-          "<b>버전 충돌 방지</b> — A 프로젝트는 pandas 2.2, B 프로젝트는 pandas 1.5가 필요할 때, 가상환경이 없으면 둘 중 하나는 반드시 깨진다.",
-          "<b>시스템 파이썬 보호</b> — 전역에 라이브러리를 계속 설치하면 원인을 알기 어려운 오류가 쌓인다.",
-          "<b>정리와 재현이 쉬움</b> — 프로젝트 폴더째 지우면 환경도 함께 사라지고, 다른 사람에게 동일한 환경을 그대로 재현해줄 수 있다.",
-        ],
-      },
-      {
-        t: "table",
-        head: ["OS", "생성", "활성화"],
-        rows: [
-          ["Windows", "<code>python -m venv venv</code>", "<code>.\\venv\\Scripts\\Activate.ps1</code>"],
-          ["macOS / Linux", "<code>python3 -m venv venv</code>", "<code>source venv/bin/activate</code>"],
-        ],
-      },
-      {
-        t: "p",
-        text: "프롬프트 앞에 <code>(venv)</code>가 표시되면 활성화된 상태다. 종료는 <code>deactivate</code>.",
-      },
-    ],
-  },
-  {
     title: "핵심 문법 요약",
     blocks: [
       {
@@ -830,3 +801,36 @@ export const WEEK1_NEXT: Block[] = [
     text: "오늘 만든 가상환경은 8주 내내 그대로 사용한다. 다음 주에도 같은 폴더를 열고 <code>source venv/bin/activate</code> (Windows는 <code>.\\venv\\Scripts\\Activate.ps1</code>)로 시작하면 된다.",
   },
 ];
+
+/** 환경 세팅 직후에 보여준다. venv를 만들어 본 뒤 바로 "왜"를 설명하기 위해
+ *  BASICS에서 빼내 따로 두었다. */
+export const VENV_WHY: BasicSlide =
+  {
+    title: "가상환경을 왜 쓰는가",
+    blocks: [
+      {
+        t: "p",
+        text: "가상환경(virtual environment)은 프로젝트별로 독립된 파이썬 실행 환경을 만드는 도구다. 프로젝트마다 별도의 옷장을 두는 것과 같다.",
+      },
+      {
+        t: "ul",
+        items: [
+          "<b>버전 충돌 방지</b> — A 프로젝트는 pandas 2.2, B 프로젝트는 pandas 1.5가 필요할 때, 가상환경이 없으면 둘 중 하나는 반드시 깨진다.",
+          "<b>시스템 파이썬 보호</b> — 전역에 라이브러리를 계속 설치하면 원인을 알기 어려운 오류가 쌓인다.",
+          "<b>정리와 재현이 쉬움</b> — 프로젝트 폴더째 지우면 환경도 함께 사라지고, 다른 사람에게 동일한 환경을 그대로 재현해줄 수 있다.",
+        ],
+      },
+      {
+        t: "table",
+        head: ["OS", "생성", "활성화"],
+        rows: [
+          ["Windows", "<code>python -m venv venv</code>", "<code>.\\venv\\Scripts\\Activate.ps1</code>"],
+          ["macOS / Linux", "<code>python3 -m venv venv</code>", "<code>source venv/bin/activate</code>"],
+        ],
+      },
+      {
+        t: "p",
+        text: "프롬프트 앞에 <code>(venv)</code>가 표시되면 활성화된 상태다. 종료는 <code>deactivate</code>.",
+      },
+    ],
+  };

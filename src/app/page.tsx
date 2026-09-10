@@ -1,12 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Tag } from "@/components";
 import { SITE_META, REFERENCES } from "@/constants/site";
-import { weeks, formatDate, findNextWeek, daysUntil } from "@/constants/weeks";
+import { weeks, formatDate, findNextWeek, daysUntil, isOpen } from "@/constants/weeks";
+import { MENTOR_UI_COOKIE } from "@/lib/mentorCookie";
 
 const WRAP = "mx-auto max-w-[1200px] px-5 sm:px-10";
+
+/** 멘토로 들어왔는지. 카드를 열어 그리기 위한 표시일 뿐이고,
+ *  실제 접근 통제는 주차 페이지에서 서버가 한다. */
+function useIsMentor() {
+  const [mentor, setMentor] = useState(false);
+  useEffect(() => {
+    setMentor(document.cookie.split("; ").some((c) => c.startsWith(`${MENTOR_UI_COOKIE}=`)));
+  }, []);
+  return mentor;
+}
 
 export default function Home() {
   return (
@@ -55,6 +67,8 @@ function Hero() {
 
 /* ── 커리큘럼 ── */
 function Curriculum() {
+  const mentor = useIsMentor();
+
   return (
     <section
       id="curriculum"
@@ -64,9 +78,14 @@ function Curriculum() {
         Curriculum
       </h2>
       <NextSession />
+      {mentor && (
+        <p className="mb-6 -mt-4 text-[0.88rem] text-(--ink-3)">
+          멘토로 보는 중입니다. 아직 열리지 않은 주차도 볼 수 있습니다.
+        </p>
+      )}
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {weeks.map((w) => (
-          <WeekCard key={w.num} week={w} />
+          <WeekCard key={w.num} week={w} mentor={mentor} />
         ))}
       </div>
     </section>
@@ -98,19 +117,36 @@ function Reference() {
           {REFERENCES.map((r) => {
             const inner = (
               <>
-                <span className="text-[0.82rem] font-medium text-(--ink-3)">
-                  {r.kind}
-                </span>
-                <span className="text-[1.05rem] font-semibold text-(--ink)">
-                  {r.title}
-                </span>
-                <span className="text-[0.9rem] leading-[1.6] text-(--ink-3)">
-                  {r.desc}
+                {r.cover && (
+                  <span className="flex-none self-start overflow-hidden rounded-[4px] border border-(--border-2) bg-(--surface-2)">
+                    <Image
+                      src={r.cover}
+                      alt=""
+                      width={r.coverW ?? 396}
+                      height={r.coverH ?? 542}
+                      sizes="120px"
+                      className="block h-[120px] w-auto"
+                    />
+                  </span>
+                )}
+                <span className="flex min-w-0 flex-col gap-2">
+                  <span className="text-[0.82rem] font-medium text-(--ink-3)">
+                    {r.kind}
+                  </span>
+                  <span className="text-[1.05rem] font-semibold text-(--ink)">
+                    {r.title}
+                  </span>
+                  {r.by && (
+                    <span className="text-[0.88rem] text-(--ink-2)">{r.by}</span>
+                  )}
+                  <span className="text-[0.9rem] leading-[1.6] text-(--ink-3)">
+                    {r.desc}
+                  </span>
                 </span>
               </>
             );
             const cls =
-              "flex flex-col gap-2 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all";
+              "flex gap-5 rounded-[18px] border border-(--border) bg-(--surface) p-6 transition-all";
             return r.href ? (
               <a
                 key={r.title}
@@ -178,8 +214,16 @@ function NextSession() {
   );
 }
 
-function WeekCard({ week }: { week: (typeof weeks)[number] }) {
-  const open = week.available;
+function WeekCard({
+  week,
+  mentor,
+}: {
+  week: (typeof weeks)[number];
+  mentor: boolean;
+}) {
+  // 서버 렌더에서는 항상 날짜 기준으로 그리고, 멘토면 붙은 뒤 열린다
+  const opened = isOpen(week);
+  const open = opened || mentor;
 
   const inner = (
     <>
@@ -207,7 +251,7 @@ function WeekCard({ week }: { week: (typeof weeks)[number] }) {
 
       <span className="flex items-center justify-between gap-2.5 border-t border-(--border-2) pt-3.5">
         <Tag variant={open ? "solid" : "outline"}>
-          {open ? "자료 열림" : "준비 중"}
+          {opened ? "자료 열림" : mentor ? "멘토 열람" : "수업 전"}
         </Tag>
         <span
           aria-hidden="true"
