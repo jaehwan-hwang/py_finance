@@ -2,7 +2,7 @@ export const SITE_NAME = "PYTHON으로 알아보는 기초 금융공학";
 export const TEAM_NAME = "FORIF";
 
 /** 배포 주소 — sitemap·robots·OG 이미지 경로의 기준이 된다. */
-export const SITE_URL = "https://py-finance.vercel.app";
+export const SITE_URL = "https://financepy.site";
 
 /** 화면에는 안 나온다. 검색 결과와 카톡·디스코드 링크 미리보기에만 쓰인다. */
 export const SITE_SEO_DESC =
