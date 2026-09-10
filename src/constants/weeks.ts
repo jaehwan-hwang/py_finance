@@ -1,10 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   ▼▼▼ 매주 여기를 고칩니다 ▼▼▼
+   주차 자료는 수업 시각(수요일 16:00)이 지나면 자동으로 열립니다.
+   한 번 열린 주차는 계속 열려 있어 복습용으로 볼 수 있습니다.
 
-   수업이 끝나면 해당 주차의  available 을  false → true  로 바꾸세요.
-   그러면 홈 화면 카드가 열리고 /week/2 페이지로 들어갈 수 있게 됩니다.
-
-   ▲▲▲ 매주 여기를 고칩니다 ▲▲▲
+   손으로 available 을 켜고 끌 필요가 없습니다. 날짜만 맞으면 됩니다.
+   멘토는 /mentor?key=... 로 한 번 들어오면 전부 볼 수 있습니다.
    ═══════════════════════════════════════════════════════════════════════ */
 
 export interface WeekMeta {
@@ -17,8 +16,6 @@ export interface WeekMeta {
   python: string[];
   /** 덤으로 알아두면 좋은 것 */
   bonus: string;
-  /** true 가 되면 주차 페이지가 열린다 */
-  available: boolean;
 }
 
 export const weeks: WeekMeta[] = [
@@ -29,7 +26,6 @@ export const weeks: WeekMeta[] = [
     desc: "Windows·MacOS·Linux 환경 세팅. NumPy와 Pandas가 잘 돌아가는지 확인합니다.",
     python: ["Python 설치", "venv", "VSCode"],
     bonus: "NumPy · Pandas 설치와 test.py 실행",
-    available: true,
   },
   {
     num: "02",
@@ -38,7 +34,6 @@ export const weeks: WeekMeta[] = [
     desc: "복리 · 연속복리 · NPV · IRR. 조건문과 반복문, 함수로 직접 구현합니다.",
     python: ["조건문 (if)", "반복문 (for / while)", "함수 (def)"],
     bonus: "이분법으로 IRR 구하기",
-    available: true,
   },
   {
     num: "03",
@@ -47,7 +42,6 @@ export const weeks: WeekMeta[] = [
     desc: "단순수익률과 로그수익률. 실제 주가 데이터를 받아 pandas로 다룹니다.",
     python: ["리스트", "딕셔너리", "라이브러리 임포트"],
     bonus: "pandas Series · DataFrame · .shift()",
-    available: true,
   },
   {
     num: "04",
@@ -56,7 +50,6 @@ export const weeks: WeekMeta[] = [
     desc: "변동성 · CAGR · 샤프지수 · MDD. 네 지표를 한 장의 표로 함께 봅니다.",
     python: ["pandas 통계 메서드", "numpy 배열 연산"],
     bonus: ".cummax() 와 .rolling()",
-    available: true,
   },
   {
     num: "05",
@@ -65,7 +58,6 @@ export const weeks: WeekMeta[] = [
     desc: "공분산 · 상관계수 · 베타 · CAPM. 상관계수가 낮으면 왜 위험이 줄어드는지 확인합니다.",
     python: ["다중 자산 관리", "matplotlib 시각화"],
     bonus: "np.polyfit 으로 베타 그리기",
-    available: true,
   },
   {
     num: "06",
@@ -74,7 +66,6 @@ export const weeks: WeekMeta[] = [
     desc: "효율적 투자선. 비중 2만 세트를 무작위로 뿌려 최적 포트폴리오를 찾습니다.",
     python: ["numpy 행렬 연산", "몬테카를로 시뮬레이션"],
     bonus: "argmax 로 최적 비중 꺼내기",
-    available: true,
   },
   {
     num: "07",
@@ -83,7 +74,6 @@ export const weeks: WeekMeta[] = [
     desc: "흩어진 코드를 quantkit 패키지로 정리하고, 그 도구로 모의투자를 집행합니다.",
     python: ["함수 모듈화", "csv 파일 입출력", "클래스 (class)"],
     bonus: "Account 클래스로 계좌 관리하기",
-    available: true,
   },
   {
     num: "08",
@@ -92,7 +82,6 @@ export const weeks: WeekMeta[] = [
     desc: "문법 총정리와 코드 리팩토링. 각자 기준으로 포트폴리오를 설계해 발표합니다.",
     python: ["문법 총정리", "코드 리팩토링"],
     bonus: "학습·검증 구간을 나눠 과최적화 점검하기",
-    available: true,
   },
 ];
 
@@ -116,4 +105,14 @@ export function daysUntil(iso: string, today: Date = new Date()): number {
   const t = new Date(today);
   t.setHours(0, 0, 0, 0);
   return Math.round((new Date(iso + "T00:00:00").getTime() - t.getTime()) / 86400000);
+}
+
+/** 수업 시작 시각 (한국 시간 수요일 16:00) */
+export function openAt(iso: string): Date {
+  return new Date(`${iso}T16:00:00+09:00`);
+}
+
+/** 그 주차 자료가 열렸는가. 한 번 열리면 계속 열려 있다. */
+export function isOpen(week: WeekMeta, now: Date = new Date()): boolean {
+  return now.getTime() >= openAt(week.date).getTime();
 }

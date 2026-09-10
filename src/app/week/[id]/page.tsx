@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { weeks } from "@/constants/weeks";
+import { weeks, isOpen } from "@/constants/weeks";
+import { isMentor } from "@/lib/mentor";
+import Locked from "./Locked";
 import MdWeek from "@/components/MdWeek";
 import Week1Content from "./weeks/Week1Content";
 import { WEEK2_DOC } from "@/constants/week2Doc";
@@ -28,11 +30,8 @@ const CUSTOM: Record<string, React.ComponentType> = {
   "1": Week1Content,
 };
 
-export function generateStaticParams() {
-  return weeks
-    .filter((w) => w.available)
-    .map((w) => ({ id: String(Number(w.num)) }));
-}
+/* 요청 시각과 쿠키로 공개 여부를 판단하므로 정적으로 굳히지 않는다. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -57,7 +56,12 @@ export default async function WeekPage({
   const key = String(Number(id));
   const week = weeks.find((w) => Number(w.num) === Number(id));
 
-  if (!week || !week.available) notFound();
+  if (!week) notFound();
+
+  // 수업 전 주차는 멘토만 볼 수 있다
+  if (!isOpen(week) && !(await isMentor())) {
+    return <Locked week={week} />;
+  }
 
   const Custom = CUSTOM[key];
   if (Custom) {

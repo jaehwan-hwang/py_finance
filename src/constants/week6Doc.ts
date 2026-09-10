@@ -926,7 +926,7 @@ def random_weights(n_assets, n_samples, seed=None):
     },
     {
       t: "p",
-      text: "이번 주에 저장한 <code>optimal_weights.csv</code>를 다음 주에 그대로 사용하므로 지우지 않는다. 완성된 퀀트 투자 코드를 배포할 예정이니, 지금까지의 <code>week3.py</code> ~ <code>week6.py</code>도 함께 보관해두면 좋다.",
+      text: "이번 주에 저장한 <code>optimal_weights.csv</code>를 다음 주에 그대로 사용하므로 지우지 않는다. 다음 주에는 지금까지 만든 함수들을 하나의 패키지로 다시 정리하므로, 지금까지의 <code>week3.py</code> ~ <code>week6.py</code>도 함께 보관해두면 좋다.",
     },
   ],
 };
