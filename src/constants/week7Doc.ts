@@ -709,6 +709,8 @@ def print_summary(prices_df):
           lang: "python",
           code: `"""포트폴리오 구성과 최적화 (5·6주차 내용)."""
 
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -807,6 +809,10 @@ def save_weights(weights, path=WEIGHTS_FILE):
 
 def load_weights(path=WEIGHTS_FILE):
     """저장된 비중 CSV를 Series로 불러온다."""
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"{path}가 없다. run_optimize.py 를 먼저 실행해야 한다."
+        )
     df = pd.read_csv(path, index_col=0)
     return df.iloc[:, 0]
 
