@@ -8,3 +8,4 @@ export { default as Quiz } from "./Quiz";
 export { default as SlideDeck, Slide } from "./SlideDeck";
 export { default as Tag } from "./Tag";
 export { default as ThemeToggle } from "./ThemeProvider";
+export { default as Wordmark } from "./Wordmark";

@@ -104,10 +104,10 @@ function Reference() {
                     <Image
                       src={r.cover}
                       alt=""
-                      width={r.coverW ?? 41}
-                      height={r.coverH ?? 56}
-                      unoptimized
-                      className="block"
+                      width={r.coverW ?? 396}
+                      height={r.coverH ?? 542}
+                      sizes="120px"
+                      className="block h-[120px] w-auto"
                     />
                   </span>
                 )}
