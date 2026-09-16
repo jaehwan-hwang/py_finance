@@ -7,5 +7,6 @@
 .env*
 !.env.example
 .vercel
+.claude/
 *.tsbuildinfo
 next-env.d.ts
