@@ -11,7 +11,7 @@ export const SITE_SEO_DESC =
 export const SITE_META = [
   { key: "Period", value: "2026.09.16 – 11.18 · 8주 (예정)" },
   { key: "When", value: "매주 수요일 16:00 – 18:00" },
-  { key: "Where", value: "ITBT관 207호" },
+  { key: "Where", value: "ITBT관 208호" },
   { key: "For", value: "파이썬과 기초 재무에 관심있는 누구든" },
 ];
 

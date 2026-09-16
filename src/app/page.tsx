@@ -183,7 +183,7 @@ function NextSession() {
     const d = daysUntil(next.date);
     setInfo({
       title: `${Number(next.num)}주차 · ${next.title}`,
-      meta: `${formatDate(next.date)} · ITBT관 207호`,
+      meta: `${formatDate(next.date)} · ITBT관 208호`,
       dday: d === 0 ? "D-DAY" : `D-${d}`,
     });
   }, []);
