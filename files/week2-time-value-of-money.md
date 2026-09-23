@@ -567,8 +567,10 @@ cashflows = [-1000000, 400000, 400000, 400000]
 result = irr_bisection(cashflows)
 
 print(f"IRR = {result:.4%}")                    # IRR = 9.7010%
-print(f"검산 NPV = {npv(result, cashflows):,.4f}")   # 검산 NPV = 0.0000
+print(f"검산 NPV = {npv(result, cashflows):,.4f}")   # 검산 NPV = -0.0482
 ```
+
+검산값이 정확히 0이 아닌 이유는 종료 조건에 있다. `abs(value) < tolerance`보다 **구간 폭이 좁아지는 조건**이 먼저 걸리기 때문에, 그 시점의 NPV에는 0.05원 남짓의 오차가 남는다. 100만원 규모에서 5전이므로 사실상 0이다. 수치해석은 정확한 해가 아니라 **허용 오차 안의 근삿값**을 구하는 방법이다.
 
 `for _ in range(max_iter)`의 언더스코어(`_`)는 **반복 횟수만 필요하고 그 값 자체는 쓰지 않을 때** 관례적으로 쓰는 변수명이다.
 

@@ -756,7 +756,11 @@ cashflows = [-1000000, 400000, 400000, 400000]
 result = irr_bisection(cashflows)
 
 print(f"IRR = {result:.4%}")                    # IRR = 9.7010%
-print(f"검산 NPV = {npv(result, cashflows):,.4f}")   # 검산 NPV = 0.0000`,
+print(f"검산 NPV = {npv(result, cashflows):,.4f}")   # 검산 NPV = -0.0482`,
+        },
+        {
+          t: "p",
+          text: "검산값이 정확히 0이 아닌 이유는 종료 조건에 있다. <code>abs(value) &lt; tolerance</code>보다 <b>구간 폭이 좁아지는 조건</b>이 먼저 걸리기 때문에, 그 시점의 NPV에는 0.05원 남짓의 오차가 남는다. 100만원 규모에서 5전이므로 사실상 0이다. 수치해석은 정확한 해가 아니라 <b>허용 오차 안의 근삿값</b>을 구하는 방법이다.",
         },
         {
           t: "p",
