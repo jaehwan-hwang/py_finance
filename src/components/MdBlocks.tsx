@@ -89,12 +89,21 @@ export default function MdBlocks({
 
         if (b.t === "out")
           return (
-            <pre
+            <div
               key={i}
-              className="scroll-x mt-4 rounded-[12px] border border-(--border-2) bg-(--surface-2) px-4 py-3.5 font-mono text-[0.85rem] leading-[1.8] whitespace-pre text-(--ink-2)"
+              className="mt-4 rounded-[14px] border border-(--border-2) bg-(--surface-2)"
             >
-              {b.text}
-            </pre>
+              <div className="border-b border-(--border-2) px-4 py-2">
+                <span className="font-mono text-[0.68rem] tracking-[0.08em] text-(--ink-3)">
+                  실행 결과
+                </span>
+              </div>
+              <div className="scroll-x">
+                <pre className="m-0 px-4 py-3.5 font-mono text-[0.85rem] leading-[1.8] whitespace-pre text-(--ink-2)">
+                  {b.text}
+                </pre>
+              </div>
+            </div>
           );
 
         if (b.t === "table")
