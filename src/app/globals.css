@@ -148,6 +148,18 @@ h1, h2, h3, h4 {
   white-space: nowrap;
 }
 
+/* 자료 본문 안의 링크 (자료 파일 내려받기 등) */
+.md a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border);
+  transition: text-decoration-color 0.15s;
+}
+.md a:hover {
+  text-decoration-color: var(--ink-3);
+}
+
 /* 수식 — 본문 글자 크기에 맞춰 조금 줄인다 */
 .katex {
   font-size: 1.04em;

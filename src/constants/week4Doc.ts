@@ -64,7 +64,11 @@ print(f"평균 일간 수익률: {simple.mean():.4%}")`,
         { t: "h", text: "이번 주 준비" },
         {
           t: "p",
-          text: "가상환경을 활성화하고, 지난주에 저장한 <code>prices.csv</code>가 프로젝트 폴더에 있는지 확인한다. 없다면 3주차 코드를 다시 한 번 실행하면 된다.",
+          text: "가상환경을 활성화하고, 지난주에 저장한 <code>prices.csv</code>가 프로젝트 폴더에 있는지 확인한다. 없다면 3주차 코드를 다시 한 번 실행하거나, 아래 파일을 받아 <code>week4.py</code>와 <b>같은 폴더</b>에 두면 된다.",
+        },
+        {
+          t: "p",
+          text: "<a href=\"/prices.csv\" download>prices.csv 내려받기</a> — 2022-09-01 ~ 2026-10-07, 다섯 종목 종가",
         },
         { t: "code", lang: "bash", code: `pip install matplotlib      # 이번 주에 간단한 그래프를 그린다` },
         { t: "p", text: "<code>week4.py</code> 파일을 새로 만든다." },
