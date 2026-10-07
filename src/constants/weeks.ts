@@ -45,7 +45,7 @@ export const weeks: WeekMeta[] = [
   },
   {
     num: "04",
-    date: "2026-10-21",
+    date: "2026-10-07",
     title: "위험을 재는 법",
     desc: "변동성 · CAGR · 샤프지수 · MDD. 네 지표를 한 장의 표로 함께 봅니다.",
     python: ["pandas 통계 메서드", "numpy 배열 연산"],
@@ -53,7 +53,7 @@ export const weeks: WeekMeta[] = [
   },
   {
     num: "05",
-    date: "2026-10-28",
+    date: "2026-11-04",
     title: "자산 간의 관계",
     desc: "공분산 · 상관계수 · 베타 · CAPM. 상관계수가 낮으면 왜 위험이 줄어드는지 확인합니다.",
     python: ["다중 자산 관리", "matplotlib 시각화"],
@@ -61,7 +61,7 @@ export const weeks: WeekMeta[] = [
   },
   {
     num: "06",
-    date: "2026-11-04",
+    date: "2026-11-11",
     title: "포트폴리오 최적화",
     desc: "효율적 투자선. 비중 2만 세트를 무작위로 뿌려 최적 포트폴리오를 찾습니다.",
     python: ["numpy 행렬 연산", "몬테카를로 시뮬레이션"],
@@ -69,7 +69,7 @@ export const weeks: WeekMeta[] = [
   },
   {
     num: "07",
-    date: "2026-11-11",
+    date: "2026-11-18",
     title: "모의계좌로 포트폴리오 집행하기",
     desc: "흩어진 코드를 quantkit 패키지로 정리하고, 그 도구로 모의투자를 집행합니다.",
     python: ["함수 모듈화", "csv 파일 입출력", "클래스 (class)"],
@@ -77,7 +77,7 @@ export const weeks: WeekMeta[] = [
   },
   {
     num: "08",
-    date: "2026-11-18",
+    date: "2026-11-25",
     title: "나만의 포트폴리오",
     desc: "문법 총정리와 코드 리팩토링. 각자 기준으로 포트폴리오를 설계해 발표합니다.",
     python: ["문법 총정리", "코드 리팩토링"],

@@ -12,7 +12,7 @@ export const WEEK4_DOC: WeekDoc = {
     {
       title: "0. 3주차 복습 노트",
       blocks: [
-        { t: "p", text: "3주간의 공백이 있었으므로 지난 내용을 조금 넉넉히 복습한다." },
+        { t: "p", text: "지난주에 배운 것 중 오늘 바로 쓰는 것들을 먼저 복습한다." },
         { t: "h", text: "파이썬 문법" },
         {
           t: "table",
@@ -978,6 +978,10 @@ print(np.dot(a, b))`,
     {
       t: "p",
       text: "이번 주에 만든 지표 함수(<code>cagr</code>, <code>volatility</code>, <code>sharpe_ratio</code>, <code>max_drawdown</code>)는 7주차 모의투자 코드에서 그대로 재사용하므로 <code>week4.py</code>를 보관해둔다.",
+    },
+    {
+      t: "note",
+      text: "이번 주 뒤로 <b>10월 14일·21일·28일은 중간고사 기간으로 휴강</b>이며, 5주차는 <b>11월 4일</b>에 시작한다. 3주간 공백이 있으므로 시험이 끝나면 <code>week3.py</code>와 <code>week4.py</code>를 한 번씩 다시 실행해보고 오면 감을 유지하는 데 도움이 된다.",
     },
   ],
 };

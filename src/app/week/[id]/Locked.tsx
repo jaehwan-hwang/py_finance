@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { formatDate, openAt, type WeekMeta } from "@/constants/weeks";
+import { daysUntil, formatDate, type WeekMeta } from "@/constants/weeks";
 
 /** 아직 수업하지 않은 주차. 언제 열리는지만 알려준다. */
 export default function Locked({ week }: { week: WeekMeta }) {
-  const opens = openAt(week.date);
-  const days = Math.ceil((opens.getTime() - Date.now()) / 86400000);
+  /* 남은 시간을 올림하면 수업 당일 오전에도 'D-1' 이 되어 하루 뒤로 보인다.
+     날짜 기준으로 세어 당일에는 D-DAY 로 보여준다. */
+  const days = daysUntil(week.date);
 
   return (
     <main className="mx-auto flex min-h-[calc(100dvh-80px)] max-w-[900px] flex-col justify-center px-5 pb-20 sm:min-h-[calc(100dvh-88px)] sm:px-10">
@@ -26,11 +27,9 @@ export default function Locked({ week }: { week: WeekMeta }) {
         <span className="text-[1.02rem] font-medium text-(--ink)">
           {formatDate(week.date)} 16:00
         </span>
-        {days > 0 && (
-          <span className="font-display text-[0.95rem] font-medium text-(--ink-3) tabular-nums">
-            D-{days}
-          </span>
-        )}
+        <span className="font-display text-[0.95rem] font-medium text-(--ink-3) tabular-nums">
+          {days > 0 ? `D-${days}` : "D-DAY"}
+        </span>
       </div>
 
       <div className="mt-9 flex flex-wrap gap-2.5">
