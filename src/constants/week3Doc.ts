@@ -805,6 +805,13 @@ df = pd.read_csv("samsung.csv", index_col=0)          # 불러오기`,
           t: "math",
           tex: "R_t = \\frac{P_t - P_{t-1}}{P_{t-1}} = \\frac{P_t}{P_{t-1}} - 1",
         },
+        {
+          t: "ul",
+          items: [
+            "$R_t$ — $t$일의 단순수익률",
+            "$P_t$ — $t$일의 가격(종가), $P_{t-1}$ — 전날 가격",
+          ],
+        },
         { t: "h", text: "비유" },
         {
           t: "p",
@@ -851,6 +858,14 @@ dtype: float64`,
         },
         { t: "math", tex: "R_p = \\sum_i w_i R_i" },
         {
+          t: "ul",
+          items: [
+            "$R_p$ — 포트폴리오 전체의 수익률",
+            "$w_i$ — 자산 $i$에 넣은 비중 (전부 더하면 1)",
+            "$R_i$ — 자산 $i$의 수익률",
+          ],
+        },
+        {
           t: "code",
           lang: "python",
           code: `weights = {"삼성전자": 0.6, "SK하이닉스": 0.4}
@@ -895,6 +910,14 @@ print(1000 * (1 + 0.5) * (1 - 0.5))   # 750.0  → 실제로는 -25%`,
         {
           t: "math",
           tex: "r_t = \\ln\\left(\\frac{P_t}{P_{t-1}}\\right) = \\ln P_t - \\ln P_{t-1}",
+        },
+        {
+          t: "ul",
+          items: [
+            "$r_t$ — $t$일의 로그수익률",
+            "$P_t$ — $t$일의 가격, $P_{t-1}$ — 전날 가격",
+            "$\\ln$ — 자연로그. 파이썬에서는 <code>np.log()</code>",
+          ],
         },
         { t: "h", text: "비유" },
         {
@@ -966,6 +989,13 @@ print(f"로그수익률 합계 복원: {np.exp(log_ret.sum()) - 1:.6f}")  # 0.07
       title: "핵심 성질 2: 두 수익률의 변환",
       blocks: [
         { t: "math", tex: "r = \\ln(1 + R) \\qquad R = e^{r} - 1" },
+        {
+          t: "ul",
+          items: [
+            "$R$ — 단순수익률 (예: 2%면 0.02)",
+            "$r$ — 같은 변화를 로그수익률로 표현한 값",
+          ],
+        },
         {
           t: "code",
           lang: "python",

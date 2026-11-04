@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import CodeBlock from "./CodeBlock";
 import Quiz from "./Quiz";
 import type { Block } from "@/constants/mdBlock";
@@ -106,6 +107,26 @@ export default function MdBlocks({
             </div>
           );
 
+        if (b.t === "img")
+          return (
+            <figure key={i} className="mt-4">
+              <div className="overflow-hidden rounded-[14px] border border-(--border-2) bg-white">
+                <Image
+                  src={b.src}
+                  alt={b.alt}
+                  width={1210}
+                  height={880}
+                  className="h-auto w-full"
+                />
+              </div>
+              {b.caption && (
+                <figcaption className="mt-2 text-[0.88rem] text-(--ink-3)">
+                  {b.caption}
+                </figcaption>
+              )}
+            </figure>
+          );
+
         if (b.t === "table")
           return (
             <div
@@ -118,10 +139,9 @@ export default function MdBlocks({
                     {b.head.map((h, n) => (
                       <th
                         key={n}
-                        className="px-5 py-3 text-[0.85rem] font-semibold text-(--ink-3)"
-                      >
-                        {h}
-                      </th>
+                        className="md px-5 py-3 text-[0.85rem] font-semibold text-(--ink-3)"
+                        dangerouslySetInnerHTML={{ __html: withMath(h) }}
+                      />
                     ))}
                   </tr>
                 </thead>

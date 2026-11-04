@@ -1,5 +1,5 @@
 /** md 문서를 슬라이드에 그대로 옮길 때 쓰는 블록 규격.
- *  문단 / 목록 / 인용구 / 소제목 / 코드 / 출력 / 표 / 문제 */
+ *  문단 / 목록 / 인용구 / 소제목 / 코드 / 출력 / 그림 / 표 / 문제 */
 
 /** 빈칸 하나. accept 에 적은 값 중 하나와 맞으면 정답으로 친다. */
 export interface Blank {
@@ -46,6 +46,8 @@ export type Block =
   | { t: "h"; text: string }
   | { t: "code"; code: string; lang?: string }
   | { t: "out"; text: string }
+  /** 그림. src 는 public 기준 경로. */
+  | { t: "img"; src: string; alt: string; caption?: string }
   | { t: "math"; tex: string }
   | { t: "table"; head: string[]; rows: string[][] }
   | QuizBlock;

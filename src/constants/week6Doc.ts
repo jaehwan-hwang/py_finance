@@ -47,6 +47,14 @@ export const WEEK6_DOC: WeekDoc = {
           tex: "\\sigma_p^2 = w_1^2\\sigma_1^2 + w_2^2\\sigma_2^2 + 2w_1w_2\\rho_{12}\\sigma_1\\sigma_2",
         },
         {
+          t: "ul",
+          items: [
+            "$\\sigma_p^2$ — 포트폴리오 분산, $\\sigma_p$ — 그 제곱근인 변동성",
+            "$w_1$, $w_2$ — 각 자산의 비중, $\\sigma_1$, $\\sigma_2$ — 각 자산의 변동성",
+            "$\\rho_{12}$ — 두 자산의 상관계수 (5주차에서 배운 그 값)",
+          ],
+        },
+        {
           t: "p",
           text: "변동성 30%와 25%인 두 자산을 상관계수 -0.5로 반씩 섞으면 포트폴리오 변동성은 <b>13.92%</b> 였다. 어느 개별 자산보다도 낮다.",
         },
@@ -122,6 +130,14 @@ print(A @ B)      # 행렬 곱셈
         { t: "h", text: "포트폴리오 수익률 = 벡터 내적" },
         { t: "math", tex: "R_p = \\sum_i w_i \\mu_i = w^T \\mu" },
         {
+          t: "ul",
+          items: [
+            "$R_p$ — 포트폴리오의 기대수익률",
+            "$w$ — 비중을 모아 놓은 벡터, $\\mu$ — 각 자산의 기대수익률 벡터",
+            "$w^T \\mu$ — 두 벡터의 내적. 파이썬에서는 <code>np.dot(w, mu)</code>",
+          ],
+        },
+        {
           t: "code",
           lang: "python",
           code: `weights = np.array([0.4, 0.3, 0.3])
@@ -137,6 +153,13 @@ print(weights @ mean_returns)    # 0.099
       title: "포트폴리오 분산 = 이차형식",
       blocks: [
         { t: "math", tex: "\\sigma_p^2 = w^T \\Sigma w" },
+        {
+          t: "ul",
+          items: [
+            "$w$ — 비중 벡터",
+            "$\\Sigma$ — 공분산 행렬 (5주차의 <code>returns.cov()</code>)",
+          ],
+        },
         {
           t: "p",
           text: "$\\Sigma$는 공분산 행렬이다. 5주차에서 <code>returns.cov()</code>로 구했던 그 표다.",

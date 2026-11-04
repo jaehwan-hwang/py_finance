@@ -8,56 +8,243 @@ export const WEEK5_DOC: WeekDoc = {
   lead: "지난주까지는 자산을 하나씩 따로 놓고 평가했다. 하지만 포트폴리오는 <b>여러 자산을 함께 담는 일</b>이고, 그때 결정적으로 중요해지는 것은 각 자산의 성질이 아니라 <b>자산들 사이의 관계</b>다. 이번 주에 배우는 개념이 다음 주 포트폴리오 최적화의 직접적인 재료가 된다.",
 
   slides: [
-    /* ── 0. 복습 ── */
+    /* ── 0. 복습 (1~4주차) ── */
     {
-      title: "0. 4주차 복습 노트",
+      title: "복습 (1) — 1주차 파이썬 기초",
       blocks: [
-        { t: "h", text: "파이썬 문법" },
+        {
+          t: "p",
+          text: "3주간 공백이 있었으므로 1주차부터 4주차까지를 한 주씩 짚는다. <b>각 코드는 그대로 복사해 실행하면 아래 출력이 그대로 나온다.</b>",
+        },
+        {
+          t: "table",
+          head: ["개념", "핵심"],
+          rows: [
+            ["<b>변수</b>", "값에 이름을 붙여 저장한다. <code>=</code>는 대입, <code>==</code>는 비교"],
+            ["<b>자료형</b>", "<code>int</code>(정수) · <code>float</code>(실수) · <code>str</code>(문자열) · <code>bool</code>(참/거짓)"],
+            ["<b><code>print()</code></b>", "화면에 출력한다"],
+            ["<b><code>input()</code></b>", "입력을 받는다. 결과는 <b>항상 문자열</b>이라 계산하려면 <code>int()</code>나 <code>float()</code>로 바꾼다"],
+            ["<b>f-string</b>", "<code>f\"{변수}\"</code>로 값을 끼워 넣는다. 금액은 <code>:,.0f</code>, 비율은 <code>:.2%</code>"],
+            ["<b>주석</b>", "<code>#</code> 뒤는 실행되지 않는다"],
+          ],
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `principal = 1000000       # 원금
+rate = 0.05               # 연 이자율
+years = 3                 # 기간
+
+total = principal * (1 + rate) ** years
+
+print("원금:", principal)
+print(f"연 이자율 {rate:.2%}로 {years}년 두면")
+print(f"원리금은 {total:,.0f}원")`,
+        },
+        {
+          t: "out",
+          text: `원금: 1000000
+연 이자율 5.00%로 3년 두면
+원리금은 1,157,625원`,
+        },
+      ],
+    },
+    {
+      title: "복습 (2) — 2주차 화폐의 시간가치",
+      blocks: [
+        {
+          t: "table",
+          head: ["개념", "핵심"],
+          rows: [
+            ["<b>조건문</b>", "<code>if</code> / <code>elif</code> / <code>else</code>. 콜론과 들여쓰기가 필수다"],
+            ["<b>반복문</b>", "<code>for</code>는 횟수를 알 때, <code>while</code>은 조건으로 돈다. <code>range(a, b)</code>는 <b>b를 포함하지 않는다</b>"],
+            ["<b>함수</b>", "<code>def</code>로 정의하고 <code>return</code>으로 값을 돌려준다. <code>return</code>이 없으면 <code>None</code>"],
+            ["<b>복리</b>", "원금 × (1 + 이자율)<sup>기간</sup>. 이자가 이자를 낳는다"],
+            ["<b>NPV · IRR</b>", "미래의 현금흐름을 현재가치로 환산해 더한 값, 그리고 그 합을 0으로 만드는 할인율"],
+          ],
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `def compound(principal, rate, years):
+    """복리 원리금을 반환한다."""
+    return principal * (1 + rate) ** years
+
+
+for year in range(1, 4):
+    balance = compound(1000000, 0.05, year)
+    state = "목표 달성" if balance >= 1150000 else "진행 중"
+    print(f"{year}년차  {balance:>12,.0f}원  {state}")`,
+        },
+        {
+          t: "out",
+          text: `1년차     1,050,000원  진행 중
+2년차     1,102,500원  진행 중
+3년차     1,157,625원  목표 달성`,
+        },
+        {
+          t: "p",
+          text: "함수 하나와 반복문 하나, 그리고 한 줄짜리 조건문(삼항 연산자)이 모두 들어 있다.",
+        },
+      ],
+    },
+    {
+      title: "복습 (3) — 3주차 수익률과 금융 데이터",
+      blocks: [
+        {
+          t: "table",
+          head: ["개념", "핵심"],
+          rows: [
+            ["<b>리스트 · 딕셔너리</b>", "<code>[ ]</code>는 순서로 꺼내고(<code>[-1]</code>은 마지막), <code>{ }</code>는 이름으로 꺼낸다"],
+            ["<b>Series · DataFrame</b>", "pandas의 1차원 · 2차원 데이터. 반복문 없이 전체에 연산이 걸린다"],
+            ["<b><code>.shift(1)</code></b>", "한 칸 밀어 전날 값을 옆에 놓는다"],
+            ["<b>단순수익률</b>", "<code>prices.pct_change()</code> — 실제로 몇 % 벌었나"],
+            ["<b>로그수익률</b>", "<code>np.log(prices / prices.shift(1))</code> — 시간축으로 더할 수 있다"],
+          ],
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `import pandas as pd
+
+prices = pd.Series([70000, 71400, 70700, 72100, 71000])
+returns = prices.pct_change().dropna()
+
+print(returns)
+print(f"평균 일간 수익률 {returns.mean():.4%}")`,
+        },
+        {
+          t: "out",
+          text: `1    0.020000
+2   -0.009804
+3    0.019802
+4   -0.015257
+dtype: float64
+평균 일간 수익률 0.3685%`,
+        },
+        {
+          t: "p",
+          text: "첫날은 전날이 없어 수익률이 없다. <code>.dropna()</code>가 그 줄을 떼어낸 것이다.",
+        },
+      ],
+    },
+    {
+      title: "복습 (4) — 4주차 위험을 재는 법",
+      blocks: [
         {
           t: "table",
           head: ["개념", "핵심"],
           rows: [
             ["<b>통계 메서드</b>", "<code>.mean()</code>, <code>.std()</code>, <code>.describe()</code>"],
-            ["<b>누적 메서드</b>", "<code>.cummax()</code> — MDD 계산의 핵심"],
-            ["<b><code>.rolling(n)</code></b>", "n개짜리 창을 밀며 계산, 앞의 n-1개는 <code>NaN</code>"],
-            ["<b>numpy 배열</b>", "원소별 연산, <code>np.sqrt()</code>, <code>np.dot()</code>"],
+            ["<b><code>.cummax()</code></b>", "그때까지의 최고점. MDD 계산의 핵심"],
+            ["<b><code>.rolling(n)</code></b>", "n개짜리 창을 밀며 계산한다"],
+            ["<b>변동성</b>", "수익률의 표준편차 × √252 (연 단위로 환산)"],
+            ["<b>CAGR · 샤프지수 · MDD</b>", "연평균 복리 수익률 · 위험 1단위당 초과수익 · 최악의 순간 낙폭"],
           ],
         },
-        { t: "h", text: "금융 지표" },
-        {
-          t: "table",
-          head: ["지표", "공식", "답하는 질문"],
-          rows: [
-            ["변동성", "$\\sigma_{일} \\times \\sqrt{252}$", "평소 얼마나 요동쳤나"],
-            ["CAGR", "$(V_{end}/V_{start})^{1/n} - 1$", "결국 연 몇 %로 불어났나"],
-            ["샤프지수", "$(R_p - R_f)/\\sigma_p$", "위험 대비 얼마나 효율적이었나"],
-            ["MDD", "$\\min(V_t/\\max V_s - 1)$", "최악의 순간 얼마나 잃었나"],
-          ],
-        },
-        {
-          t: "p",
-          text: "기억할 것: <b>수익률 연율화는 × 252, 변동성 연율화는 × √252.</b>",
-        },
-        { t: "h", text: "코드로 보는 4주차" },
         {
           t: "code",
           lang: "python",
           code: `import numpy as np
+import pandas as pd
 
-def sharpe_ratio(returns, risk_free=0.03, periods=252):
-    """연율화 샤프지수를 반환한다."""
-    annual_return = returns.mean() * periods
-    annual_vol = returns.std() * np.sqrt(periods)
-    return (annual_return - risk_free) / annual_vol
+prices = pd.Series([70000, 71400, 70700, 72100, 71000])
+returns = prices.pct_change().dropna()
 
-
-def max_drawdown(prices):
-    """최대낙폭을 반환한다."""
-    return (prices / prices.cummax() - 1).min()`,
+print(f"연율화 변동성 {returns.std() * np.sqrt(252):>8.2%}")
+print(f"최대낙폭(MDD) {(prices / prices.cummax() - 1).min():>8.2%}")`,
+        },
+        {
+          t: "out",
+          text: `연율화 변동성   29.93%
+최대낙폭(MDD)   -1.53%`,
         },
         {
           t: "p",
-          text: "이번 주 준비 — 가상환경을 활성화하고 <code>prices.csv</code>가 있는지 확인한다. <code>week5.py</code>를 새로 만든다.",
+          text: "기억할 것: <b>연율화할 때 수익률은 × 252, 변동성은 × √252.</b>",
+        },
+      ],
+    },
+
+    /* ── 0-1. 4주차 그래프 직접 그려보기 ── */
+    {
+      title: "4주차 그래프 직접 그려보기",
+      blocks: [
+        {
+          t: "p",
+          text: "아래 코드를 <code>week5.py</code>에 <b>그대로 복사해 붙여넣고 실행한다.</b> <code>prices.csv</code>가 같은 폴더에 있으면 바로 돌아간다. 없으면 <a href=\"/week/4\">4주차 자료</a>에서 내려받는다.",
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `"""4주차에서 그린 그래프 다시 그리기"""
+import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = "Malgun Gothic"   # macOS: AppleGothic, Linux: NanumGothic
+plt.rcParams["axes.unicode_minus"] = False
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 8), sharex=True)
+
+# 위 — 시작을 1로 맞춘 누적 성과
+normalized = prices / prices.iloc[0]
+for name in prices.columns:
+    ax1.plot(normalized.index, normalized[name], label=name)
+ax1.set_title("누적 성과 (시작=1)")
+ax1.legend()
+ax1.grid(alpha=0.3)
+
+# 아래 — 최고점 대비 낙폭
+for name in prices.columns:
+    ax2.plot(prices.index, prices[name] / prices[name].cummax() - 1, label=name)
+ax2.set_title("최고점 대비 낙폭 (Drawdown)")
+ax2.legend()
+ax2.grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()`,
+        },
+        {
+          t: "note",
+          text: "그래프 창을 닫으면 프로그램이 끝난다. 한글이 네모로 나오면 <code>font.family</code> 줄에서 본인 OS에 맞는 것만 남긴다.",
+        },
+      ],
+    },
+
+    /* ── 0-2. 그 결과 ── */
+    {
+      title: "4주차에서 그린 그래프",
+      blocks: [
+        {
+          t: "img",
+          src: "/week4-risk.png",
+          alt: "다섯 자산의 누적 성과와 최고점 대비 낙폭 그래프",
+          caption: "2022-09-01 ~ 2026-10-07",
+        },
+        {
+          t: "p",
+          text: "위는 다섯 자산의 누적 성과(시작을 1로 맞춘 것), 아래는 각 자산의 최고점 대비 낙폭이다. 그림 한 장에 지금까지 배운 것이 모여 있다.",
+        },
+        {
+          t: "table",
+          head: ["그래프를 이루는 것", "배운 주차"],
+          rows: [
+            ["<code>prices.csv</code>를 읽어 표로 만들기", "3주차"],
+            ["시작값으로 나눠 모두 1에서 출발시키기", "3주차"],
+            ["<code>.cummax()</code>로 최고점을 만들어 낙폭 구하기", "4주차"],
+            ["종목을 하나씩 돌며 선을 그리기", "2주차"],
+            ["축·범례·격자를 붙여 그림으로 만들기", "오늘"],
+          ],
+        },
+        {
+          t: "p",
+          text: "<b>데이터를 받아 위험을 재고 그림으로 그리는 데까지 4주가 걸렸다.</b> 자산을 하나씩 따로 보는 일은 이제 할 수 있다. 오늘은 여기에 <b>자산들이 서로 어떻게 움직이는가</b>를 더한다.",
+        },
+        {
+          t: "p",
+          text: "가상환경을 활성화하고 <code>prices.csv</code>가 있는지 확인한 뒤 <code>week5.py</code>를 새로 만든다.",
         },
       ],
     },
@@ -122,7 +309,11 @@ weights = {"삼성전자": 0.2, "KODEX200": 0.2, "미국S&P500": 0.2,
         {
           t: "code",
           lang: "python",
-          code: `returns = prices.pct_change().dropna()   # 모든 열의 수익률을 한 번에
+          code: `import pandas as pd
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+
+returns = prices.pct_change().dropna()   # 모든 열의 수익률을 한 번에
 
 print(returns.mean())        # 열별 평균
 print(returns.std())         # 열별 표준편차
@@ -133,7 +324,12 @@ print(returns.corr())        # 열끼리의 상관계수 행렬`,
         {
           t: "code",
           lang: "python",
-          code: `weights = {"삼성전자": 0.2, "KODEX200": 0.2, "미국S&P500": 0.2,
+          code: `import pandas as pd
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+
+weights = {"삼성전자": 0.2, "KODEX200": 0.2, "미국S&P500": 0.2,
            "국고채30년": 0.2, "금": 0.2}
 
 # 방법 1: 반복문 (이해하기 쉬움)
@@ -143,7 +339,9 @@ for name, w in weights.items():
 
 # 방법 2: pandas 벡터 연산 (간결함)
 w_series = pd.Series(weights)
-portfolio_returns = (returns * w_series).sum(axis=1)`,
+portfolio_returns = (returns * w_series).sum(axis=1)
+
+print(portfolio_returns.tail())`,
         },
         {
           t: "p",
@@ -234,20 +432,38 @@ plt.rcParams["axes.unicode_minus"] = False        # 마이너스 기호 깨짐 �
         {
           t: "code",
           lang: "python",
-          code: `import matplotlib.pyplot as plt
+          code: `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = "Malgun Gothic"   # macOS: AppleGothic, Linux: NanumGothic
+plt.rcParams["axes.unicode_minus"] = False
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+weights = {"삼성전자": 0.2, "KODEX200": 0.2, "미국S&P500": 0.2,
+           "국고채30년": 0.2, "금": 0.2}
+
+fig, ax = plt.subplots(2, 2, figsize=(11, 7))
 
 # 선 그래프 — 시계열
-plt.plot(prices.index, prices["삼성전자"], label="삼성전자")
-plt.legend()
+ax[0][0].plot(prices.index, prices["삼성전자"])
+ax[0][0].set_title("선 그래프 — 삼성전자 주가")
 
 # 산점도 — 두 변수의 관계
-plt.scatter(returns["KODEX200"], returns["삼성전자"], alpha=0.5, s=10)
+ax[0][1].scatter(returns["KODEX200"], returns["삼성전자"], alpha=0.5, s=10)
+ax[0][1].set_title("산점도 — 코스피200 vs 삼성전자")
 
 # 히스토그램 — 분포
-plt.hist(returns["삼성전자"], bins=50)
+ax[1][0].hist(returns["삼성전자"], bins=50)
+ax[1][0].set_title("히스토그램 — 일간 수익률 분포")
 
 # 막대 그래프 — 항목별 비교
-plt.bar(list(weights.keys()), list(weights.values()))`,
+ax[1][1].bar(list(weights.keys()), list(weights.values()))
+ax[1][1].set_title("막대 그래프 — 종목별 비중")
+ax[1][1].tick_params(axis="x", rotation=30)
+
+plt.tight_layout()
+plt.show()`,
         },
         {
           t: "table",
@@ -264,7 +480,16 @@ plt.bar(list(weights.keys()), list(weights.values()))`,
         {
           t: "code",
           lang: "python",
-          code: `fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 8), sharex=True)
+          code: `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = "Malgun Gothic"   # macOS: AppleGothic, Linux: NanumGothic
+plt.rcParams["axes.unicode_minus"] = False
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 8), sharex=True)
 
 ax1.plot(prices.index, prices["삼성전자"])
 ax1.set_title("주가")
@@ -290,23 +515,84 @@ plt.show()`,
         { t: "h", text: "정의" },
         {
           t: "p",
-          text: "<b>공분산이란 두 변수가 각자의 평균에서 벗어나는 방향이 얼마나 함께 움직이는지를 나타내는 값이다.</b>",
+          text: "<b>공분산이란 두 자산이 각자의 평균에서 벗어나는 방향이 얼마나 함께 움직이는지를 나타내는 값이다.</b>",
         },
         {
           t: "math",
           tex: "\\text{Cov}(X, Y) = \\frac{1}{n-1}\\sum_{i=1}^{n}(x_i - \\bar{x})(y_i - \\bar{y})",
         },
+        {
+          t: "ul",
+          items: [
+            "$X$, $Y$ — 비교하는 두 대상의 수익률 (예: 자산과 시장)",
+            "$x_i$, $y_i$ — $i$번째 날의 각 수익률",
+            "$\\bar{x}$, $\\bar{y}$ — 각 수익률의 평균",
+            "$n$ — 관측한 날의 수 (아래 표에서는 5일)",
+          ],
+        },
         { t: "h", text: "비유" },
         {
           t: "p",
-          text: "공분산은 <b>두 사람이 함께 걷는지 재는 지표</b>다. 한 사람이 앞서갈 때 다른 사람도 앞서가면 두 편차의 곱이 양수가 되고, 한 사람이 앞설 때 다른 사람이 뒤처지면 음수가 된다. 이 곱들을 평균 낸 것이 공분산이다.",
+          text: "<b>두 사람이 보조를 맞춰 걷는지 재는 지표</b>다. 한 사람이 앞서갈 때 다른 사람도 앞서가면 두 편차의 곱이 양수가 되고, 한 사람이 앞설 때 다른 사람이 뒤처지면 음수가 된다. 이 곱들을 평균 낸 것이 공분산이다.",
+        },
+      ],
+    },
+    {
+      title: "공분산 — 숫자로 따라가기",
+      blocks: [
+        {
+          t: "p",
+          text: "어떤 자산과 시장(코스피200 같은 지수)의 5일치 수익률이 아래와 같다고 하자. 공분산은 표를 오른쪽으로 한 칸씩 채워 나가면 손으로도 구할 수 있다.",
+        },
+        {
+          t: "ol",
+          items: [
+            { text: "<b>각각의 평균을 구한다.</b> 자산 평균 <code>+1%</code>, 시장 평균 <code>+1%</code>" },
+            { text: "<b>각 날이 평균에서 얼마나 벗어났는지(편차) 구한다.</b>" },
+            { text: "<b>두 편차를 곱한다.</b> 둘 다 평균 위면 (+)×(+) = 양수, 둘 다 평균 아래면 (−)×(−) = 양수, 서로 엇갈리면 음수가 된다" },
+            { text: "<b>곱의 합을 (개수 − 1)로 나눈다.</b> 7 ÷ 4 = <b>1.75</b>" },
+          ],
+        },
+        {
+          t: "table",
+          head: ["일", "자산", "시장", "자산 편차", "시장 편차", "편차의 곱"],
+          rows: [
+            ["1", "+3%", "+2%", "+2", "+1", "+2"],
+            ["2", "−1%", "−1%", "−2", "−2", "+4"],
+            ["3", "+2%", "+1%", "+1", "0", "0"],
+            ["4", "0%", "0%", "−1", "−1", "+1"],
+            ["5", "+1%", "+3%", "0", "+2", "0"],
+            ["<b>합</b>", "", "", "", "", "<b>+7</b>"],
+          ],
+        },
+        {
+          t: "p",
+          text: "마지막 열에 음수가 거의 없다는 점을 보자. 자산이 평균보다 좋은 날은 시장도 좋았고, 나쁜 날은 시장도 나빴다는 뜻이다. <b>그래서 합이 크게 양수가 되고, 공분산도 양수가 된다.</b>",
+        },
+        {
+          t: "p",
+          text: "반대로 한쪽이 오를 때 다른 쪽이 내리는 자산이라면 곱이 음수로 쌓여 공분산이 음수가 된다. 이것이 포트폴리오에서 결정적인 차이를 만든다.",
+        },
+      ],
+    },
+    {
+      title: "공분산 — 세 가지 모양",
+      blocks: [
+        {
+          t: "p",
+          text: "같은 이야기를 그림으로 보면 분명하다. 가로축이 자산 A의 수익률, 세로축이 자산 B의 수익률이고, 점 하나가 하루다.",
+        },
+        {
+          t: "img",
+          src: "/week5-corr-shapes.png",
+          alt: "양의 상관, 무상관, 음의 상관을 보여주는 산점도 세 개",
         },
         {
           t: "ul",
           items: [
-            "공분산 &gt; 0: 같은 방향으로 움직이는 경향",
-            "공분산 &lt; 0: 반대 방향으로 움직이는 경향",
-            "공분산 = 0: 뚜렷한 관계 없음",
+            "<b>왼쪽</b> — A가 오른 날 B도 올랐다. 점들이 오른쪽 위로 몰린다. 공분산 양수",
+            "<b>가운데</b> — A의 등락과 B의 등락이 무관하다. 점들이 사방에 흩어진다. 공분산 0에 가까움",
+            "<b>오른쪽</b> — A가 오른 날 B는 내렸다. 점들이 오른쪽 아래로 몰린다. 공분산 음수",
           ],
         },
       ],
@@ -323,8 +609,18 @@ plt.show()`,
           tex: "\\sigma_p^2 = w_1^2\\sigma_1^2 + w_2^2\\sigma_2^2 + 2w_1w_2\\text{Cov}(1,2)",
         },
         {
+          t: "ul",
+          items: [
+            "$\\sigma_p^2$ — 포트폴리오 수익률의 <b>분산</b> (변동성의 제곱). 변동성은 $\\sigma_p = \\sqrt{\\sigma_p^2}$",
+            "$w_1$, $w_2$ — 1번·2번 자산에 넣은 비중 (둘을 더하면 1)",
+            "$\\sigma_1$, $\\sigma_2$ — 각 자산의 변동성(표준편차)",
+            "$\\sigma_1^2$, $\\sigma_2^2$ — 각 자산의 분산",
+            "$\\text{Cov}(1,2)$ — 두 자산의 공분산",
+          ],
+        },
+        {
           t: "p",
-          text: "세 번째 항이 공분산이다. <b>이 항이 음수라면 포트폴리오 전체 위험이 각 자산의 위험보다 낮아진다.</b> 분산투자가 작동하는 수학적 이유가 바로 여기에 있다.",
+          text: "앞의 두 항은 각 자산이 혼자 가진 위험이고, <b>세 번째 항이 둘의 관계</b>다. 이 항이 작거나 음수이면 포트폴리오 전체 위험이 각 자산의 위험보다 낮아진다. 분산투자가 작동하는 수학적 이유가 여기에 있다.",
         },
         { t: "h", text: "코드" },
         {
@@ -332,21 +628,34 @@ plt.show()`,
           lang: "python",
           code: `import pandas as pd
 
-a = pd.Series([0.010, -0.005, 0.020, 0.000, -0.010, 0.015, 0.005, -0.008, 0.012, 0.003])
-m = pd.Series([0.008, -0.003, 0.012, 0.002, -0.006, 0.010, 0.004, -0.005, 0.009, 0.001])
+a = pd.Series([0.03, -0.01, 0.02, 0.00, 0.01])   # 자산의 5일 수익률
+m = pd.Series([0.02, -0.01, 0.01, 0.00, 0.03])   # 시장의 5일 수익률
 
-print(f"공분산: {a.cov(m):.8f}")   # 0.00006462`,
+print(f"공분산: {a.cov(m):.6f}")   # 0.000175`,
         },
-        { t: "p", text: "DataFrame 전체의 공분산 행렬은 한 줄로 구한다." },
-        { t: "code", lang: "python", code: `cov_matrix = returns.cov()\nprint(cov_matrix)` },
         {
           t: "p",
-          text: "<b>공분산 행렬(covariance matrix)</b> 은 대각선에 각 자산의 분산, 나머지에 자산 쌍의 공분산이 들어간 정사각 표다. 6주차 포트폴리오 최적화의 핵심 재료다.",
+          text: "위에서 손으로 구한 1.75와 같은 값이다. 표에서는 %단위로, 코드는 소수로 계산해서 자리수만 다르다(1.75 %² = 0.000175).",
+        },
+        { t: "p", text: "다섯 자산 전체의 공분산 행렬도 한 줄로 구한다." },
+        {
+          t: "code",
+          lang: "python",
+          code: `import pandas as pd
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+
+print(returns.cov())`,
+        },
+        {
+          t: "p",
+          text: "<b>공분산 행렬</b>은 대각선에 각 자산의 분산, 나머지에 자산 쌍의 공분산이 들어간 정사각 표다. 6주차 포트폴리오 최적화의 핵심 재료다.",
         },
         { t: "h", text: "공분산의 한계" },
         {
           t: "p",
-          text: "공분산 값 자체는 해석하기 어렵다. 단위가 \"수익률의 제곱\"이고, 자산의 변동성 크기에 따라 값의 스케일이 완전히 달라지기 때문이다. 위 예시의 0.00006462가 강한 관계인지 약한 관계인지 이 숫자만으로는 알 수 없다. 그래서 표준화한 지표가 필요하다.",
+          text: "공분산 값 자체는 해석하기 어렵다. 단위가 \"수익률의 제곱\"이고, 자산의 변동성 크기에 따라 값의 스케일이 완전히 달라지기 때문이다. 위 예시의 <code>0.000175</code>가 강한 관계인지 약한 관계인지 이 숫자만으로는 알 수 없다. <b>그래서 크기를 지우고 방향만 남긴 지표가 필요하다.</b>",
         },
       ],
     },
@@ -358,13 +667,65 @@ print(f"공분산: {a.cov(m):.8f}")   # 0.00006462`,
         { t: "h", text: "정의" },
         {
           t: "p",
-          text: "<b>상관계수란 공분산을 두 변수의 표준편차의 곱으로 나누어 -1과 1 사이의 값으로 표준화한 지표다.</b>",
+          text: "<b>상관계수란 공분산을 두 자산의 표준편차의 곱으로 나누어 −1과 +1 사이로 표준화한 값이다.</b>",
         },
         { t: "math", tex: "\\rho_{XY} = \\frac{\\text{Cov}(X,Y)}{\\sigma_X \\sigma_Y}" },
+        {
+          t: "ul",
+          items: [
+            "$\\rho_{XY}$ — 두 자산의 상관계수. 항상 −1과 +1 사이",
+            "$\\text{Cov}(X,Y)$ — 두 자산의 공분산 (함께 움직인 정도)",
+            "$\\sigma_X$, $\\sigma_Y$ — 각 자산 수익률의 표준편차 (각자 흔들린 정도)",
+          ],
+        },
         { t: "h", text: "비유" },
         {
           t: "p",
-          text: "상관계수는 <b>공분산을 백분율처럼 읽을 수 있게 만든 것</b>이다. 키를 재는데 어떤 사람은 cm, 어떤 사람은 inch를 쓰면 비교가 안 된다. 상관계수는 모든 자산 쌍을 -1 ~ +1이라는 공통 자로 재게 해준다.",
+          text: "키를 재는데 한 사람은 cm, 다른 사람은 inch를 쓰면 비교할 수 없다. 상관계수는 <b>모든 자산 쌍을 −1 ~ +1이라는 공통 자로 재게 해주는 장치</b>다.",
+        },
+        { t: "h", text: "숫자로 따라가기" },
+        {
+          t: "p",
+          text: "앞 절의 표를 그대로 이어서 쓴다. 공분산은 <b>1.75</b> 였다. 이제 분모에 들어갈 표준편차가 필요하다.",
+        },
+        {
+          t: "p",
+          text: "<b>분산과 표준편차는 공분산과 똑같은 방법으로 구한다.</b> 공분산에서는 <i>자산 편차 × 시장 편차</i>를 더했다면, 분산은 <i>자기 편차 × 자기 편차</i>, 즉 편차를 제곱해서 더한다. <b>분산은 자기 자신과의 공분산</b>인 셈이다.",
+        },
+        {
+          t: "table",
+          head: ["일", "자산 편차", "자산 편차²", "시장 편차", "시장 편차²"],
+          rows: [
+            ["1", "+2", "4", "+1", "1"],
+            ["2", "−2", "4", "−2", "4"],
+            ["3", "+1", "1", "0", "0"],
+            ["4", "−1", "1", "−1", "1"],
+            ["5", "0", "0", "+2", "4"],
+            ["<b>합</b>", "", "<b>10</b>", "", "<b>10</b>"],
+          ],
+        },
+        {
+          t: "p",
+          text: "제곱의 합이 양쪽 다 10이고, 공분산과 똑같이 (개수 − 1)로 나눈다.",
+        },
+        {
+          t: "ul",
+          items: [
+            "자산의 분산 = 10 ÷ 4 = <b>2.5</b>",
+            "시장의 분산 = 10 ÷ 4 = <b>2.5</b>",
+          ],
+        },
+        {
+          t: "p",
+          text: "표준편차는 분산의 제곱근이므로 $\\sqrt{2.5} = 1.58$, 즉 <b>1.58%</b> 다. 편차를 %단위로 적었으므로 분산 2.5의 단위는 %², 표준편차의 단위는 %가 된다. 우연히 두 자산의 분산이 같게 나온 예시라는 점만 염두에 두면 된다.",
+        },
+        {
+          t: "math",
+          tex: "\\rho = \\frac{1.75}{1.58 \\times 1.58} = \\frac{1.75}{2.5} = 0.70",
+        },
+        {
+          t: "p",
+          text: "분모가 \"두 자산이 각자 흔들린 정도\"이므로, <b>상관계수는 함께 움직인 정도를 각자 흔들린 정도로 나눈 비율</b>이 된다. 그래서 아무리 변동성이 큰 자산이라도 값이 −1과 +1 사이에 들어온다. 0.70은 대체로 같은 방향으로 움직였다는 뜻이다.",
         },
         { t: "h", text: "해석" },
         {
@@ -374,9 +735,30 @@ print(f"공분산: {a.cov(m):.8f}")   # 0.00006462`,
             ["<code>+1.0</code>", "완전히 같은 방향으로 움직임"],
             ["<code>+0.7 ~ +1.0</code>", "강한 양의 상관"],
             ["<code>+0.3 ~ +0.7</code>", "중간 정도 양의 상관"],
-            ["<code>-0.3 ~ +0.3</code>", "약한 관계"],
-            ["<code>-1.0 ~ -0.7</code>", "강한 음의 상관"],
-            ["<code>-1.0</code>", "완전히 반대 방향으로 움직임"],
+            ["<code>−0.3 ~ +0.3</code>", "약한 관계"],
+            ["<code>−1.0 ~ −0.7</code>", "강한 음의 상관"],
+            ["<code>−1.0</code>", "완전히 반대 방향으로 움직임"],
+          ],
+        },
+      ],
+    },
+    {
+      title: "실제 자산으로 보기",
+      blocks: [
+        {
+          t: "p",
+          text: "우리가 쓰는 다섯 자산 중 두 쌍을 찍어 보면 차이가 한눈에 보인다. 점 하나가 하루고, 빨간 선은 점들의 경향을 나타낸 직선이다.",
+        },
+        {
+          t: "img",
+          src: "/week5-corr-real.png",
+          alt: "삼성전자와 KODEX200, 미국S&P500과 국고채30년의 산점도",
+        },
+        {
+          t: "ul",
+          items: [
+            "<b>왼쪽 (삼성전자 vs KODEX200, 0.90)</b> — 점들이 직선에 바짝 붙어 있다. 코스피200이 오른 날 삼성전자도 거의 어김없이 올랐다. 삼성전자는 코스피200에서 가장 비중이 큰 종목이므로 당연한 결과다. <b>둘 다 사는 것은 사실상 같은 것을 두 번 사는 셈이다.</b>",
+            "<b>오른쪽 (미국S&P500 vs 국고채30년, 0.02)</b> — 점들이 공처럼 흩어져 있다. 한쪽이 오른 날 다른 쪽이 어떻게 됐는지 예측할 수 없다. <b>이런 조합이 진짜 분산투자다.</b>",
           ],
         },
       ],
@@ -386,29 +768,111 @@ print(f"공분산: {a.cov(m):.8f}")   # 0.00006462`,
       blocks: [
         {
           t: "p",
-          text: "<b>포트폴리오 분산 효과는 상관계수가 낮을수록 커진다.</b>",
+          text: "왜 상관계수가 낮으면 위험이 줄어드는지, 숫자로 보면 이렇다. <b>변동성이 똑같이 20%인 두 자산을 50:50으로 섞는다</b>고 하자.",
+        },
+        { t: "h", text: "그래프를 그린 식" },
+        {
+          t: "p",
+          text: "앞에서 본 두 자산 포트폴리오의 분산 공식에서 출발한다. 공분산을 상관계수로 바꿔 쓴 형태다($\\text{Cov}(1,2) = \\rho\\,\\sigma_1\\sigma_2$).",
+        },
+        {
+          t: "math",
+          tex: "\\sigma_p^2 = w_1^2\\sigma_1^2 + w_2^2\\sigma_2^2 + 2w_1w_2\\,\\rho\\,\\sigma_1\\sigma_2",
+        },
+        {
+          t: "p",
+          text: "여기에 조건을 넣는다. 비중은 $w_1 = w_2 = 0.5$, 변동성은 $\\sigma_1 = \\sigma_2 = 0.2$ 이므로",
+        },
+        {
+          t: "math",
+          tex: "\\sigma_p^2 = 0.25(0.04) + 0.25(0.04) + 2(0.5)(0.5)\\,\\rho\\,(0.2)(0.2) = 0.01 + 0.01 + 0.02\\rho",
+        },
+        { t: "p", text: "정리하면 <b>상관계수 $\\rho$ 하나만 남는다.</b>" },
+        {
+          t: "math",
+          tex: "\\sigma_p^2 = 0.02\\,(1 + \\rho) \\qquad \\Longrightarrow \\qquad \\sigma_p = 0.2\\sqrt{\\frac{1 + \\rho}{2}}",
         },
         {
           t: "ul",
           items: [
-            "상관계수 +1인 두 자산을 섞으면 위험이 전혀 줄지 않는다. 사실상 같은 자산이다.",
-            "상관계수 0인 두 자산을 섞으면 위험이 줄어든다.",
-            "상관계수 -1이면 이론상 위험을 0으로 만들 수 있다.",
+            "$\\sigma_p$ — 포트폴리오의 변동성 (그래프의 세로축)",
+            "$\\rho$ — 두 자산의 상관계수 (그래프의 가로축)",
+            "$0.2$ — 각 자산의 변동성 20%",
           ],
         },
         {
           t: "p",
-          text: "같은 시장의 주식을 여러 개 사는 것이 진짜 분산투자가 아닌 이유다. 삼성전자와 KODEX200의 상관계수는 <b>0.90</b>으로, 사실상 같은 것을 두 번 사는 셈이다. 반면 미국S&amp;P500과 국고채30년은 <b>0.02</b>로 거의 무관하다.",
+          text: "<b>그래프는 이 식에 $\\rho$ 를 −1부터 +1까지 넣어 그린 곡선이다.</b>",
         },
-        { t: "h", text: "코드" },
+        {
+          t: "img",
+          src: "/week5-diversification.png",
+          alt: "상관계수에 따라 포트폴리오 변동성이 달라지는 곡선",
+        },
+        {
+          t: "table",
+          head: ["상관계수 $\\rho$", "분산 $\\sigma_p^2$", "변동성 $\\sigma_p$", "20% 대비"],
+          rows: [
+            ["<b>+1</b> (똑같이 움직임)", "0.02 × 2 = 0.04", "<b>20.0%</b>", "그대로"],
+            ["<b>+0.5</b>", "0.02 × 1.5 = 0.03", "<b>17.3%</b>", "13% 감소"],
+            ["<b>0</b> (무관)", "0.02 × 1 = 0.02", "<b>14.1%</b>", "<b>29% 감소</b>"],
+            ["<b>−0.5</b>", "0.02 × 0.5 = 0.01", "<b>10.0%</b>", "50% 감소"],
+            ["<b>−1</b> (완전 반대)", "0.02 × 0 = 0", "<b>0.0%</b>", "사라짐"],
+          ],
+        },
+        { t: "h", text: "왜 하필 29%인가" },
+        {
+          t: "p",
+          text: "가운데 줄을 뜯어보면 이렇다. 상관계수가 0이면 공식의 <b>세 번째 항이 통째로 사라진다.</b> 그러면 분산은 0.04에서 0.02로, <b>정확히 절반</b>이 된다.",
+        },
+        {
+          t: "p",
+          text: "그런데 우리가 보는 변동성은 분산이 아니라 <b>그 제곱근</b>이다. 절반이 된 것의 제곱근은 절반이 아니라",
+        },
+        {
+          t: "math",
+          tex: "\\sqrt{\\tfrac{1}{2}} = 0.707 \\quad \\rightarrow \\quad 20\\% \\times 0.707 = 14.1\\%",
+        },
+        {
+          t: "p",
+          text: "즉 <b>변동성은 0.707배, 약 29% 줄어든다.</b> 분산이 반으로 줄었는데 변동성은 29%만 줄어드는 이유가 제곱근 때문이다. 4주차에서 연율화할 때 √252를 곱했던 것과 같은 성질이다.",
+        },
+        {
+          t: "p",
+          text: "반대로 상관계수가 +1이면 세 번째 항이 최대가 되어 분산이 0.04 그대로다. 섞어도 아무 효과가 없다.",
+        },
+        {
+          t: "p",
+          text: "<b>그리고 이 모든 과정에서 기대수익률은 한 번도 등장하지 않는다.</b> 포트폴리오의 기대수익률은 각 자산 기대수익률의 가중평균이라 상관계수와 무관하게 일정하다. <b>수익은 그대로 두고 위험만 깎는 것</b>, 이것이 분산투자를 \"공짜 점심\"이라고 부르는 이유다.",
+        },
+        {
+          t: "p",
+          text: "그래서 같은 시장의 주식을 여러 개 사는 것은 진짜 분산투자가 아니다. 성격이 다른 자산 — 주식과 채권, 국내와 해외, 원자재 — 을 섞어야 상관계수가 낮아진다. 우리가 다섯 자산을 그렇게 고른 이유다.",
+        },
+      ],
+    },
+    {
+      title: "상관계수 — 코드",
+      blocks: [
         {
           t: "code",
           lang: "python",
-          code: `print(f"상관계수: {a.corr(m):.4f}")    # 0.9891
+          code: `import pandas as pd
 
-# 전체 상관계수 행렬
-corr_matrix = returns.corr()
-print(corr_matrix)`,
+a = pd.Series([0.03, -0.01, 0.02, 0.00, 0.01])   # 자산의 5일 수익률
+m = pd.Series([0.02, -0.01, 0.01, 0.00, 0.03])   # 시장의 5일 수익률
+
+print(f"상관계수: {a.corr(m):.4f}")    # 0.7000`,
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `import pandas as pd
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+
+print(returns.corr().round(2))`,
         },
         { t: "p", text: "대각선은 항상 1이다(자기 자신과의 상관계수)." },
       ],
@@ -417,9 +881,20 @@ print(corr_matrix)`,
       title: "히트맵으로 보기",
       blocks: [
         {
+          t: "p",
+          text: "숫자 표보다 색으로 보면 어느 자산끼리 묶여 있는지 한눈에 들어온다.",
+        },
+        {
           t: "code",
           lang: "python",
           code: `import matplotlib.pyplot as plt
+import pandas as pd
+
+plt.rcParams["font.family"] = "Malgun Gothic"   # macOS: AppleGothic, Linux: NanumGothic
+plt.rcParams["axes.unicode_minus"] = False
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
 
 corr = returns.corr()
 
@@ -441,6 +916,10 @@ plt.title("자산 간 상관계수")
 plt.tight_layout()
 plt.show()`,
         },
+        {
+          t: "p",
+          text: "붉을수록 함께 움직이고, 흰색에 가까울수록 무관하다. 삼성전자–KODEX200 칸이 가장 붉고, 미국S&P500–국고채30년 칸이 거의 흰색으로 나온다.",
+        },
       ],
     },
 
@@ -454,10 +933,96 @@ plt.show()`,
           text: "<b>베타란 시장 전체의 움직임에 대한 개별 자산의 민감도를 나타내는 계수다.</b> 자산 수익률과 시장 수익률의 공분산을 시장 수익률의 분산으로 나눈 값이다.",
         },
         { t: "math", tex: "\\beta_i = \\frac{\\text{Cov}(R_i, R_m)}{\\text{Var}(R_m)}" },
-        { t: "h", text: "비유" },
+        {
+          t: "ul",
+          items: [
+            "$\\beta_i$ — 자산 $i$의 베타",
+            "$R_i$ — 자산 $i$의 수익률, $R_m$ — 시장의 수익률",
+            "$\\text{Cov}(R_i, R_m)$ — 자산과 시장의 공분산",
+            "$\\text{Var}(R_m)$ — 시장 수익률의 분산 (시장 변동성의 제곱)",
+          ],
+        },
+        { t: "h", text: "분모가 하는 일" },
         {
           t: "p",
-          text: "베타는 <b>파도에 대한 배의 반응</b>이다. 시장이라는 파도가 1만큼 출렁일 때, 베타 1.5인 배는 1.5만큼 흔들리고 베타 0.5인 배는 0.5만큼만 흔들린다. 파도가 클 때 더 크게 오르지만, 파도가 꺼질 때도 더 크게 떨어진다.",
+          text: "분자인 공분산만 보면 \"함께 움직였다\"는 사실은 알아도 <b>얼마나</b> 움직였는지는 알 수 없다. 앞에서 봤듯 공분산은 자산이 크게 출렁일수록 같이 커지기 때문이다. 그래서 <b>시장의 분산으로 나눠 \"시장이 움직인 만큼을 1로 놓았을 때의 배수\"로 바꾼다.</b>",
+        },
+        {
+          t: "p",
+          text: "분모가 기준자 역할을 한다는 것은 시장 자신의 베타를 구해보면 바로 보인다.",
+        },
+        {
+          t: "math",
+          tex: "\\beta_m = \\frac{\\text{Cov}(R_m, R_m)}{\\text{Var}(R_m)} = \\frac{\\text{Var}(R_m)}{\\text{Var}(R_m)} = 1",
+        },
+        {
+          t: "p",
+          text: "자기 자신과의 공분산은 곧 분산이므로 <b>시장의 베타는 언제나 정확히 1</b>이다. 모든 자산의 베타는 이 1을 기준으로 읽는다.",
+        },
+        { t: "h", text: "성장주와 인버스 ETF로 보기" },
+        {
+          t: "p",
+          text: "시장이 5일간 아래처럼 움직였다고 하자. 평균이 0%라 편차가 곧 수익률이어서 계산이 간단하다.",
+        },
+        {
+          t: "table",
+          head: ["일", "시장", "성장주", "인버스 ETF"],
+          rows: [
+            ["1", "+2%", "+4%", "−2%"],
+            ["2", "−2%", "−4%", "+2%"],
+            ["3", "+1%", "+2%", "−1%"],
+            ["4", "−1%", "−2%", "+1%"],
+            ["5", "0%", "0%", "0%"],
+          ],
+        },
+        {
+          t: "p",
+          text: "<b>성장주</b>는 시장이 오른 날 두 배로 오르고 내린 날 두 배로 내렸다. <b>인버스 ETF</b>는 시장과 정확히 반대로, 같은 크기만큼 움직였다.",
+        },
+        {
+          t: "p",
+          text: "분모부터 구한다. 시장 편차의 제곱합은 $4+4+1+1+0 = 10$ 이므로 $\\text{Var}(R_m) = 10 \\div 4 = 2.5$ 다.",
+        },
+        {
+          t: "p",
+          text: "<b>이 2.5는 어떤 자산을 재든 바뀌지 않는다.</b> 시장 하나로 정해지는 값이기 때문이다. 자산마다 달라지는 것은 분자뿐이다.",
+        },
+        {
+          t: "table",
+          head: ["", "편차의 곱을 더하면", "공분산 (÷4)", "베타 (÷2.5)"],
+          rows: [
+            ["<b>성장주</b>", "8+8+2+2+0 = <b>20</b>", "5.0", "<b>+2.0</b>"],
+            ["<b>인버스 ETF</b>", "−4−4−1−1+0 = <b>−10</b>", "−2.5", "<b>−1.0</b>"],
+            ["<b>시장 자신</b>", "4+4+1+1+0 = <b>10</b>", "2.5", "<b>+1.0</b>"],
+          ],
+        },
+        {
+          t: "p",
+          text: "성장주는 매일 시장의 2배로 움직였으므로 편차의 곱도 시장 자신의 2배가 되어 <b>베타가 정확히 2</b>다. 일반화하면 <b>자산이 시장의 $k$ 배로 움직일 때 베타는 $k$</b> 가 된다.",
+        },
+        {
+          t: "p",
+          text: "인버스 ETF는 시장이 오른 날 내렸으므로 <b>편차의 곱이 전부 음수</b>다. 그래서 공분산이 음수가 되고 베타도 음수다. 크기는 시장과 같으니 정확히 −1이다. 시장이 20% 빠질 때 20% 오르는 자산이라는 뜻이고, <b>이런 자산을 섞으면 포트폴리오 전체의 베타가 내려간다.</b>",
+        },
+        { t: "h", text: "우리 자산들의 베타" },
+        {
+          t: "p",
+          text: "같은 방법으로 실제 다섯 자산을 재면 이렇게 나온다(시장은 KODEX200).",
+        },
+        {
+          t: "table",
+          head: ["자산", "베타", "읽는 법"],
+          rows: [
+            ["삼성전자", "<b>+1.19</b>", "코스피200이 1% 오르면 평균 1.19% 오른다"],
+            ["KODEX200", "<b>+1.00</b>", "시장 자신이므로 정의상 1"],
+            ["금", "<b>+0.19</b>", "시장과 거의 따로 논다"],
+            ["미국S&P500", "<b>+0.14</b>", "같은 주식이어도 시장이 다르면 베타가 낮다"],
+            ["국고채30년", "<b>+0.08</b>", "코스피와 사실상 무관하다"],
+          ],
+        },
+        {
+          t: "p",
+          text: "실제 자산은 예시처럼 정확히 배수로 움직이지 않으므로, 베타는 <b>\"평균적으로 몇 배였나\"</b> 를 뜻한다.",
         },
         { t: "h", text: "해석" },
         {
@@ -490,21 +1055,28 @@ plt.show()`,
           text: "종목을 늘리면 비체계적 위험은 상쇄되어 사라지지만, 체계적 위험은 남는다. <b>베타는 이 남는 위험, 즉 피할 수 없는 위험의 크기를 재는 지표다.</b> 다음 절의 CAPM이 \"피할 수 없는 위험만큼만 보상받는다\"고 말하는 근거가 여기에 있다.",
         },
         { t: "h", text: "코드" },
+        { t: "p", text: "여기서도 앞에서 만든 <code>a</code>, <code>m</code>을 그대로 쓴다." },
         {
           t: "code",
           lang: "python",
-          code: `def beta(asset_returns, market_returns):
+          code: `import pandas as pd
+
+a = pd.Series([0.03, -0.01, 0.02, 0.00, 0.01])   # 자산의 5일 수익률
+m = pd.Series([0.02, -0.01, 0.01, 0.00, 0.03])   # 시장의 5일 수익률
+
+
+def beta(asset_returns, market_returns):
     """자산 수익률과 시장 수익률로 베타를 계산한다."""
     covariance = asset_returns.cov(market_returns)
     market_variance = market_returns.var()
     return covariance / market_variance
 
 
-print(f"베타: {beta(a, m):.4f}")   # 1.5403`,
+print(f"베타: {beta(a, m):.4f}")   # 0.7000`,
         },
         {
           t: "p",
-          text: "베타 1.54는 시장이 1% 오를 때 이 자산은 평균적으로 약 1.54% 오르는 경향이 있다는 뜻이다.",
+          text: "베타 0.70은 시장이 1% 오를 때 이 자산은 평균적으로 약 0.70% 오르는 경향이 있다는 뜻이다. 시장보다 덜 움직이는 자산이다. 이 예시에서는 자산과 시장의 변동성이 같아서 베타와 상관계수가 0.70으로 똑같이 나왔다. 변동성이 다르면 두 값은 달라진다.",
         },
       ],
     },
@@ -531,6 +1103,13 @@ market = fdr.DataReader("069500", "2025-01-01")["Close"]   # KODEX 200`,
           lang: "python",
           code: `import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
+plt.rcParams["font.family"] = "Malgun Gothic"   # macOS: AppleGothic, Linux: NanumGothic
+plt.rcParams["axes.unicode_minus"] = False
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
 
 x = returns["KODEX200"]
 y = returns["삼성전자"]
@@ -601,7 +1180,7 @@ plt.show()`,
       blocks: [
         {
           t: "p",
-          text: "무위험수익률 3%, 시장 기대수익률 8%, 베타 1.54일 때:",
+          text: "무위험수익률 3%, 시장 기대수익률 8%, 베타 0.70일 때:",
         },
         {
           t: "math",
@@ -615,7 +1194,7 @@ plt.show()`,
     return risk_free + beta_value * (market_return - risk_free)
 
 
-print(f"{capm_expected_return(1.5403):.2%}")   # 10.70%`,
+print(f"{capm_expected_return(0.70):.2%}")   # 6.50%`,
         },
         { t: "h", text: "알파 (Alpha)" },
         {
@@ -624,19 +1203,138 @@ print(f"{capm_expected_return(1.5403):.2%}")   # 10.70%`,
         },
         { t: "math", tex: "\\alpha = R_{\\text{실제}} - E(R_{\\text{CAPM}})" },
         {
+          t: "ul",
+          items: [
+            "$\\alpha$ — 알파. CAPM이 요구한 것보다 더 번 부분",
+            "$R_{\\text{실제}}$ — 실제로 올린 수익률",
+            "$E(R_{\\text{CAPM}})$ — CAPM이 요구하는 기대수익률",
+          ],
+        },
+        {
+          t: "p",
+          text: "앞 절에서 정의한 <code>capm_expected_return()</code> 함수를 그대로 불러 쓴다.",
+        },
+        {
           t: "code",
           lang: "python",
-          code: `def alpha(actual_return, beta_value, risk_free=0.03, market_return=0.08):
+          code: `def capm_expected_return(beta_value, risk_free=0.03, market_return=0.08):
+    """CAPM으로 기대수익률을 계산한다."""
+    return risk_free + beta_value * (market_return - risk_free)
+
+
+def alpha(actual_return, beta_value, risk_free=0.03, market_return=0.08):
     """CAPM 기대수익률 대비 초과수익(알파)을 계산한다."""
     expected = capm_expected_return(beta_value, risk_free, market_return)
     return actual_return - expected
 
 
-print(f"알파: {alpha(0.13, 1.5403):.2%}")   # 2.30%`,
+print(f"알파: {alpha(0.13, 0.70):.2%}")   # 6.50%`,
         },
         {
           t: "p",
           text: "알파가 양수면 \"감수한 위험에 비해 잘했다\"는 뜻이다. 액티브 펀드 매니저의 성과를 평가하는 기준이자, 퀀트 투자가 찾으려는 목표이기도 하다.",
+        },
+      ],
+    },
+    {
+      title: "내 계좌로 이어보기",
+      blocks: [
+        {
+          t: "p",
+          text: "여기까지가 이론이고, 실제 계좌에 어떻게 적용되는지 보자. 1,000만 원을 다섯 자산에 아래처럼 나눠 담은 계좌가 있다고 하자. 증권 앱의 보유 종목 화면을 떠올리면 된다.",
+        },
+        {
+          t: "img",
+          src: "/week5-portfolio.png",
+          alt: "예시 계좌의 종목별 평가금액과 비중",
+        },
+        { t: "p", text: "이 계좌의 성과를 CAPM으로 평가하는 순서는 이렇다." },
+        {
+          t: "ol",
+          items: [
+            { text: "<b>계좌의 하루 수익률을 구한다</b> — 종목별 수익률을 비중으로 가중평균한다. 3주차에서 배운 \"자산 간에는 단순수익률을 쓴다\"가 여기서 쓰인다" },
+            { text: "<b>계좌의 베타를 구한다</b> — 계좌 수익률과 시장(KODEX200)의 공분산 ÷ 시장의 분산" },
+            { text: "<b>CAPM이 요구하는 수익률을 구한다</b> — 무위험 3% + 베타 × (시장 8% − 무위험 3%)" },
+            { text: "<b>실제 올린 수익률과 비교한다</b> — 그 차이가 알파다" },
+          ],
+        },
+        {
+          t: "code",
+          lang: "python",
+          code: `"""예시 계좌의 베타와 알파 — prices.csv 와 같은 폴더에 두고 실행한다."""
+import pandas as pd
+
+RF, RM = 0.03, 0.08          # 무위험수익률 3%, 시장 기대수익률 8%
+
+prices = pd.read_csv("prices.csv", index_col=0, parse_dates=True)
+returns = prices.pct_change().dropna()
+
+weights = {"삼성전자": 0.30, "KODEX200": 0.20, "미국S&P500": 0.30,
+           "국고채30년": 0.10, "금": 0.10}
+
+# 1) 계좌 전체의 하루 수익률 = 종목별 수익률을 비중으로 가중평균
+portfolio = sum(returns[name] * w for name, w in weights.items())
+
+# 2) 베타 = 시장과의 공분산 ÷ 시장의 분산
+market = returns["KODEX200"]
+beta = portfolio.cov(market) / market.var()
+
+# 3) CAPM이 요구하는 수익률
+expected = RF + beta * (RM - RF)
+
+# 4) 실제로 올린 연평균 수익률
+years = len(prices) / 252
+actual = (1 + portfolio).prod() ** (1 / years) - 1
+
+print(f"계좌 베타       {beta:.4f}")
+print(f"CAPM 요구수익률 {expected:.2%}")
+print(f"실제 연수익률   {actual:.2%}")
+print(f"알파            {actual - expected:+.2%}p")`,
+        },
+        {
+          t: "out",
+          text: `계좌 베타       0.6260
+CAPM 요구수익률 6.13%
+실제 연수익률   31.89%
+알파            +25.76%p`,
+        },
+      ],
+    },
+    {
+      title: "증권시장선 위에 올려보기",
+      blocks: [
+        {
+          t: "p",
+          text: "이 네 숫자를 그림 한 장에 올리면 CAPM이 무엇을 하는 모형인지 분명해진다.",
+        },
+        {
+          t: "img",
+          src: "/week5-capm-sml.png",
+          alt: "예시 계좌를 증권시장선 위에 올린 그림",
+        },
+        {
+          t: "p",
+          text: "파란 직선이 <b>증권시장선</b>이다. 가로축은 베타(피할 수 없는 위험을 얼마나 졌나), 세로축은 수익률이다. 이 선이 말하는 것은 하나다. <b>\"이만큼 위험을 졌으면 최소한 이만큼은 벌어야 한다.\"</b>",
+        },
+        {
+          t: "ul",
+          items: [
+            "베타 0 — 위험을 전혀 안 졌으니 무위험수익률 3%면 충분하다",
+            "베타 1 — 시장만큼 위험을 졌으니 시장 수익률 8%는 받아야 한다",
+            "이 계좌는 베타 <b>0.63</b> — 주식 비중이 절반이고 나머지가 해외·채권·금이라 시장보다 덜 흔들렸다. 그래서 선 위의 요구 수익률이 <b>6.13%</b> 로 낮다",
+          ],
+        },
+        {
+          t: "p",
+          text: "그런데 실제로는 <b>31.89%</b> 를 벌었다. 점이 선보다 한참 위에 찍힌다. <b>선 위에 있으면 위험에 비해 잘한 것이고, 아래에 있으면 못한 것이다.</b> 그 수직 거리가 알파다.",
+        },
+        {
+          t: "note",
+          text: "<b>이 알파가 비현실적으로 큰 이유</b> — 이 기간(2022~2026)이 국내 주식에 유난히 좋았고, 시장을 코스피200 하나로만 잡았기 때문이다. 계좌의 30%를 차지한 미국S&P500은 코스피200과 거의 무관하게 움직이므로 베타에 거의 반영되지 않는다. 실무에서 자산군별로 다른 시장 지수를 쓰거나 여러 요인을 함께 보는 이유다. 알파가 크게 나왔다고 실력이 좋았다고 단정할 수 없다.",
+        },
+        {
+          t: "p",
+          text: "<b>정리하면 이번 주의 네 개념은 한 줄로 이어진다.</b> 자산들이 함께 움직이는 정도를 재고(<b>공분산</b>) → 비교할 수 있게 표준화하고(<b>상관계수</b>) → 그중 시장과 함께 움직이는 부분만 떼어내어(<b>베타</b>) → 그 위험에 걸맞은 수익률을 계산한다(<b>CAPM</b>).",
         },
       ],
     },
@@ -924,19 +1622,17 @@ plt.show()`,
           code: `"""데이터를 못 받을 때 — 하드코딩한 수익률로 관계 지표 계산"""
 import pandas as pd
 
-asset = pd.Series([0.010, -0.005, 0.020, 0.000, -0.010,
-                   0.015, 0.005, -0.008, 0.012, 0.003])
-market = pd.Series([0.008, -0.003, 0.012, 0.002, -0.006,
-                    0.010, 0.004, -0.005, 0.009, 0.001])
+asset = pd.Series([0.03, -0.01, 0.02, 0.00, 0.01])
+market = pd.Series([0.02, -0.01, 0.01, 0.00, 0.03])
 
 cov = asset.cov(market)
 corr = asset.corr(market)
 b = cov / market.var()
 
-print(f"공분산      {cov:.8f}")     # 0.00006462
-print(f"상관계수    {corr:.4f}")     # 0.9891
-print(f"베타        {b:.4f}")        # 1.5403
-print(f"CAPM 기대   {0.03 + b * (0.08 - 0.03):.2%}")   # 10.70%`,
+print(f"공분산      {cov:.8f}")     # 0.000175
+print(f"상관계수    {corr:.4f}")     # 0.7000
+print(f"베타        {b:.4f}")        # 0.7000
+print(f"CAPM 기대   {0.03 + b * (0.08 - 0.03):.2%}")   # 6.50%`,
         },
       ],
     },
