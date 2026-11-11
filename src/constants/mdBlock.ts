@@ -45,7 +45,8 @@ export type Block =
   | { t: "note"; text: string }
   | { t: "h"; text: string }
   | { t: "code"; code: string; lang?: string }
-  | { t: "out"; text: string }
+  /** 고정폭 글상자. label 을 주면 머리말이 바뀐다 (기본 '실행 결과'). */
+  | { t: "out"; text: string; label?: string }
   /** 그림. src 는 public 기준 경로. */
   | { t: "img"; src: string; alt: string; caption?: string }
   | { t: "math"; tex: string }

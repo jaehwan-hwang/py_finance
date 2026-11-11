@@ -96,7 +96,7 @@ export default function MdBlocks({
             >
               <div className="border-b border-(--border-2) px-4 py-2">
                 <span className="font-mono text-[0.68rem] tracking-[0.08em] text-(--ink-3)">
-                  실행 결과
+                  {b.label ?? "실행 결과"}
                 </span>
               </div>
               <div className="scroll-x">
